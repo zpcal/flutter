@@ -5,8 +5,8 @@
 // @dart = 2.8
 
 import 'package:flutter/src/rendering/sliver.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({

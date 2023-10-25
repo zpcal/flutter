@@ -21,7 +21,7 @@ class ProtocolDiscovery {
     this.hostPort,
     this.devicePort,
     this.ipv6,
-  }) : assert(logReader != null)
+  })
   {
     _deviceLogSubscription = logReader.logLines.listen(
       _handleLine,
@@ -95,8 +95,8 @@ class ProtocolDiscovery {
   Future<void> cancel() => _stopScrapingLogs();
 
   Future<void> _stopScrapingLogs() async {
-    await _uriStreamController?.close();
-    await _deviceLogSubscription?.cancel();
+    await _uriStreamController.close();
+    await _deviceLogSubscription.cancel();
     _deviceLogSubscription = null;
   }
 
@@ -107,10 +107,8 @@ class ProtocolDiscovery {
 
   Uri _getObservatoryUri(String line) {
     final Match match = _getPatternMatch(line);
-    if (match != null) {
-      return Uri.parse(match[1]);
-    }
-    return null;
+    return Uri.parse(match[1]);
+      return null;
   }
 
   void _handleLine(String line) {
@@ -123,7 +121,7 @@ class ProtocolDiscovery {
     if (uri == null) {
       return;
     }
-    if (devicePort != null && uri.port != devicePort) {
+    if (uri.port != devicePort) {
       globals.printTrace('skipping potential observatory $uri due to device port mismatch');
       return;
     }
@@ -134,13 +132,11 @@ class ProtocolDiscovery {
     globals.printTrace('$serviceName URL on device: $deviceUri');
     Uri hostUri = deviceUri;
 
-    if (portForwarder != null) {
-      final int actualDevicePort = deviceUri.port;
-      final int actualHostPort = await portForwarder.forward(actualDevicePort, hostPort: hostPort);
-      globals.printTrace('Forwarded host port $actualHostPort to device port $actualDevicePort for $serviceName');
-      hostUri = deviceUri.replace(port: actualHostPort);
-    }
-
+    final int actualDevicePort = deviceUri.port;
+    final int actualHostPort = await portForwarder.forward(actualDevicePort, hostPort: hostPort);
+    globals.printTrace('Forwarded host port $actualHostPort to device port $actualDevicePort for $serviceName');
+    hostUri = deviceUri.replace(port: actualHostPort);
+  
     assert(InternetAddress(hostUri.host).isLoopback);
     if (ipv6) {
       hostUri = hostUri.replace(host: InternetAddress.loopbackIPv6.host);
@@ -215,7 +211,6 @@ class _BufferedStreamController<T> {
 StreamTransformer<S, S> _throttle<S>({
   @required Duration waitDuration,
 }) {
-  assert(waitDuration != null);
 
   S latestLine;
   int lastExecution;

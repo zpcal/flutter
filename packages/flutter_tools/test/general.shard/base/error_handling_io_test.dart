@@ -11,7 +11,6 @@ import 'package:mockito/mockito.dart';
 import 'package:path/path.dart' as path; // ignore: package_path_import
 
 import '../../src/common.dart';
-import '../../src/context.dart';
 
 class MockFile extends Mock implements File {}
 class MockFileSystem extends Mock implements FileSystem {}

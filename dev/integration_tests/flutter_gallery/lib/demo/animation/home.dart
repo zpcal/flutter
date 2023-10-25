@@ -34,8 +34,8 @@ class _RenderStatusBarPaddingSliver extends RenderSliver {
   _RenderStatusBarPaddingSliver({
     @required double maxHeight,
     @required double scrollFactor,
-  }) : assert(maxHeight != null && maxHeight >= 0.0),
-       assert(scrollFactor != null && scrollFactor >= 1.0),
+  }) : assert(maxHeight >= 0.0),
+       assert(scrollFactor >= 1.0),
        _maxHeight = maxHeight,
        _scrollFactor = scrollFactor;
 
@@ -43,7 +43,7 @@ class _RenderStatusBarPaddingSliver extends RenderSliver {
   double get maxHeight => _maxHeight;
   double _maxHeight;
   set maxHeight(double value) {
-    assert(maxHeight != null && maxHeight >= 0.0);
+    assert(maxHeight >= 0.0);
     if (_maxHeight == value)
       return;
     _maxHeight = value;
@@ -55,7 +55,7 @@ class _RenderStatusBarPaddingSliver extends RenderSliver {
   double get scrollFactor => _scrollFactor;
   double _scrollFactor;
   set scrollFactor(double value) {
-    assert(scrollFactor != null && scrollFactor >= 1.0);
+    assert(scrollFactor >= 1.0);
     if (_scrollFactor == value)
       return;
     _scrollFactor = value;
@@ -64,7 +64,7 @@ class _RenderStatusBarPaddingSliver extends RenderSliver {
 
   @override
   void performLayout() {
-    final double height = (maxHeight - constraints.scrollOffset / scrollFactor).clamp(0.0, maxHeight) as double;
+    final double height = (maxHeight - constraints.scrollOffset / scrollFactor).clamp(0.0, maxHeight);
     geometry = SliverGeometry(
       paintExtent: math.min(height, constraints.remainingPaintExtent),
       scrollExtent: maxHeight,
@@ -78,8 +78,8 @@ class _StatusBarPaddingSliver extends SingleChildRenderObjectWidget {
     Key key,
     @required this.maxHeight,
     this.scrollFactor = 5.0,
-  }) : assert(maxHeight != null && maxHeight >= 0.0),
-       assert(scrollFactor != null && scrollFactor >= 1.0),
+  }) : assert(maxHeight >= 0.0),
+       assert(scrollFactor >= 1.0),
        super(key: key);
 
   final double maxHeight;
@@ -268,9 +268,7 @@ class _AllSectionsView extends AnimatedWidget {
     this.midHeight,
     this.maxHeight,
     this.sectionCards = const <Widget>[],
-  }) : assert(sections != null),
-       assert(sectionCards != null),
-       assert(sectionCards.length == sections.length),
+  }) : assert(sectionCards.length == sections.length),
        assert(sectionIndex >= 0 && sectionIndex < sections.length),
        assert(selectedIndex != null),
        assert(selectedIndex.value >= 0.0 && selectedIndex.value < sections.length.toDouble()),
@@ -285,7 +283,7 @@ class _AllSectionsView extends AnimatedWidget {
   final List<Widget> sectionCards;
 
   double _selectedIndexDelta(int index) {
-    return (index.toDouble() - selectedIndex.value).abs().clamp(0.0, 1.0) as double;
+    return (index.toDouble() - selectedIndex.value).abs().clamp(0.0, 1.0);
   }
 
   Widget _build(BuildContext context, BoxConstraints constraints) {
@@ -366,8 +364,7 @@ class _SnappingScrollPhysics extends ClampingScrollPhysics {
   const _SnappingScrollPhysics({
     ScrollPhysics parent,
     @required this.midScrollOffset,
-  }) : assert(midScrollOffset != null),
-       super(parent: parent);
+  }) : super(parent: parent);
 
   final double midScrollOffset;
 

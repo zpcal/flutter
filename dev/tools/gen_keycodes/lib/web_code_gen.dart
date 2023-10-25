@@ -18,10 +18,8 @@ class WebCodeGenerator extends PlatformCodeGenerator {
   String get _webLogicalKeyCodeMap {
     final StringBuffer result = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.name != null) {
-        result.writeln("  '${entry.name}': ${toHex(entry.flutterId, digits: 10)},");
-      }
-    }
+      result.writeln("  '${entry.name}': ${toHex(entry.flutterId, digits: 10)},");
+        }
     return result.toString().trimRight();
   }
 
@@ -29,10 +27,8 @@ class WebCodeGenerator extends PlatformCodeGenerator {
   String get _webPhysicalKeyCodeMap {
     final StringBuffer result = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.name != null) {
-        result.writeln("  '${entry.name}': ${toHex(entry.usbHidCode)},");
-      }
-    }
+      result.writeln("  '${entry.name}': ${toHex(entry.usbHidCode)},");
+        }
     return result.toString().trimRight();
   }
 
@@ -40,10 +36,8 @@ class WebCodeGenerator extends PlatformCodeGenerator {
   String get _webNumpadCodeMap {
     final StringBuffer result = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.name != null) {
-        result.writeln("  '${entry.name}': ${toHex(entry.flutterId, digits: 10)},");
-      }
-    }
+      result.writeln("  '${entry.name}': ${toHex(entry.flutterId, digits: 10)},");
+        }
     return result.toString().trimRight();
   }
 

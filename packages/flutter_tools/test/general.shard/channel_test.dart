@@ -9,8 +9,8 @@ import 'package:args/command_runner.dart';
 import 'package:file/memory.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/cache.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/commands/channel.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/version.dart';
 import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
@@ -170,7 +170,7 @@ void main() {
       final Iterable<String> rows = testLogger.statusText
         .split('\n')
         .map((String line) => line.trim())
-        .where((String line) => line?.isNotEmpty == true)
+        .where((String line) => line.isNotEmpty == true)
         .skip(1); // remove `Flutter channels:` line
 
       expect(rows, <String>['dev', 'beta', 'stable']);

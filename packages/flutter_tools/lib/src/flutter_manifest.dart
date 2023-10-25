@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart';
 
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/user_messages.dart';
 import 'base/utils.dart';
@@ -30,7 +29,7 @@ class FlutterManifest {
     @required FileSystem fileSystem,
     @required Logger logger,
   }) {
-    if (path == null || !fileSystem.isFileSync(path)) {
+    if (!fileSystem.isFileSync(path)) {
       return _createFromYaml(null, logger);
     }
     final String manifest = fileSystem.file(path).readAsStringSync();
@@ -106,8 +105,8 @@ class FlutterManifest {
   /// The build version name from the `pubspec.yaml` file.
   /// Can be null if version isn't set or has a wrong format.
   String get buildName {
-    if (appVersion != null && appVersion.contains('+')) {
-      return appVersion.split('+')?.elementAt(0);
+    if (appVersion.contains('+')) {
+      return appVersion.split('+').elementAt(0);
     }
     return appVersion;
   }
@@ -115,8 +114,8 @@ class FlutterManifest {
   /// The build version number from the `pubspec.yaml` file.
   /// Can be null if version isn't set or has a wrong format.
   String get buildNumber {
-    if (appVersion != null && appVersion.contains('+')) {
-      final String value = appVersion.split('+')?.elementAt(1);
+    if (appVersion.contains('+')) {
+      final String value = appVersion.split('+').elementAt(1);
       return value;
     } else {
       return null;
@@ -220,11 +219,11 @@ class FlutterManifest {
     }
     final List<Uri> results = <Uri>[];
     for (final Object asset in assets) {
-      if (asset is! String || asset == null || asset == '') {
+      if (asset is! String || asset == '') {
         _logger.printError('Asset manifest contains a null or empty uri.');
         continue;
       }
-      final String stringAsset = asset as String;
+      final String stringAsset = asset;
       try {
         results.add(Uri(pathSegments: stringAsset.split('/')));
       } on FormatException {
@@ -297,15 +296,13 @@ class FlutterManifest {
     if (value is! bool) {
       return false;
     }
-    return value as bool;
+    return value;
   }
 }
 
 class Font {
   Font(this.familyName, this.fontAssets)
-    : assert(familyName != null),
-      assert(fontAssets != null),
-      assert(fontAssets.isNotEmpty);
+    : assert(fontAssets.isNotEmpty);
 
   final String familyName;
   final List<FontAsset> fontAssets;
@@ -322,8 +319,7 @@ class Font {
 }
 
 class FontAsset {
-  FontAsset(this.assetUri, {this.weight, this.style})
-    : assert(assetUri != null);
+  FontAsset(this.assetUri, {this.weight, this.style});
 
   final Uri assetUri;
   final int weight;
@@ -331,14 +327,10 @@ class FontAsset {
 
   Map<String, dynamic> get descriptor {
     final Map<String, dynamic> descriptor = <String, dynamic>{};
-    if (weight != null) {
-      descriptor['weight'] = weight;
-    }
-
-    if (style != null) {
-      descriptor['style'] = style;
-    }
-
+    descriptor['weight'] = weight;
+  
+    descriptor['style'] = style;
+  
     descriptor['asset'] = assetUri.path;
     return descriptor;
   }

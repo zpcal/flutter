@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
 import 'base/common.dart';
-import 'base/file_system.dart';
 import 'globals.dart' as globals;
 
 /// Constant for 'pluginClass' key in plugin maps.
@@ -89,7 +88,6 @@ class AndroidPlugin extends PluginPlatform {
   Set<String> get _supportedEmbedings => _cachedEmbeddingVersion ??= _getSupportedEmbeddings();
 
   Set<String> _getSupportedEmbeddings() {
-    assert(pluginPath != null);
     final Set<String> supportedEmbeddings = <String>{};
     final String baseMainPath = globals.fs.path.join(
       pluginPath,
@@ -246,8 +244,8 @@ class MacOSPlugin extends PluginPlatform implements NativeOrDartPlugin {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
-      if (pluginClass != null) 'class': pluginClass,
-      if (dartPluginClass != null) 'dartPluginClass': dartPluginClass,
+      'class': pluginClass,
+      'dartPluginClass': dartPluginClass,
     };
   }
 }
@@ -297,9 +295,9 @@ class WindowsPlugin extends PluginPlatform implements NativeOrDartPlugin{
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
-      if (pluginClass != null) 'class': pluginClass,
-      if (pluginClass != null) 'filename': _filenameForCppClass(pluginClass),
-      if (dartPluginClass != null) 'dartPluginClass': dartPluginClass,
+      'class': pluginClass,
+      'filename': _filenameForCppClass(pluginClass),
+      'dartPluginClass': dartPluginClass,
     };
   }
 }
@@ -349,9 +347,9 @@ class LinuxPlugin extends PluginPlatform implements NativeOrDartPlugin {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
-      if (pluginClass != null) 'class': pluginClass,
-      if (pluginClass != null) 'filename': _filenameForCppClass(pluginClass),
-      if (dartPluginClass != null) 'dartPluginClass': dartPluginClass,
+      'class': pluginClass,
+      'filename': _filenameForCppClass(pluginClass),
+      'dartPluginClass': dartPluginClass,
     };
   }
 }

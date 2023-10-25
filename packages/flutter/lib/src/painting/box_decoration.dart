@@ -7,7 +7,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 import 'border_radius.dart';
 import 'box_border.dart';
 import 'box_shadow.dart';

@@ -994,9 +994,7 @@ class _ActionButtonParentDataWidget extends ParentDataWidget<_ActionButtonParent
 // ParentData applied to individual action buttons that report whether or not
 // that button is currently pressed by the user.
 class _ActionButtonParentData extends MultiChildLayoutParentData {
-  _ActionButtonParentData({
-    this.isPressed = false,
-  });
+  _ActionButtonParentData();
 
   bool isPressed;
 }

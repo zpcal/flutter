@@ -5,12 +5,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter_devicelab/framework/browser.dart';
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 import 'package:shelf/shelf.dart';
-import 'package:shelf_static/shelf_static.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf_static/shelf_static.dart';
 
 final String bat = Platform.isWindows ? '.bat' : '';
 final String flutterRoot = path.dirname(path.dirname(path.dirname(path.fromUri(Platform.script))));
@@ -137,7 +137,7 @@ Future<void> runRecordingServer({
     await completer.future;
   } finally {
     chrome?.stop();
-    await server?.close();
+    await server.close();
     userDataDirectory.deleteSync(recursive: true);
   }
 }

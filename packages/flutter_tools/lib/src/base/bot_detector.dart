@@ -28,10 +28,8 @@ class BotDetector {
   final PersistentToolState _persistentToolState;
 
   Future<bool> get isRunningOnBot async {
-    if (_persistentToolState.isRunningOnBot != null) {
-      return _persistentToolState.isRunningOnBot;
-    }
-    if (
+    return _persistentToolState.isRunningOnBot;
+      if (
       // Explicitly stated to not be a bot.
       _platform.environment['BOT'] == 'false'
 
@@ -94,10 +92,8 @@ class AzureDetector {
   bool _isRunningOnAzure;
 
   Future<bool> get isRunningOnAzure async {
-    if (_isRunningOnAzure != null) {
-      return _isRunningOnAzure;
-    }
-    const Duration connectionTimeout = Duration(milliseconds: 250);
+    return _isRunningOnAzure;
+      const Duration connectionTimeout = Duration(milliseconds: 250);
     const Duration requestTimeout = Duration(seconds: 1);
     final HttpClient client = _httpClientFactory()
       ..connectionTimeout = connectionTimeout;

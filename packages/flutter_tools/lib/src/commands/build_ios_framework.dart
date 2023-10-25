@@ -9,7 +9,6 @@ import 'package:meta/meta.dart';
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
 import '../base/process.dart';
@@ -235,7 +234,7 @@ class BuildIOSFrameworkCommand extends BuildSubCommand {
     final Status status = globals.logger.startProgress(' ├─Creating Flutter.podspec...', timeout: timeoutConfiguration.fastOperation);
     try {
       final GitTagVersion gitTagVersion = _flutterVersion.gitTagVersion;
-      if (!force && (gitTagVersion.x == null || gitTagVersion.y == null || gitTagVersion.z == null || gitTagVersion.commits != 0)) {
+      if (!force && (gitTagVersion.commits != 0)) {
         throwToolExit(
             '--cocoapods is only supported on the dev, beta, or stable channels. Detected version is ${_flutterVersion.frameworkVersion}');
       }
@@ -374,9 +373,9 @@ end
           kIconTreeShakerFlag: buildInfo.treeShakeIcons.toString(),
           kDartDefines: jsonEncode(buildInfo.dartDefines),
           kBitcodeFlag: 'true',
-          if (buildInfo?.extraGenSnapshotOptions?.isNotEmpty ?? false)
+          if (buildInfo.extraGenSnapshotOptions.isNotEmpty ?? false)
             kExtraGenSnapshotOptions: buildInfo.extraGenSnapshotOptions.join(','),
-          if (buildInfo?.extraFrontEndOptions?.isNotEmpty ?? false)
+          if (buildInfo.extraFrontEndOptions.isNotEmpty ?? false)
             kExtraFrontEndOptions: buildInfo.extraFrontEndOptions.join(','),
           kIosArchs: <DarwinArch>[DarwinArch.armv7, DarwinArch.arm64]
             .map(getNameForDarwinArch).join(' '),

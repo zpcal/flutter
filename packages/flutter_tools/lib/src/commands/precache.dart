@@ -105,7 +105,7 @@ class PrecacheCommand extends FlutterCommand {
     for (final DevelopmentArtifact artifact in DevelopmentArtifact.values) {
       final String umbrellaName = umbrellaForArtifact[artifact.name];
       if (explicitlySelected(artifact.name) ||
-          (umbrellaName != null && explicitlySelected(umbrellaName))) {
+          (explicitlySelected(umbrellaName))) {
         selections.add(artifact.name);
       }
     }
@@ -149,7 +149,7 @@ class PrecacheCommand extends FlutterCommand {
     final Map<String, String> umbrellaForArtifact = _umbrellaForArtifactMap();
     final Set<DevelopmentArtifact> requiredArtifacts = <DevelopmentArtifact>{};
     for (final DevelopmentArtifact artifact in DevelopmentArtifact.values) {
-      if (artifact.feature != null && !_featureFlags.isEnabled(artifact.feature)) {
+      if (!_featureFlags.isEnabled(artifact.feature)) {
         continue;
       }
 

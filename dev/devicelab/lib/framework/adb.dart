@@ -201,12 +201,10 @@ class AndroidDeviceDiscovery implements DeviceDiscovery {
   @override
   Future<void> chooseWorkingDeviceById(String deviceId) async {
     final String matchedId = _findMatchId(await discoverDevices(), deviceId);
-    if (matchedId != null) {
-      _workingDevice = AndroidDevice(deviceId: matchedId);
-      print('Choose device by ID: $matchedId');
-      return;
-    }
-    throw DeviceException(
+    _workingDevice = AndroidDevice(deviceId: matchedId);
+    print('Choose device by ID: $matchedId');
+    return;
+      throw DeviceException(
       'Device with ID $deviceId is not found for operating system: '
       '$deviceOperatingSystem'
       );
@@ -320,12 +318,10 @@ class FuchsiaDeviceDiscovery implements DeviceDiscovery {
   @override
   Future<void> chooseWorkingDeviceById(String deviceId) async {
     final String matchedId = _findMatchId(await discoverDevices(), deviceId);
-    if (deviceId != null) {
-      _workingDevice = FuchsiaDevice(deviceId: matchedId);
-      print('Choose device by ID: $matchedId');
-      return;
-    }
-    throw DeviceException(
+    _workingDevice = FuchsiaDevice(deviceId: matchedId);
+    print('Choose device by ID: $matchedId');
+    return;
+      throw DeviceException(
       'Device with ID $deviceId is not found for operating system: '
       '$deviceOperatingSystem'
       );
@@ -494,7 +490,6 @@ class AndroidDevice extends Device {
   Future<Map<String, dynamic>> getMemoryStats(String packageName) async {
     final String meminfo = await shellEval('dumpsys', <String>['meminfo', packageName]);
     final Match match = RegExp(r'TOTAL\s+(\d+)').firstMatch(meminfo);
-    assert(match != null, 'could not parse dumpsys meminfo output');
     return <String, dynamic>{
       'total_kb': int.parse(match.group(1)),
     };
@@ -621,12 +616,10 @@ class IosDeviceDiscovery implements DeviceDiscovery {
   @override
   Future<void> chooseWorkingDeviceById(String deviceId) async {
     final String matchedId = _findMatchId(await discoverDevices(), deviceId);
-    if (matchedId != null) {
-      _workingDevice = IosDevice(deviceId: matchedId);
-      print('Choose device by ID: $matchedId');
-      return;
-    }
-    throw DeviceException(
+    _workingDevice = IosDevice(deviceId: matchedId);
+    print('Choose device by ID: $matchedId');
+    return;
+      throw DeviceException(
       'Device with ID $deviceId is not found for operating system: '
       '$deviceOperatingSystem'
       );
@@ -882,12 +875,10 @@ class FakeDeviceDiscovery implements DeviceDiscovery {
   @override
   Future<void> chooseWorkingDeviceById(String deviceId) async {
     final String matchedId = _findMatchId(await discoverDevices(), deviceId);
-    if (matchedId != null) {
-      _workingDevice = FakeDevice(deviceId: matchedId);
-      print('Choose device by ID: $matchedId');
-      return;
-    }
-    throw DeviceException(
+    _workingDevice = FakeDevice(deviceId: matchedId);
+    print('Choose device by ID: $matchedId');
+    return;
+      throw DeviceException(
       'Device with ID $deviceId is not found for operating system: '
       '$deviceOperatingSystem'
       );

@@ -50,8 +50,7 @@ class DateTimeItem extends StatelessWidget {
                     lastDate: date.add(const Duration(days: 30)),
                   )
                   .then<void>((DateTime value) {
-                    if (value != null)
-                      onChanged(DateTime(value.year, value.month, value.day, time.hour, time.minute));
+                    onChanged(DateTime(value.year, value.month, value.day, time.hour, time.minute));
                   });
                 },
                 child: Row(

@@ -5,11 +5,10 @@
 import 'dart:async';
 import 'dart:io' show ProcessResult;
 
+import 'package:fuchsia_remote_debug_protocol/src/runners/ssh_command_runner.dart';
 import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
-import 'package:fuchsia_remote_debug_protocol/src/runners/ssh_command_runner.dart';
 
-import '../../common.dart';
 
 void main() {
   group('SshCommandRunner.constructors', () {

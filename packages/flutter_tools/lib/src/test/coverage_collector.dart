@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:coverage/coverage.dart' as coverage;
 import 'package:vm_service/vm_service.dart' as vm_service;
 
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/process.dart';
 import '../base/utils.dart';
@@ -57,13 +56,11 @@ class CoverageCollector extends TestWatcher {
   ///
   /// The returned [Future] completes when the coverage is collected.
   Future<void> collectCoverageIsolate(Uri observatoryUri) async {
-    assert(observatoryUri != null);
     _logMessage('collecting coverage data from $observatoryUri...');
     final Map<String, dynamic> data = await collect(observatoryUri, libraryPredicate);
     if (data == null) {
       throw Exception('Failed to collect coverage.');
     }
-    assert(data != null);
 
     _logMessage('($observatoryUri): collected coverage data; merging...');
     _addHitmap(await coverage.createHitmap(
@@ -81,8 +78,6 @@ class CoverageCollector extends TestWatcher {
   ///
   /// The returned [Future] completes when the coverage is collected.
   Future<void> collectCoverage(Process process, Uri observatoryUri) async {
-    assert(process != null);
-    assert(observatoryUri != null);
     final int pid = process.pid;
     _logMessage('pid $pid: collecting coverage data from $observatoryUri...');
 
@@ -99,7 +94,6 @@ class CoverageCollector extends TestWatcher {
         data = result;
       });
     await Future.any<void>(<Future<void>>[ processComplete, collectionComplete ]);
-    assert(data != null);
 
     _logMessage('pid $pid ($observatoryUri): collected coverage data; merging...');
     _addHitmap(await coverage.createHitmap(
@@ -285,20 +279,16 @@ void _buildCoverageMap(
       if (tokenPositions == null) {
         continue;
       }
-      if (hits != null) {
-        for (final int hit in hits) {
-          final int line = _lineAndColumn(hit, tokenPositions)[0];
-          final int current = hitMap[line] ?? 0;
-          hitMap[line] = current + 1;
-        }
+      for (final int hit in hits) {
+        final int line = _lineAndColumn(hit, tokenPositions)[0];
+        final int current = hitMap[line] ?? 0;
+        hitMap[line] = current + 1;
       }
-      if (misses != null) {
-        for (final int miss in misses) {
-          final int line = _lineAndColumn(miss, tokenPositions)[0];
-          hitMap[line] ??= 0;
-        }
+          for (final int miss in misses) {
+        final int line = _lineAndColumn(miss, tokenPositions)[0];
+        hitMap[line] ??= 0;
       }
-    }
+        }
   }
   hitMaps.forEach((String uri, Map<int, int> hitMap) {
     coverage.add(_toScriptCoverageJson(uri, hitMap));

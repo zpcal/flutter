@@ -59,12 +59,10 @@ class TabbedComponentDemoScaffold extends StatelessWidget {
 
   void _showExampleCode(BuildContext context) {
     final String tag = demos[DefaultTabController.of(context).index].exampleCodeTag;
-    if (tag != null) {
-      Navigator.push(context, MaterialPageRoute<FullScreenCodeDialog>(
-        builder: (BuildContext context) => FullScreenCodeDialog(exampleCodeTag: tag)
-      ));
+    Navigator.push(context, MaterialPageRoute<FullScreenCodeDialog>(
+      builder: (BuildContext context) => FullScreenCodeDialog(exampleCodeTag: tag)
+    ));
     }
-  }
 
   Future<void> _showApiDocumentation(BuildContext context) async {
     final String url = demos[DefaultTabController.of(context).index].documentationUrl;
@@ -99,7 +97,7 @@ class TabbedComponentDemoScaffold extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
           actions: <Widget>[
-            ...?actions,
+            ...actions,
             Builder(
               builder: (BuildContext context) {
                 return IconButton(

@@ -317,8 +317,6 @@ class LayoutBuilder extends ConstrainedLayoutBuilder<BoxConstraints> {
   }) : assert(builder != null),
        super(key: key, builder: builder);
 
-  @override
-  LayoutWidgetBuilder get builder => super.builder;
 
   @override
   _RenderLayoutBuilder createRenderObject(BuildContext context) => _RenderLayoutBuilder();

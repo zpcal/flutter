@@ -4,7 +4,6 @@
 
 import 'package:meta/meta.dart';
 
-import '../../base/file_system.dart';
 import '../../base/logger.dart';
 
 /// iOS project is generated from a template on Flutter project creation.

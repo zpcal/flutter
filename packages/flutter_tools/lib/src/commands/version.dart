@@ -147,7 +147,7 @@ class VersionCommand extends FlutterCommand {
     }
 
     final String projectRoot = findProjectRoot();
-    if (projectRoot != null && boolArg('pub')) {
+    if (boolArg('pub')) {
       globals.printStatus('');
       await pub.get(
         context: PubContext.pubUpgrade,

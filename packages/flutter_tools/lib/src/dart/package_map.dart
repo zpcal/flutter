@@ -9,7 +9,6 @@ import 'package:meta/meta.dart';
 import 'package:package_config/package_config.dart';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 
 const String kPackagesFileName = '.packages';

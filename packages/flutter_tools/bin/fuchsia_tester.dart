@@ -7,16 +7,15 @@ import 'dart:convert' show json;
 import 'dart:math' as math;
 
 import 'package:args/args.dart';
+import 'package:flutter_tools/src/artifacts.dart';
 import 'package:flutter_tools/src/base/common.dart';
 import 'package:flutter_tools/src/base/context.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/io.dart';
-
 import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/context_runner.dart';
 import 'package:flutter_tools/src/dart/package_map.dart';
-import 'package:flutter_tools/src/artifacts.dart';
 import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/project.dart';
 import 'package:flutter_tools/src/reporting/reporting.dart';
@@ -88,13 +87,11 @@ Future<void> run(List<String> args) async {
     }
     Directory coverageDirectory;
     final String coverageDirectoryPath = argResults[_kOptionCoverageDirectory] as String;
-    if (coverageDirectoryPath != null) {
-      if (!globals.fs.isDirectorySync(coverageDirectoryPath)) {
-        throwToolExit('Cannot find coverage directory at $coverageDirectoryPath');
-      }
-      coverageDirectory = globals.fs.directory(coverageDirectoryPath);
+    if (!globals.fs.isDirectorySync(coverageDirectoryPath)) {
+      throwToolExit('Cannot find coverage directory at $coverageDirectoryPath');
     }
-
+    coverageDirectory = globals.fs.directory(coverageDirectoryPath);
+  
     // Put the tester shell where runTests expects it.
     // TODO(garymm): Switch to a Fuchsia-specific Artifacts impl.
     final Link testerDestLink =

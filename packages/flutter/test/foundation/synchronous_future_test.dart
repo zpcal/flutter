@@ -7,7 +7,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('SynchronousFuture control test', () async {

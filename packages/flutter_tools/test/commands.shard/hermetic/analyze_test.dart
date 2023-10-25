@@ -89,7 +89,7 @@ void main() {
 }
 
 bool inRepo(List<String> fileList, FileSystem fileSystem) {
-  if (fileList == null || fileList.isEmpty) {
+  if (fileList.isEmpty) {
     fileList = <String>[fileSystem.path.current];
   }
   final String root = fileSystem.path.normalize(fileSystem.path.absolute(Cache.flutterRoot));

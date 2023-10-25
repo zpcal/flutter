@@ -7,7 +7,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import '../flutter_test_alternative.dart';
 
 void checkEncoding<T>(MessageCodec<T> codec, T message, List<int> expectedBytes) {
   final ByteData encoded = codec.encodeMessage(message);

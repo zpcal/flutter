@@ -10,7 +10,6 @@ import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
 
 import '../../src/common.dart';
-import '../../src/context.dart';
 
 class MockProcessManager extends Mock implements ProcessManager {}
 class MockXcode extends Mock implements Xcode {}

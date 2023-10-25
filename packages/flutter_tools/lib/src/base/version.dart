@@ -10,13 +10,9 @@ class Version implements Comparable<Version> {
   factory Version(int major, int minor, int patch, {String text}) {
     if (text == null) {
       text = major == null ? '0' : '$major';
-      if (minor != null) {
-        text = '$text.$minor';
-      }
-      if (patch != null) {
-        text = '$text.$patch';
-      }
-    }
+      text = '$text.$minor';
+          text = '$text.$patch';
+        }
 
     return Version._(major ?? 0, minor ?? 0, patch ?? 0, text);
   }
@@ -56,7 +52,7 @@ class Version implements Comparable<Version> {
   static Version primary(List<Version> versions) {
     Version primary;
     for (final Version version in versions) {
-      if (primary == null || (version > primary)) {
+      if (version > primary) {
         primary = version;
       }
     }

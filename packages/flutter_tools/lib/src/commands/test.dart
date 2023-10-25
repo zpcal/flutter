@@ -7,7 +7,6 @@ import 'dart:math' as math;
 
 import '../asset.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../build_info.dart';
 import '../build_system/build_system.dart';
 import '../bundle.dart';
@@ -29,7 +28,7 @@ class TestCommand extends FlutterCommand {
     bool verboseHelp = false,
     this.testWrapper = const TestWrapper(),
     this.testRunner = const FlutterTestRunner(),
-  }) : assert(testWrapper != null) {
+  }) {
     requiresPubspecYaml();
     usesPubOption();
     addNullSafetyModeOptions(hide: !verboseHelp);
@@ -212,7 +211,7 @@ class TestCommand extends FlutterCommand {
     }
 
     final int jobs = int.tryParse(stringArg('concurrency'));
-    if (jobs == null || jobs <= 0 || !jobs.isFinite) {
+    if (jobs <= 0 || !jobs.isFinite) {
       throwToolExit(
         'Could not parse -j/--concurrency argument. It must be an integer greater than zero.'
       );
@@ -235,7 +234,7 @@ class TestCommand extends FlutterCommand {
       }
     } else {
       files = <String>[
-        for (String path in files)
+        for (final String path in files)
           if (globals.fs.isDirectorySync(path))
             ..._findTests(globals.fs.directory(path))
           else
@@ -256,9 +255,10 @@ class TestCommand extends FlutterCommand {
     TestWatcher watcher;
     if (machine) {
       watcher = EventPrinter(parent: collector);
-    } else if (collector != null) {
+    } else {
       watcher = collector;
     }
+  
 
     final bool disableServiceAuthCodes =
       boolArg('disable-service-auth-codes');
@@ -289,16 +289,14 @@ class TestCommand extends FlutterCommand {
       nullAssertions: boolArg(FlutterOptions.kNullAssertions),
     );
 
-    if (collector != null) {
-      final bool collectionResult = await collector.collectCoverageData(
-        stringArg('coverage-path'),
-        mergeCoverageData: boolArg('merge-coverage'),
-      );
-      if (!collectionResult) {
-        throwToolExit(null);
-      }
+    final bool collectionResult = await collector.collectCoverageData(
+      stringArg('coverage-path'),
+      mergeCoverageData: boolArg('merge-coverage'),
+    );
+    if (!collectionResult) {
+      throwToolExit(null);
     }
-
+  
     if (result != 0) {
       throwToolExit(null);
     }

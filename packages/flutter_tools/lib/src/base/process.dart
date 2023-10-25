@@ -144,8 +144,7 @@ class ProcessExit implements Exception {
 
 class RunResult {
   RunResult(this.processResult, this._command)
-    : assert(_command != null),
-      assert(_command.isNotEmpty);
+    : assert(_command.isNotEmpty);
 
   final ProcessResult processResult;
 
@@ -305,7 +304,7 @@ class _DefaultProcessUtils implements ProcessUtils {
     Duration timeout,
     int timeoutRetries = 0,
   }) async {
-    if (cmd == null || cmd.isEmpty) {
+    if (cmd.isEmpty) {
       throw ArgumentError('cmd must be a non-empty list');
     }
     if (timeoutRetries < 0) {
@@ -324,7 +323,7 @@ class _DefaultProcessUtils implements ProcessUtils {
       final RunResult runResult = RunResult(results, cmd);
       _logger.printTrace(runResult.toString());
       if (throwOnError && runResult.exitCode != 0 &&
-          (allowedFailures == null || !allowedFailures(runResult.exitCode))) {
+          (!allowedFailures(runResult.exitCode))) {
         runResult.throwException('Process exited abnormally:\n$runResult');
       }
       return runResult;
@@ -385,15 +384,13 @@ class _DefaultProcessUtils implements ProcessUtils {
       final RunResult runResult = RunResult(result, cmd);
 
       // If the process did not timeout. We are done.
-      if (exitCode != null) {
-        _logger.printTrace(runResult.toString());
-        if (throwOnError && runResult.exitCode != 0 &&
-            (allowedFailures == null || !allowedFailures(exitCode))) {
-          runResult.throwException('Process exited abnormally:\n$runResult');
-        }
-        return runResult;
+      _logger.printTrace(runResult.toString());
+      if (throwOnError && runResult.exitCode != 0 &&
+          (!allowedFailures(exitCode))) {
+        runResult.throwException('Process exited abnormally:\n$runResult');
       }
-
+      return runResult;
+    
       // If we are out of timeoutRetries, throw a ProcessException.
       if (timeoutRetries < 0) {
         runResult.throwException('Process timed out:\n$runResult');
@@ -434,7 +431,7 @@ class _DefaultProcessUtils implements ProcessUtils {
     _logger.printTrace('Exit code ${runResult.exitCode} from: ${cmd.join(' ')}');
 
     bool failedExitCode = runResult.exitCode != 0;
-    if (allowedFailures != null && failedExitCode) {
+    if (failedExitCode) {
       failedExitCode = !allowedFailures(runResult.exitCode);
     }
 
@@ -502,34 +499,26 @@ class _DefaultProcessUtils implements ProcessUtils {
     final StreamSubscription<String> stdoutSubscription = process.stdout
       .transform<String>(utf8.decoder)
       .transform<String>(const LineSplitter())
-      .where((String line) => filter == null || filter.hasMatch(line))
+      .where((String line) => filter.hasMatch(line))
       .listen((String line) {
-        if (mapFunction != null) {
-          line = mapFunction(line);
+        line = mapFunction(line);
+              final String message = '$prefix$line';
+        if (stdoutErrorMatcher.hasMatch(line) == true) {
+          _logger.printError(message, wrap: false);
+        } else if (trace) {
+          _logger.printTrace(message);
+        } else {
+          _logger.printStatus(message, wrap: false);
         }
-        if (line != null) {
-          final String message = '$prefix$line';
-          if (stdoutErrorMatcher?.hasMatch(line) == true) {
-            _logger.printError(message, wrap: false);
-          } else if (trace) {
-            _logger.printTrace(message);
-          } else {
-            _logger.printStatus(message, wrap: false);
-          }
-        }
-      });
+            });
     final StreamSubscription<String> stderrSubscription = process.stderr
       .transform<String>(utf8.decoder)
       .transform<String>(const LineSplitter())
-      .where((String line) => filter == null || filter.hasMatch(line))
+      .where((String line) => filter.hasMatch(line))
       .listen((String line) {
-        if (mapFunction != null) {
-          line = mapFunction(line);
-        }
-        if (line != null) {
-          _logger.printError('$prefix$line', wrap: false);
-        }
-      });
+        line = mapFunction(line);
+              _logger.printError('$prefix$line', wrap: false);
+            });
 
     // Wait for stdout to be fully processed
     // because process.exitCode may complete first causing flaky tests.

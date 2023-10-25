@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:usage/usage_io.dart';
 
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/os.dart';

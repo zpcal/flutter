@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
-import 'package:flutter_devicelab/tasks/integration_ui.dart';
 import 'package:flutter_devicelab/framework/adb.dart';
 import 'package:flutter_devicelab/framework/framework.dart';
+import 'package:flutter_devicelab/tasks/integration_ui.dart';
 
 /// End to end tests for iOS.
 Future<void> main() async {

@@ -80,7 +80,7 @@ class BuildIOSCommand extends BuildSubCommand {
     if (forSimulator && !buildInfo.supportsSimulator) {
       throwToolExit('${toTitleCase(buildInfo.friendlyModeName)} mode is not supported for simulators.');
     }
-    if (configOnly && buildInfo.codeSizeDirectory != null) {
+    if (configOnly) {
       throwToolExit('Cannot analyze code size without performing a full build.');
     }
     if (!forSimulator && !shouldCodesign) {
@@ -116,49 +116,45 @@ class BuildIOSCommand extends BuildSubCommand {
       throwToolExit('Encountered error while building for $logTarget.');
     }
 
-    if (buildInfo.codeSizeDirectory != null) {
-      final SizeAnalyzer sizeAnalyzer = SizeAnalyzer(
-        fileSystem: globals.fs,
-        logger: globals.logger,
-        flutterUsage: globals.flutterUsage,
-        appFilenamePattern: 'App'
-      );
-      // Only support 64bit iOS code size analysis.
-      final String arch = getNameForDarwinArch(DarwinArch.arm64);
-      final File aotSnapshot = globals.fs.directory(buildInfo.codeSizeDirectory)
-        .childFile('snapshot.$arch.json');
-      final File precompilerTrace = globals.fs.directory(buildInfo.codeSizeDirectory)
-        .childFile('trace.$arch.json');
+    final SizeAnalyzer sizeAnalyzer = SizeAnalyzer(
+      fileSystem: globals.fs,
+      logger: globals.logger,
+      flutterUsage: globals.flutterUsage,
+      appFilenamePattern: 'App'
+    );
+    // Only support 64bit iOS code size analysis.
+    final String arch = getNameForDarwinArch(DarwinArch.arm64);
+    final File aotSnapshot = globals.fs.directory(buildInfo.codeSizeDirectory)
+      .childFile('snapshot.$arch.json');
+    final File precompilerTrace = globals.fs.directory(buildInfo.codeSizeDirectory)
+      .childFile('trace.$arch.json');
 
-      // This analysis is only supported for release builds, which also excludes the simulator.
-      // Attempt to guess the correct .app by picking the first one.
-      final Directory candidateDirectory = globals.fs.directory(
-        globals.fs.path.join(getIosBuildDirectory(), 'Release-iphoneos'),
-      );
-      final Directory appDirectory = candidateDirectory.listSync()
-        .whereType<Directory>()
-        .firstWhere((Directory directory) {
-        return globals.fs.path.extension(directory.path) == '.app';
-      });
-      final Map<String, Object> output = await sizeAnalyzer.analyzeAotSnapshot(
-        aotSnapshot: aotSnapshot,
-        precompilerTrace: precompilerTrace,
-        outputDirectory: appDirectory,
-        type: 'ios',
-      );
-      final File outputFile = globals.fsUtils.getUniqueFile(
-        globals.fs.directory(getBuildDirectory()),'ios-code-size-analysis', 'json',
-      )..writeAsStringSync(jsonEncode(output));
-      // This message is used as a sentinel in analyze_apk_size_test.dart
-      globals.printStatus(
-        'A summary of your iOS bundle analysis can be found at: ${outputFile.path}',
-      );
-    }
-
-    if (result.output != null) {
-      globals.printStatus('Built ${result.output}.');
-    }
-
+    // This analysis is only supported for release builds, which also excludes the simulator.
+    // Attempt to guess the correct .app by picking the first one.
+    final Directory candidateDirectory = globals.fs.directory(
+      globals.fs.path.join(getIosBuildDirectory(), 'Release-iphoneos'),
+    );
+    final Directory appDirectory = candidateDirectory.listSync()
+      .whereType<Directory>()
+      .firstWhere((Directory directory) {
+      return globals.fs.path.extension(directory.path) == '.app';
+    });
+    final Map<String, Object> output = await sizeAnalyzer.analyzeAotSnapshot(
+      aotSnapshot: aotSnapshot,
+      precompilerTrace: precompilerTrace,
+      outputDirectory: appDirectory,
+      type: 'ios',
+    );
+    final File outputFile = globals.fsUtils.getUniqueFile(
+      globals.fs.directory(getBuildDirectory()),'ios-code-size-analysis', 'json',
+    )..writeAsStringSync(jsonEncode(output));
+    // This message is used as a sentinel in analyze_apk_size_test.dart
+    globals.printStatus(
+      'A summary of your iOS bundle analysis can be found at: ${outputFile.path}',
+    );
+  
+    globals.printStatus('Built ${result.output}.');
+  
     return FlutterCommandResult.success();
   }
 }

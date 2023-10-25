@@ -235,7 +235,7 @@ String regenerateIconsFile(String iconData, Map<String, String> tokenPairMap) {
       generating = true;
 
       final String iconDeclarationsString = <String>[
-        for (MapEntry<String, String> entry in tokenPairMap.entries)
+        for (final MapEntry<String, String> entry in tokenPairMap.entries)
           _generateDeclaration(entry)
       ].join();
 

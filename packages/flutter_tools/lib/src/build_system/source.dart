@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import '../artifacts.dart';
-import '../base/file_system.dart';
 import '../build_info.dart';
 import 'build_system.dart';
 import 'exceptions.dart';
@@ -171,19 +170,17 @@ class SourceVisitor implements ResolvedFiles {
   /// the artifact itself.
   void visitArtifact(Artifact artifact, TargetPlatform platform, BuildMode mode) {
     // This is not a local engine.
-    if (environment.engineVersion != null) {
-      sources.add(environment.flutterRootDir
-        .childDirectory('bin')
-        .childDirectory('internal')
-        .childFile('engine.version'),
-      );
-      return;
-    }
-    final String path = environment.artifacts
+    sources.add(environment.flutterRootDir
+      .childDirectory('bin')
+      .childDirectory('internal')
+      .childFile('engine.version'),
+    );
+    return;
+      final String path = environment.artifacts
       .getArtifactPath(artifact, platform: platform, mode: mode);
     if (environment.fileSystem.isDirectorySync(path)) {
       sources.addAll(<File>[
-        for (FileSystemEntity entity in environment.fileSystem.directory(path).listSync(recursive: true))
+        for (final FileSystemEntity entity in environment.fileSystem.directory(path).listSync(recursive: true))
           if (entity is File)
             entity,
       ]);

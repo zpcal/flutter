@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter_devicelab/tasks/perf_tests.dart';
 import 'package:flutter_devicelab/framework/framework.dart';
+import 'package:flutter_devicelab/tasks/perf_tests.dart';
 
 Future<void> main() async {
   // It's intended to use the Gallery startup test as a smoke test on macOS

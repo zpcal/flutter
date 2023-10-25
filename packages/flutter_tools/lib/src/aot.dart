@@ -91,9 +91,9 @@ class AotBuilder {
         kIconTreeShakerFlag: buildInfo.treeShakeIcons.toString(),
         kDartDefines: buildInfo.dartDefines.join(','),
         kBitcodeFlag: bitcode.toString(),
-        if (buildInfo?.extraGenSnapshotOptions?.isNotEmpty ?? false)
+        if (buildInfo.extraGenSnapshotOptions.isNotEmpty ?? false)
           kExtraGenSnapshotOptions: buildInfo.extraGenSnapshotOptions.join(','),
-        if (buildInfo?.extraFrontEndOptions?.isNotEmpty ?? false)
+        if (buildInfo.extraFrontEndOptions.isNotEmpty ?? false)
           kExtraFrontEndOptions: buildInfo.extraFrontEndOptions.join(','),
         if (platform == TargetPlatform.ios)
           kIosArchs: iosBuildArchs.map(getNameForDarwinArch).join(' ')
@@ -104,7 +104,7 @@ class AotBuilder {
       processManager: globals.processManager,
     );
     final BuildResult result = await globals.buildSystem.build(target, environment);
-    status?.stop();
+    status.stop();
 
     if (!result.success) {
       for (final ExceptionMeasurement measurement in result.exceptions.values) {

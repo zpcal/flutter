@@ -16,7 +16,6 @@ import 'package:package_config/package_config.dart';
 import 'package:process/process.dart';
 
 import '../src/common.dart';
-import '../src/context.dart';
 import '../src/mocks.dart';
 
 void main() {

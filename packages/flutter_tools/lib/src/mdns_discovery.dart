@@ -115,7 +115,7 @@ class MDnsObservatoryDiscovery {
             ResourceRecordQuery.text(domainName),
         )
         ?.toList();
-      if (txt == null || txt.isEmpty) {
+      if (txt.isEmpty) {
         return MDnsObservatoryDiscoveryResult(srv.first.port, '');
       }
       const String authCodePrefix = 'authCode=';
@@ -231,9 +231,7 @@ Future<Uri> buildObservatoryUri(
   String authCode,
 ]) async {
   String path = '/';
-  if (authCode != null) {
-    path = authCode;
-  }
+  path = authCode;
   // Not having a trailing slash can cause problems in some situations.
   // Ensure that there's one present.
   if (!path.endsWith('/')) {

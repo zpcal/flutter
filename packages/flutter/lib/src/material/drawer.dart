@@ -5,8 +5,8 @@
 // @dart = 2.8
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
+import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
 import 'debug.dart';

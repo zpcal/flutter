@@ -318,7 +318,7 @@ class _CellSheet extends StatelessWidget {
     @required this.cellSize,
     @required this.children,
   }) : assert(cellSize != null),
-       assert(children != null && children.isNotEmpty),
+       assert(children.isNotEmpty),
        super(key: key);
 
   final Size cellSize;

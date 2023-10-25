@@ -6,9 +6,9 @@
 
 import 'dart:math' as math;
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('toString control test', () {
@@ -20,7 +20,7 @@ void main() {
 
   test('Curve flipped control test', () {
     const Curve ease = Curves.ease;
-    final Curve flippedEase = ease.flipped;
+    const Curve flippedEase = ease.flipped;
     expect(flippedEase.transform(0.0), lessThan(0.001));
     expect(flippedEase.transform(0.5), lessThan(ease.transform(0.5)));
     expect(flippedEase.transform(1.0), greaterThan(0.999));

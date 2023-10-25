@@ -5,9 +5,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:flutter_devicelab/framework/utils.dart';
+import 'package:path/path.dart' as path;
 
 final List<String> flutterAssets = <String>[
   'assets/flutter_assets/AssetManifest.json',
@@ -104,7 +104,7 @@ bool hasMultipleOccurrences(String text, Pattern pattern) {
 String get _androidHome {
   final String androidHome = Platform.environment['ANDROID_HOME'] ??
       Platform.environment['ANDROID_SDK_ROOT'];
-  if (androidHome == null || androidHome.isEmpty) {
+  if (androidHome.isEmpty) {
     throw Exception('Environment variable `ANDROID_SDK_ROOT` is not set.');
   }
   return androidHome;
@@ -412,7 +412,7 @@ Future<ProcessResult> _resultOfGradleTask({String workingDirectory, String task,
 
   final List<String> args = <String>[
     'app:$task',
-    ...?options,
+    ...options,
   ];
   final String gradle = path.join(workingDirectory, Platform.isWindows ? 'gradlew.bat' : './gradlew');
   print('┌── $gradle');

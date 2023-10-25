@@ -17,6 +17,7 @@ import 'package:build_modules/src/module_builder.dart';
 import 'package:build_modules/src/platform.dart';
 import 'package:build_runner/build_runner.dart' as build_runner;
 import 'package:build_runner_core/build_runner_core.dart' as core;
+import 'package:build_runner_core/src/util/constants.dart' as core;
 import 'package:build_test/builder.dart';
 import 'package:build_test/src/debug_test_builder.dart';
 import 'package:build_web_compilers/build_web_compilers.dart';
@@ -24,7 +25,6 @@ import 'package:build_web_compilers/builders.dart';
 import 'package:build_web_compilers/src/dev_compiler_bootstrap.dart';
 import 'package:path/path.dart' as path; // ignore: package_path_import
 import 'package:test_core/backend.dart'; // ignore: deprecated_member_use
-import 'package:build_runner_core/src/util/constants.dart' as core;
 
 const String ddcBootstrapExtension = '.dart.bootstrap.js';
 const String jsEntrypointExtension = '.dart.js';
@@ -180,7 +180,7 @@ final List<core.BuilderApplication> builders = <core.BuilderApplication>[
 Future<void> main(List<String> args, [SendPort sendPort]) async {
   core.overrideGeneratedOutputDirectory('flutter_web');
   final int result = await build_runner.run(args, builders);
-  sendPort?.send(result);
+  sendPort.send(result);
 }
 
 /// A ddc-only entry point builder that respects the Flutter target flag.

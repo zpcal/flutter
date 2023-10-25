@@ -9,7 +9,6 @@ import 'package:meta/meta.dart';
 import 'package:package_config/package_config.dart';
 
 import '../../artifacts.dart';
-import '../../base/file_system.dart';
 import '../../base/io.dart';
 import '../../build_info.dart';
 import '../../dart/package_map.dart';
@@ -189,7 +188,7 @@ class Dart2JSTarget extends Target {
       '--disable-dart-dev',
       globals.artifacts.getArtifactPath(Artifact.dart2jsSnapshot),
       '--libraries-spec=${globals.fs.path.join(globals.artifacts.getArtifactPath(Artifact.flutterWebSdk), 'libraries.json')}',
-      ...?decodeDartDefines(environment.defines, kExtraFrontEndOptions),
+      ...decodeDartDefines(environment.defines, kExtraFrontEndOptions),
       if (buildMode == BuildMode.profile)
         '-Ddart.vm.profile=true'
       else
@@ -218,7 +217,7 @@ class Dart2JSTarget extends Target {
 
     final ProcessResult javaScriptResult = await globals.processManager.run(<String>[
       ...sharedCommandOptions,
-      if (dart2jsOptimization != null) '-$dart2jsOptimization' else '-O4',
+      '-$dart2jsOptimization',
       if (buildMode == BuildMode.profile) '--no-minify',
       if (csp) '--csp',
       '-o',

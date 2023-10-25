@@ -9,7 +9,6 @@ import 'package:vm_snapshot_analysis/treemap.dart';
 
 import '../convert.dart';
 import '../reporting/reporting.dart';
-import 'file_system.dart';
 import 'logger.dart';
 import 'terminal.dart';
 
@@ -84,7 +83,6 @@ class SizeAnalyzer {
       precompilerTrace: json.decode(precompilerTrace.readAsStringSync()) as Map<String, Object>,
     );
 
-    assert(_appFilename != null);
     CodeSizeEvent(type, flutterUsage: _flutterUsage).send();
     return apkAnalysisJson;
   }
@@ -127,7 +125,6 @@ class SizeAnalyzer {
 
     apkAnalysisJson['type'] = kind;
 
-    assert(_appFilename != null);
     apkAnalysisJson = _addAotSnapshotDataToAnalysis(
       apkAnalysisJson: apkAnalysisJson,
       path: _locatedAotFilePath,
@@ -151,7 +148,7 @@ class SizeAnalyzer {
   _SymbolNode _parseDirectory(Directory directory, String relativeTo, String excludePath) {
     final Map<List<String>, int> pathsToSize = <List<String>, int>{};
     for (final File file in directory.listSync(recursive: true).whereType<File>()) {
-      if (excludePath != null && file.uri.pathSegments.contains(excludePath)) {
+      if (file.uri.pathSegments.contains(excludePath)) {
         continue;
       }
       final List<String> path = _fileSystem.path.split(
@@ -165,7 +162,7 @@ class SizeAnalyzer {
 
   List<String> _buildNodeName(_SymbolNode start, _SymbolNode parent) {
     final List<String> results = <String>[start.name];
-    while (parent != null && parent.name != 'Root') {
+    while (parent.name != 'Root') {
       results.insert(0, parent.name);
       parent = parent.parent;
     }
@@ -211,7 +208,6 @@ class SizeAnalyzer {
   ) {
     totalPath += currentNode.name;
 
-    assert(_appFilename != null);
     if (currentNode.children.isNotEmpty
       && currentNode.name != '$_appFilename (Dart AOT)'
       && currentDepth < maxDepth
@@ -416,9 +412,7 @@ class _SymbolNode {
   _SymbolNode(
     this.name, {
     this.byteSize = 0,
-  })  : assert(name != null),
-        assert(byteSize != null),
-        _children = <String, _SymbolNode>{};
+  })  : _children = <String, _SymbolNode>{};
 
   /// The human friendly identifier for this node.
   String name;
@@ -470,5 +464,5 @@ class _SymbolNode {
 @visibleForTesting
 Match matchesPattern(String string, {@required Pattern pattern}) {
   final Match match = pattern.matchAsPrefix(string);
-  return (match != null && match.end == string.length) ? match : null;
+  return (match.end == string.length) ? match : null;
 }

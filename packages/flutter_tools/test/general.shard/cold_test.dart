@@ -15,7 +15,6 @@ import 'package:flutter_tools/src/vmservice.dart';
 import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
 
-import '../src/common.dart';
 import '../src/context.dart';
 import '../src/mocks.dart';
 
@@ -125,8 +124,7 @@ class TestFlutterDevice extends FlutterDevice {
     @required Device device,
     @required this.exception,
     @required ResidentCompiler generator,
-  })  : assert(exception != null),
-        super(device, buildInfo: BuildInfo.debug, generator: generator);
+  })  : super(device, buildInfo: BuildInfo.debug, generator: generator);
 
   /// The exception to throw when the connect method is called.
   final Exception exception;

@@ -6,7 +6,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../build_info.dart';
 import '../globals.dart' as globals;
@@ -80,7 +79,7 @@ class CleanCommand extends FlutterCommand {
     } on Exception catch (error) {
       globals.printTrace('Could not clean Xcode workspace: $error');
     } finally {
-      xcodeStatus?.stop();
+      xcodeStatus.stop();
     }
   }
 

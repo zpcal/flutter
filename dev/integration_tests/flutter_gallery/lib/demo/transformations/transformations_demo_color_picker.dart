@@ -11,8 +11,7 @@ class ColorPicker extends StatelessWidget {
     @required this.colors,
     @required this.selectedColor,
     this.onColorSelection,
-  }) : assert(colors != null),
-       assert(selectedColor != null);
+  }) : assert(selectedColor != null);
 
   final Set<Color> colors;
   final Color selectedColor;
@@ -44,8 +43,7 @@ class _ColorPickerSwatch extends StatelessWidget {
     @required this.color,
     @required this.selected,
     this.onTap,
-  }) : assert(color != null),
-       assert(selected != null);
+  }) : assert(color != null);
 
   final Color color;
   final bool selected;
@@ -60,10 +58,8 @@ class _ColorPickerSwatch extends StatelessWidget {
       child: RawMaterialButton(
         fillColor: color,
         onPressed: () {
-          if (onTap != null) {
-            onTap();
-          }
-        },
+          onTap();
+                },
         child: !selected ? null : const Icon(
           Icons.check,
           color: Colors.white,

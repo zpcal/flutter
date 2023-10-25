@@ -73,26 +73,16 @@ class HotEvent extends UsageEvent {
       CustomDimensions.hotEventSdkName: sdkName,
       CustomDimensions.hotEventEmulator: emulator.toString(),
       CustomDimensions.hotEventFullRestart: fullRestart.toString(),
-      if (reason != null)
-        CustomDimensions.hotEventReason: reason,
-      if (finalLibraryCount != null)
-        CustomDimensions.hotEventFinalLibraryCount: finalLibraryCount.toString(),
-      if (syncedLibraryCount != null)
-        CustomDimensions.hotEventSyncedLibraryCount: syncedLibraryCount.toString(),
-      if (syncedClassesCount != null)
-        CustomDimensions.hotEventSyncedClassesCount: syncedClassesCount.toString(),
-      if (syncedProceduresCount != null)
-        CustomDimensions.hotEventSyncedProceduresCount: syncedProceduresCount.toString(),
-      if (syncedBytes != null)
-        CustomDimensions.hotEventSyncedBytes: syncedBytes.toString(),
-      if (invalidatedSourcesCount != null)
-        CustomDimensions.hotEventInvalidatedSourcesCount: invalidatedSourcesCount.toString(),
-      if (transferTimeInMs != null)
-        CustomDimensions.hotEventTransferTimeInMs: transferTimeInMs.toString(),
-      if (overallTimeInMs != null)
-        CustomDimensions.hotEventOverallTimeInMs: overallTimeInMs.toString(),
-      if (nullSafety != null)
-        CustomDimensions.nullSafety: nullSafety.toString(),
+      CustomDimensions.hotEventReason: reason,
+      CustomDimensions.hotEventFinalLibraryCount: finalLibraryCount.toString(),
+      CustomDimensions.hotEventSyncedLibraryCount: syncedLibraryCount.toString(),
+      CustomDimensions.hotEventSyncedClassesCount: syncedClassesCount.toString(),
+      CustomDimensions.hotEventSyncedProceduresCount: syncedProceduresCount.toString(),
+      CustomDimensions.hotEventSyncedBytes: syncedBytes.toString(),
+      CustomDimensions.hotEventInvalidatedSourcesCount: invalidatedSourcesCount.toString(),
+      CustomDimensions.hotEventTransferTimeInMs: transferTimeInMs.toString(),
+      CustomDimensions.hotEventOverallTimeInMs: overallTimeInMs.toString(),
+      CustomDimensions.nullSafety: nullSafety.toString(),
     });
     flutterUsage.sendEvent(category, parameter, parameters: parameters);
   }
@@ -171,12 +161,9 @@ class BuildEvent extends UsageEvent {
   @override
   void send() {
     final Map<String, String> parameters = _useCdKeys(<CustomDimensions, String>{
-      if (_command != null)
-        CustomDimensions.buildEventCommand: _command,
-      if (_settings != null)
-        CustomDimensions.buildEventSettings: _settings,
-      if (_eventError != null)
-        CustomDimensions.buildEventError: _eventError,
+      CustomDimensions.buildEventCommand: _command,
+      CustomDimensions.buildEventSettings: _settings,
+      CustomDimensions.buildEventError: _eventError,
     });
     flutterUsage.sendEvent(
       category,
@@ -190,9 +177,7 @@ class BuildEvent extends UsageEvent {
 /// An event that reports the result of a top-level command.
 class CommandResultEvent extends UsageEvent {
   CommandResultEvent(String commandPath, FlutterCommandResult result)
-      : assert(commandPath != null),
-        assert(result != null),
-        super(commandPath, result.toString(), flutterUsage: globals.flutterUsage);
+      : super(commandPath, result.toString(), flutterUsage: globals.flutterUsage);
 
   @override
   void send() {

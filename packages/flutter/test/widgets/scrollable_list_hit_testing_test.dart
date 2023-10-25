@@ -4,10 +4,10 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/gestures.dart' show DragStartBehavior;
+import 'package:flutter_test/flutter_test.dart';
 
 const List<int> items = <int>[0, 1, 2, 3, 4, 5];
 

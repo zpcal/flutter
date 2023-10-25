@@ -272,14 +272,12 @@ class DartSyntaxHighlighter extends SyntaxHighlighter {
         else if (word.length >= 2 && word.startsWith('k') && _firstLetterIsUpperCase(word.substring(1)))
           type = _HighlightType.constant;
 
-        if (type != null) {
-          _spans.add(_HighlightSpan(
-            type,
-            _scanner.lastMatch.start,
-            _scanner.lastMatch.end,
-          ));
-        }
-      }
+        _spans.add(_HighlightSpan(
+          type,
+          _scanner.lastMatch.start,
+          _scanner.lastMatch.end,
+        ));
+            }
 
       // Check if this loop did anything
       if (lastLoopPosition == _scanner.position) {

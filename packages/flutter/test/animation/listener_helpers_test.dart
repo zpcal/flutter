@@ -4,9 +4,9 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('AnimationLocalStatusListenersMixin with AnimationLazyListenerMixin - removing unregistered listener is no-op', () {

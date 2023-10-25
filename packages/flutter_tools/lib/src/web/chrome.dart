@@ -334,7 +334,7 @@ class Chromium {
       _chromiumLauncher._currentCompleter = Completer<Chromium>();
     }
     chromeConnection.close();
-    _process?.kill();
-    await _process?.exitCode;
+    _process.kill();
+    await _process.exitCode;
   }
 }

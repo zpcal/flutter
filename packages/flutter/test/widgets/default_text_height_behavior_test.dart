@@ -6,9 +6,9 @@
 
 import 'dart:ui' show TextHeightBehavior;
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('Text widget parameter takes precedence over DefaultTextHeightBehavior', (WidgetTester tester) async {

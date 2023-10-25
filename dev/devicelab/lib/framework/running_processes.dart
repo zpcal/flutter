@@ -9,9 +9,7 @@ import 'package:process/process.dart';
 
 @immutable
 class RunningProcessInfo {
-  const RunningProcessInfo(this.pid, this.creationDate, this.commandLine)
-      : assert(pid != null),
-        assert(commandLine != null);
+  const RunningProcessInfo(this.pid, this.creationDate, this.commandLine);
 
   final String commandLine;
   final String pid;
@@ -29,16 +27,10 @@ class RunningProcessInfo {
   int get hashCode {
     // TODO(dnfield): Replace this when Object.hashValues lands, https://github.com/dart-lang/sdk/issues/11617
     int hash = 17;
-    if (pid != null) {
-      hash = hash * 23 + pid.hashCode;
-    }
-    if (commandLine != null) {
+    hash = hash * 23 + pid.hashCode;
       hash = hash * 23 + commandLine.hashCode;
-    }
-    if (creationDate != null) {
       hash = hash * 23 + creationDate.hashCode;
-    }
-    return hash;
+      return hash;
   }
 
   @override
@@ -48,7 +40,6 @@ class RunningProcessInfo {
 }
 
 Future<bool> killProcess(String pid, {ProcessManager processManager}) async {
-  assert(pid != null, 'Must specify a pid to kill');
   processManager ??= const LocalProcessManager();
   ProcessResult result;
   if (Platform.isWindows) {
@@ -220,7 +211,7 @@ Iterable<RunningProcessInfo> processPsOutput(
       continue;
     }
 
-    if (processName != null && !line.contains(processName)) {
+    if (!line.contains(processName)) {
       continue;
     }
     if (line.length < 25) {

@@ -115,9 +115,7 @@ class AppContext {
   /// such value has been associated.
   T get<T>() {
     dynamic value = _generateIfNecessary(T, _overrides);
-    if (value == null && _parent != null) {
-      value = _parent.get<T>();
-    }
+    value ??= _parent.get<T>();
     return _unboxNull(value ?? _generateIfNecessary(T, _fallbacks)) as T;
   }
 
@@ -160,19 +158,15 @@ class AppContext {
     AppContext ctx = this;
     while (ctx != null) {
       buf.write('AppContext');
-      if (ctx.name != null) {
-        buf.write('[${ctx.name}]');
-      }
-      if (ctx._overrides.isNotEmpty) {
+      buf.write('[${ctx.name}]');
+          if (ctx._overrides.isNotEmpty) {
         buf.write('\n$indent  overrides: [${ctx._overrides.keys.join(', ')}]');
       }
       if (ctx._fallbacks.isNotEmpty) {
         buf.write('\n$indent  fallbacks: [${ctx._fallbacks.keys.join(', ')}]');
       }
-      if (ctx._parent != null) {
-        buf.write('\n$indent  parent: ');
-      }
-      ctx = ctx._parent;
+      buf.write('\n$indent  parent: ');
+          ctx = ctx._parent;
       indent += '  ';
     }
     return buf.toString();

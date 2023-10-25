@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:process/process.dart';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
@@ -55,7 +54,7 @@ class AndroidDevices extends PollingDeviceDiscovery {
 
   @override
   Future<List<Device>> pollingGetDevices({ Duration timeout }) async {
-    if (_androidSdk == null || _androidSdk.adbPath == null) {
+    if (_androidSdk.adbPath == null) {
       return <AndroidDevice>[];
     }
     String text;
@@ -87,7 +86,7 @@ class AndroidDevices extends PollingDeviceDiscovery {
 
   @override
   Future<List<String>> getDiagnostics() async {
-    if (_androidSdk == null || _androidSdk.adbPath == null) {
+    if (_androidSdk.adbPath == null) {
       return <String>[];
     }
 
@@ -131,7 +130,7 @@ class AndroidDevices extends PollingDeviceDiscovery {
   }) {
     // Check for error messages from adb
     if (!text.contains('List of devices')) {
-      diagnostics?.add(text);
+      diagnostics.add(text);
       return;
     }
 
@@ -143,7 +142,7 @@ class AndroidDevices extends PollingDeviceDiscovery {
 
       // Skip lines about adb server and client version not matching
       if (line.startsWith(RegExp(r'adb server (version|is out of date)'))) {
-        diagnostics?.add(line);
+        diagnostics.add(line);
         continue;
       }
 
@@ -159,7 +158,7 @@ class AndroidDevices extends PollingDeviceDiscovery {
         String rest = match[3];
 
         final Map<String, String> info = <String, String>{};
-        if (rest != null && rest.isNotEmpty) {
+        if (rest.isNotEmpty) {
           rest = rest.trim();
           for (final String data in rest.split(' ')) {
             if (data.contains(':')) {
@@ -174,14 +173,14 @@ class AndroidDevices extends PollingDeviceDiscovery {
         }
 
         if (deviceState == 'unauthorized') {
-          diagnostics?.add(
+          diagnostics.add(
             'Device $deviceID is not authorized.\n'
             'You might need to check your device for an authorization dialog.'
           );
         } else if (deviceState == 'offline') {
-          diagnostics?.add('Device $deviceID is offline.');
+          diagnostics.add('Device $deviceID is offline.');
         } else {
-          devices?.add(AndroidDevice(
+          devices.add(AndroidDevice(
             deviceID,
             productID: info['product'],
             modelID: info['model'] ?? deviceID,
@@ -195,7 +194,7 @@ class AndroidDevices extends PollingDeviceDiscovery {
           ));
         }
       } else {
-        diagnostics?.add(
+        diagnostics.add(
           'Unexpected failure parsing device information from adb output:\n'
           '$line\n'
           '${globals.userMessages.flutterToolBugInstructions}');

@@ -118,7 +118,6 @@ void testWidgets(
   TestVariant<Object> variant = const DefaultTestVariant(),
   dynamic tags,
 }) {
-  assert(variant != null);
   assert(variant.values.isNotEmpty, 'There must be at least on value to test in the testing variant');
   final TestWidgetsFlutterBinding binding = TestWidgetsFlutterBinding.ensureInitialized() as TestWidgetsFlutterBinding;
   final WidgetTester tester = WidgetTester._(binding);
@@ -527,7 +526,6 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
 
   @override
   Future<List<Duration>> handlePointerEventRecord(List<PointerEventRecord> records) {
-    assert(records != null);
     assert(records.isNotEmpty);
     return TestAsyncUtils.guard<List<Duration>>(() async {
       // hitTestHistory is an equivalence of _hitTests in [GestureBinding]
@@ -665,9 +663,7 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
     EnginePhase phase = EnginePhase.sendSemanticsUpdate,
     Duration timeout = const Duration(minutes: 10),
   ]) {
-    assert(duration != null);
     assert(duration > Duration.zero);
-    assert(timeout != null);
     assert(timeout > Duration.zero);
     assert(() {
       final WidgetsBinding binding = this.binding;
@@ -703,7 +699,6 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
     Duration maxDuration, [
     Duration interval = const Duration(milliseconds: 16, microseconds: 683),
   ]) {
-    assert(maxDuration != null);
     // The interval following the last frame doesn't have to be within the fullDuration.
     Duration elapsed = Duration.zero;
     return TestAsyncUtils.guard<void>(() async {
@@ -894,14 +889,12 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
           } else if (key is ValueKey<String>) {
             keyLabel = "const Key('${key.value}')";
           }
-          if (keyLabel != null) {
-            final Iterable<Element> matches = find.byKey(key).evaluate();
-            if (matches.length == 1) {
-              debugPrint('  find.byKey($keyLabel)');
-              continue;
-            }
+          final Iterable<Element> matches = find.byKey(key).evaluate();
+          if (matches.length == 1) {
+            debugPrint('  find.byKey($keyLabel)');
+            continue;
           }
-        }
+                }
 
         if (!_isPrivate(widget.runtimeType)) {
           if (numberOfTypes < 5) {
@@ -913,7 +906,7 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
             }
           }
 
-          if (descendantText != null && numberOfWithTexts < 5) {
+          if (numberOfWithTexts < 5) {
             final Iterable<Element> matches = find.widgetWithText(widget.runtimeType, descendantText).evaluate();
             if (matches.length == 1) {
               debugPrint("  find.widgetWithText(${widget.runtimeType}, '$descendantText')");
@@ -972,7 +965,6 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
   }
 
   void _removeTicker(_TestTicker ticker) {
-    assert(_tickers != null);
     assert(_tickers.contains(ticker));
     _tickers.remove(ticker);
   }
@@ -984,24 +976,21 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
   /// error message. It should be an adverbial phrase describing the current
   /// situation, such as "at the end of the test".
   void verifyTickersWereDisposed([ String when = 'when none should have been' ]) {
-    assert(when != null);
-    if (_tickers != null) {
-      for (final Ticker ticker in _tickers) {
-        if (ticker.isActive) {
-          throw FlutterError.fromParts(<DiagnosticsNode>[
-            ErrorSummary('A Ticker was active $when.'),
-            ErrorDescription('All Tickers must be disposed.'),
-            ErrorHint(
-              'Tickers used by AnimationControllers '
-              'should be disposed by calling dispose() on the AnimationController itself. '
-              'Otherwise, the ticker will leak.'
-            ),
-            ticker.describeForError('The offending ticker was')
-          ]);
-        }
+    for (final Ticker ticker in _tickers) {
+      if (ticker.isActive) {
+        throw FlutterError.fromParts(<DiagnosticsNode>[
+          ErrorSummary('A Ticker was active $when.'),
+          ErrorDescription('All Tickers must be disposed.'),
+          ErrorHint(
+            'Tickers used by AnimationControllers '
+            'should be disposed by calling dispose() on the AnimationController itself. '
+            'Otherwise, the ticker will leak.'
+          ),
+          ticker.describeForError('The offending ticker was')
+        ]);
       }
     }
-  }
+    }
 
   void _endOfTestVerifications() {
     verifyTickersWereDisposed('at the end of the test');
@@ -1009,7 +998,6 @@ class WidgetTester extends WidgetController implements HitTestDispatcher, Ticker
   }
 
   void _verifySemanticsHandlesWereDisposed() {
-    assert(_lastRecordedSemanticsHandles != null);
     if (binding.pipelineOwner.debugOutstandingSemanticsHandles > _lastRecordedSemanticsHandles) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('A SemanticsHandle was active at the end of the test.'),
@@ -1119,8 +1107,7 @@ class _TestTicker extends Ticker {
 
   @override
   void dispose() {
-    if (_onDispose != null)
-      _onDispose(this);
+    _onDispose(this);
     super.dispose();
   }
 }

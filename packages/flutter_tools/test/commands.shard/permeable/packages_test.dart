@@ -12,14 +12,13 @@ import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/commands/packages.dart';
 import 'package:flutter_tools/src/dart/pub.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/reporting/reporting.dart';
 import 'package:process/process.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 
 import '../../src/common.dart';
 import '../../src/context.dart';
 import '../../src/mocks.dart' show MockProcessManager, MockStdio, PromptingProcess, AlwaysTrueBotDetector, AlwaysFalseBotDetector;
-import '../../src/testbed.dart';
 
 void main() {
   Cache.disableLocking();
@@ -56,7 +55,7 @@ void main() {
       await runner.run(<String>[
         'packages',
         verb,
-        ...?args,
+        ...args,
         projectPath,
       ]);
       return command;

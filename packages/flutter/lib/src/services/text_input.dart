@@ -21,7 +21,6 @@ import 'autofill.dart';
 import 'message_codec.dart';
 import 'platform_channel.dart';
 import 'system_channels.dart';
-import 'system_chrome.dart';
 import 'text_editing.dart';
 
 export 'dart:ui' show TextAffinity;
@@ -124,7 +123,7 @@ class TextInputType {
   ///
   /// Requests a default keyboard with ready access to the number keys.
   /// Additional options, such as decimal point and/or positive/negative
-  /// signs, can be requested using [new TextInputType.numberWithOptions].
+  /// signs, can be requested using [TextInputType.numberWithOptions].
   static const TextInputType number = TextInputType.numberWithOptions();
 
   /// Optimize for telephone numbers.

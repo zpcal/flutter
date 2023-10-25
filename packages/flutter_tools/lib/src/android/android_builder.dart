@@ -8,7 +8,6 @@ import 'package:meta/meta.dart';
 
 import '../android/gradle_errors.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../build_info.dart';
 import '../globals.dart' as globals;
 import '../project.dart';
@@ -88,7 +87,7 @@ class _AndroidBuilderImpl extends AndroidBuilder {
         fileSystem: globals.fs,
       );
     } finally {
-      globals.androidSdk?.reinitialize();
+      globals.androidSdk.reinitialize();
     }
   }
 
@@ -108,7 +107,7 @@ class _AndroidBuilderImpl extends AndroidBuilder {
         localGradleErrors: gradleErrors,
       );
     } finally {
-      globals.androidSdk?.reinitialize();
+      globals.androidSdk.reinitialize();
     }
   }
 
@@ -128,7 +127,7 @@ class _AndroidBuilderImpl extends AndroidBuilder {
         localGradleErrors: gradleErrors,
       );
     } finally {
-      globals.androidSdk?.reinitialize();
+      globals.androidSdk.reinitialize();
     }
   }
 }

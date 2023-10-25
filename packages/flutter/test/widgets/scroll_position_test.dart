@@ -7,9 +7,9 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
 
 ScrollController _controller = ScrollController(
   initialScrollOffset: 110.0,

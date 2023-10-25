@@ -109,13 +109,13 @@ abstract class DesktopDevice extends Device {
     if (!prebuiltApplication) {
       await buildForDevice(
         package,
-        buildInfo: debuggingOptions?.buildInfo,
+        buildInfo: debuggingOptions.buildInfo,
         mainPath: mainPath,
       );
     }
 
     // Ensure that the executable is locatable.
-    final BuildMode buildMode = debuggingOptions?.buildInfo?.mode;
+    final BuildMode buildMode = debuggingOptions.buildInfo.mode;
     final String executable = executablePathForDevice(package, buildMode);
     if (executable == null) {
       _logger.printError('Unable to find executable to run');
@@ -129,21 +129,19 @@ abstract class DesktopDevice extends Device {
     unawaited(process.exitCode.then((_) => _runningProcesses.remove(process)));
 
     _deviceLogReader.initializeProcess(process);
-    if (debuggingOptions?.buildInfo?.isRelease == true) {
+    if (debuggingOptions.buildInfo.isRelease == true) {
       return LaunchResult.succeeded();
     }
     final ProtocolDiscovery observatoryDiscovery = ProtocolDiscovery.observatory(_deviceLogReader,
-      devicePort: debuggingOptions?.deviceVmServicePort,
-      hostPort: debuggingOptions?.hostVmServicePort,
+      devicePort: debuggingOptions.deviceVmServicePort,
+      hostPort: debuggingOptions.hostVmServicePort,
       ipv6: ipv6,
     );
     try {
       final Uri observatoryUri = await observatoryDiscovery.uri;
-      if (observatoryUri != null) {
-        onAttached(package, buildMode, process);
-        return LaunchResult.succeeded(observatoryUri: observatoryUri);
-      }
-      _logger.printError(
+      onAttached(package, buildMode, process);
+      return LaunchResult.succeeded(observatoryUri: observatoryUri);
+          _logger.printError(
         'Error waiting for a debug connection: '
         'The log reader stopped unexpectedly.',
       );
@@ -171,7 +169,7 @@ abstract class DesktopDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    await portForwarder?.dispose();
+    await portForwarder.dispose();
   }
 
   /// Builds the current project for this device, with the given options.

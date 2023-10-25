@@ -7,13 +7,12 @@ import 'dart:convert' show LineSplitter, json, utf8;
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:meta/meta.dart';
-import 'package:path/path.dart' as path;
-
 import 'package:flutter_devicelab/framework/adb.dart';
 import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:flutter_devicelab/framework/utils.dart';
 import 'package:flutter_devicelab/tasks/track_widget_creation_enabled_task.dart';
+import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 
 TaskFunction createComplexLayoutScrollPerfTest({bool measureCpuGpu = false}) {
   return PerfTest(
@@ -494,12 +493,9 @@ class PerfTest {
           '--trace-startup', // Enables "endless" timeline event buffering.
         '-t', testTarget,
         if (noBuild) '--no-build',
-        if (testDriver != null)
-          ...<String>['--driver', testDriver],
-        if (existingApp != null)
-          ...<String>['--use-existing-app', existingApp],
-        if (writeSkslFileName != null)
-          ...<String>['--write-sksl-on-exit', writeSkslFileName],
+        ...<String>['--driver', testDriver],
+        ...<String>['--use-existing-app', existingApp],
+        ...<String>['--write-sksl-on-exit', writeSkslFileName],
         if (cacheSkSL) '--cache-sksl',
         if (dartDefine.isNotEmpty)
           ...<String>['--dart-define', dartDefine],
@@ -645,7 +641,7 @@ class PerfTestWithSkSL extends PerfTest {
         '-d', _device.deviceId,
         '-t', testTarget,
         '--endless-trace-buffer',
-        if (appBinary != null) ...<String>['--use-application-binary', _appBinary],
+        ...<String>['--use-application-binary', _appBinary],
         '--vmservice-out-file', _vmserviceFileName,
       ],
     );
@@ -748,14 +744,14 @@ class WebCompileTest {
 
       await flutter('packages', options: <String>['get']);
       final Stopwatch watch = measureBuildTime ? Stopwatch() : null;
-      watch?.start();
+      watch.start();
       await evalFlutter('build', options: <String>[
         'web',
         '-v',
         '--release',
         '--no-pub',
       ]);
-      watch?.stop();
+      watch.stop();
       final String outputFileName = path.join(directory, 'build/web/main.dart.js');
       metrics.addAll(await getSize(outputFileName, metric: metric));
 
@@ -947,7 +943,7 @@ class MemoryTest {
 
   /// Completes when the log line specified in the last call to
   /// [prepareForNextMessage] is seen by `adb logcat`.
-  Future<void> get receivedNextMessage => _receivedNextMessage?.future;
+  Future<void> get receivedNextMessage => _receivedNextMessage.future;
   Completer<void> _receivedNextMessage;
   String _nextMessage;
 
@@ -983,7 +979,6 @@ class MemoryTest {
         print('running memory test iteration $iteration...');
         _startMemoryUsage = null;
         await useMemory();
-        assert(_startMemoryUsage != null);
         assert(_startMemory.length == iteration + 1);
         assert(_endMemory.length == iteration + 1);
         assert(_diffMemory.length == iteration + 1);
@@ -1064,7 +1059,6 @@ class MemoryTest {
 
   @protected
   Future<void> recordEnd() async {
-    assert(_startMemoryUsage != null);
     print('snapshotting memory usage...');
     final Map<String, dynamic> endMemoryUsage = await device.getMemoryStats(package);
     _startMemory.add(_startMemoryUsage['total_kb'] as int);
@@ -1149,7 +1143,7 @@ class DevToolsMemoryTest {
         .listen((String line) {
           print('run stdout: $line');
           final RegExpMatch match = RegExp(r'An Observatory debugger and profiler on .+ is available at: ((http|//)[a-zA-Z0-9:/=_\-\.\[\]]+)').firstMatch(line);
-          if (match != null && !observatoryUri.isCompleted) {
+          if (!observatoryUri.isCompleted) {
             observatoryUri.complete(match[1]);
             _observatoryUri = match[1];
           }
@@ -1318,10 +1312,7 @@ class _UnzipListEntry {
     @required this.uncompressedSize,
     @required this.compressedSize,
     @required this.path,
-  }) : assert(uncompressedSize != null),
-       assert(compressedSize != null),
-       assert(compressedSize <= uncompressedSize),
-       assert(path != null);
+  }) : assert(compressedSize <= uncompressedSize);
 
   final int uncompressedSize;
   final int compressedSize;

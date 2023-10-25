@@ -7,7 +7,6 @@ import 'package:meta/meta.dart';
 import 'package:vm_service/vm_service.dart' as vm_service;
 
 import 'base/common.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/utils.dart';
 
@@ -132,16 +131,14 @@ Future<void> downloadStartupTrace(vm_service.VmService vmService, {
     'engineEnterTimestampMicros': engineEnterTimestampMicros,
   };
 
-  if (frameworkInitTimestampMicros != null) {
-    final int timeToFrameworkInitMicros = frameworkInitTimestampMicros - engineEnterTimestampMicros;
-    traceInfo['timeToFrameworkInitMicros'] = timeToFrameworkInitMicros;
-    message = 'Time to framework init: ${timeToFrameworkInitMicros ~/ 1000}ms.';
-  }
+  final int timeToFrameworkInitMicros = frameworkInitTimestampMicros - engineEnterTimestampMicros;
+  traceInfo['timeToFrameworkInitMicros'] = timeToFrameworkInitMicros;
+  message = 'Time to framework init: ${timeToFrameworkInitMicros ~/ 1000}ms.';
 
   if (awaitFirstFrame) {
     final int firstFrameBuiltTimestampMicros = extractInstantEventTimestamp(kFirstFrameBuiltEventName);
     final int firstFrameRasterizedTimestampMicros = extractInstantEventTimestamp(kFirstFrameRasterizedEventName);
-    if (firstFrameBuiltTimestampMicros == null || firstFrameRasterizedTimestampMicros == null) {
+    if (firstFrameRasterizedTimestampMicros == null) {
       logger.printTrace('First frame events are missing in the timeline: $timeline');
       throwToolExit('First frame events are missing in the timeline. Cannot compute startup time.');
     }
@@ -154,10 +151,8 @@ Future<void> downloadStartupTrace(vm_service.VmService vmService, {
     final int timeToFirstFrameMicros = firstFrameBuiltTimestampMicros - engineEnterTimestampMicros;
     traceInfo['timeToFirstFrameMicros'] = timeToFirstFrameMicros;
     message = 'Time to first frame: ${timeToFirstFrameMicros ~/ 1000}ms.';
-    if (frameworkInitTimestampMicros != null) {
-      traceInfo['timeAfterFrameworkInitMicros'] = firstFrameBuiltTimestampMicros - frameworkInitTimestampMicros;
+    traceInfo['timeAfterFrameworkInitMicros'] = firstFrameBuiltTimestampMicros - frameworkInitTimestampMicros;
     }
-  }
 
   traceInfoFile.writeAsStringSync(toPrettyJson(traceInfo));
 

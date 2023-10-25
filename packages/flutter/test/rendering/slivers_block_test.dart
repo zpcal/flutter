@@ -4,11 +4,9 @@
 
 // @dart = 2.8
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
-
-import '../flutter_test_alternative.dart';
 
 import 'rendering_tester.dart';
 

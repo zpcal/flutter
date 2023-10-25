@@ -34,13 +34,11 @@ void main() {
         print('run:stdout: $line');
         if (vmServicePort == null) {
           vmServicePort = parseServicePort(line);
-          if (vmServicePort != null) {
-            print('service protocol connection available at port $vmServicePort');
-            print('run: ready!');
-            ready.complete();
-            ok ??= true;
-          }
-        }
+          print('service protocol connection available at port $vmServicePort');
+          print('run: ready!');
+          ready.complete();
+          ok ??= true;
+                }
       });
       run.stderr
           .transform<String>(utf8.decoder)

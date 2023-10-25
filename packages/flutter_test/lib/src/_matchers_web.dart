@@ -40,7 +40,7 @@ class MatchesGoldenFile extends AsyncMatcher {
     if (item is! Finder) {
       return 'web goldens only supports matching finders.';
     }
-    final Finder finder = item as Finder;
+    final Finder finder = item;
     final Iterable<Element> elements = finder.evaluate();
     if (elements.isEmpty) {
       return 'could not be rendered because no widget was found';

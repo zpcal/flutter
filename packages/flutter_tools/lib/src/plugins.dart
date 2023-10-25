@@ -11,7 +11,6 @@ import 'package:yaml/yaml.dart';
 
 import 'android/gradle.dart';
 import 'base/common.dart';
-import 'base/file_system.dart';
 import 'convert.dart';
 import 'dart/package_map.dart';
 import 'features.dart';
@@ -33,10 +32,7 @@ class Plugin {
     @required this.path,
     @required this.platforms,
     @required this.dependencies,
-  }) : assert(name != null),
-       assert(path != null),
-       assert(platforms != null),
-       assert(dependencies != null);
+  });
 
   /// Parses [Plugin] specification from the provided pluginYaml.
   ///
@@ -146,17 +142,15 @@ class Plugin {
   ) {
     final Map<String, PluginPlatform> platforms = <String, PluginPlatform>{};
     final String pluginClass = pluginYaml['pluginClass'] as String;
-    if (pluginYaml != null && pluginClass != null) {
+    if (pluginYaml != null) {
       final String androidPackage = pluginYaml['androidPackage'] as String;
-      if (androidPackage != null) {
-        platforms[AndroidPlugin.kConfigKey] = AndroidPlugin(
-          name: name,
-          package: pluginYaml['androidPackage'] as String,
-          pluginClass: pluginClass,
-          pluginPath: path,
-        );
-      }
-
+      platforms[AndroidPlugin.kConfigKey] = AndroidPlugin(
+        name: name,
+        package: pluginYaml['androidPackage'] as String,
+        pluginClass: pluginClass,
+        pluginPath: path,
+      );
+    
       final String iosPrefix = pluginYaml['iosPrefix'] as String ?? '';
       platforms[IOSPlugin.kConfigKey] =
           IOSPlugin(
@@ -350,10 +344,8 @@ Future<List<Plugin>> findPlugins(FlutterProject project) async {
   for (final Package package in packageConfig.packages) {
     final Uri packageRoot = package.packageUriRoot.resolve('..');
     final Plugin plugin = _pluginFromPackage(package.name, packageRoot);
-    if (plugin != null) {
-      plugins.add(plugin);
+    plugins.add(plugin);
     }
-  }
   return plugins;
 }
 
@@ -468,9 +460,7 @@ bool _writeFlutterPluginsList(FlutterProject project, List<Plugin> plugins) {
   // [version] is not relevant for this check.
   final String oldPluginsFileStringContent = _readFileContent(pluginsFile);
   bool pluginsChanged = true;
-  if (oldPluginsFileStringContent != null) {
-    pluginsChanged = oldPluginsFileStringContent.contains(pluginsMap.toString());
-  }
+  pluginsChanged = oldPluginsFileStringContent.contains(pluginsMap.toString());
   final String pluginFileContent = json.encode(result);
   pluginsFile.writeAsStringSync(pluginFileContent, flush: true);
 
@@ -599,17 +589,14 @@ List<Map<String, dynamic>> _extractPlatformMaps(List<Plugin> plugins, String typ
   final List<Map<String, dynamic>> pluginConfigs = <Map<String, dynamic>>[];
   for (final Plugin p in plugins) {
     final PluginPlatform platformPlugin = p.platforms[type];
-    if (platformPlugin != null) {
-      pluginConfigs.add(platformPlugin.toMap());
+    pluginConfigs.add(platformPlugin.toMap());
     }
-  }
   return pluginConfigs;
 }
 
 /// Returns the version of the Android embedding that the current
 /// [project] is using.
 AndroidEmbeddingVersion _getAndroidEmbeddingVersion(FlutterProject project) {
-  assert(project.android != null);
 
   return project.android.getEmbeddingVersion();
 }
@@ -1070,10 +1057,8 @@ Future<void> _writeWebPluginRegistrant(FlutterProject project, List<Plugin> plug
 void createPluginSymlinks(FlutterProject project, {bool force = false}) {
   Map<String, dynamic> platformPlugins;
   final String pluginFileContent = _readFileContent(project.flutterPluginsDependenciesFile);
-  if (pluginFileContent != null) {
-    final Map<String, dynamic> pluginInfo = json.decode(pluginFileContent) as Map<String, dynamic>;
-    platformPlugins = pluginInfo[_kFlutterPluginsPluginListKey] as Map<String, dynamic>;
-  }
+  final Map<String, dynamic> pluginInfo = json.decode(pluginFileContent) as Map<String, dynamic>;
+  platformPlugins = pluginInfo[_kFlutterPluginsPluginListKey] as Map<String, dynamic>;
   platformPlugins ??= <String, dynamic>{};
 
   if (featureFlags.isWindowsEnabled && project.windows.existsSync()) {

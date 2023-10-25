@@ -731,10 +731,10 @@ class FlutterError extends Error with DiagnosticableTreeMixin implements Asserti
   /// All sentences in the error should be correctly punctuated (i.e.,
   /// do end the error message with a period).
   ///
-  /// This constructor defers to the [new FlutterError.fromParts] constructor.
+  /// This constructor defers to the [FlutterError.fromParts] constructor.
   /// The first line is wrapped in an implied [ErrorSummary], and subsequent
   /// lines are wrapped in implied [ErrorDescription]s. Consider using the
-  /// [new FlutterError.fromParts] constructor to provide more detail, e.g.
+  /// [FlutterError.fromParts] constructor to provide more detail, e.g.
   /// using [ErrorHint]s or other [DiagnosticsNode]s.
   factory FlutterError(String message) {
     final List<String> lines = message.split('\n');
@@ -1047,7 +1047,7 @@ class FlutterError extends Error with DiagnosticableTreeMixin implements Asserti
 
     // Only include packages we actually elided from.
     final List<String> where = <String>[
-      for (MapEntry<String, int> entry in removedPackagesAndClasses.entries)
+      for (final MapEntry<String, int> entry in removedPackagesAndClasses.entries)
         if (entry.value > 0)
           entry.key
     ]..sort();

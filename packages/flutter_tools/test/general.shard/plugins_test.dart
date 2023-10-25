@@ -309,8 +309,6 @@ flutter:
       @required String name,
       @required List<String> dependencies,
     }) {
-      assert(name != null);
-      assert(dependencies != null);
 
       final Directory pluginDirectory = fs.systemTempDirectory.createTempSync('plugin.');
       pluginDirectory

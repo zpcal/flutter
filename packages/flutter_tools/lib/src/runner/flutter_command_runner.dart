@@ -14,7 +14,6 @@ import 'package:package_config/package_config.dart';
 import '../artifacts.dart';
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/terminal.dart';
 import '../base/user_messages.dart';
 import '../base/utils.dart';
@@ -253,7 +252,7 @@ class FlutterCommandRunner extends CommandRunner<void> {
     // anything, unless the user explicitly said to.
     final bool useWrapping = topLevelResults.wasParsed('wrap')
         ? topLevelResults['wrap'] as bool
-        : globals.stdio.terminalColumns != null && topLevelResults['wrap'] as bool;
+        : topLevelResults['wrap'] as bool;
     contextOverrides[OutputPreferences] = OutputPreferences(
       wrapText: useWrapping,
       showColor: topLevelResults['color'] as bool,
@@ -272,12 +271,10 @@ class FlutterCommandRunner extends CommandRunner<void> {
 
     // Set up the tooling configuration.
     final String enginePath = await _findEnginePath(topLevelResults);
-    if (enginePath != null) {
-      contextOverrides.addAll(<Type, dynamic>{
-        Artifacts: Artifacts.getLocalEngine(_findEngineBuildPath(topLevelResults, enginePath)),
-      });
-    }
-
+    contextOverrides.addAll(<Type, dynamic>{
+      Artifacts: Artifacts.getLocalEngine(_findEngineBuildPath(topLevelResults, enginePath)),
+    });
+  
     await context.run<void>(
       overrides: contextOverrides.map<Type, Generator>((Type type, dynamic value) {
         return MapEntry<Type, Generator>(type, () => value);
@@ -318,10 +315,8 @@ class FlutterCommandRunner extends CommandRunner<void> {
           String status;
           if (machineFlag) {
             final Map<String, Object> jsonOut = globals.flutterVersion.toJson();
-            if (jsonOut != null) {
-              jsonOut['flutterRoot'] = Cache.flutterRoot;
-            }
-            status = const JsonEncoder.withIndent('  ').convert(jsonOut);
+            jsonOut['flutterRoot'] = Cache.flutterRoot;
+                      status = const JsonEncoder.withIndent('  ').convert(jsonOut);
           } else {
             status = globals.flutterVersion.toString();
           }
@@ -357,20 +352,18 @@ class FlutterCommandRunner extends CommandRunner<void> {
         );
         Uri engineUri = packageConfig[kFlutterEnginePackageName]?.packageUriRoot;
         // Skip if sky_engine is the self-contained one.
-        if (engineUri != null && globals.fs.identicalSync(globals.fs.path.join(Cache.flutterRoot, 'bin', 'cache', 'pkg', kFlutterEnginePackageName, 'lib'), engineUri.path)) {
+        if (globals.fs.identicalSync(globals.fs.path.join(Cache.flutterRoot, 'bin', 'cache', 'pkg', kFlutterEnginePackageName, 'lib'), engineUri.path)) {
           engineUri = null;
         }
         // If sky_engine is specified and the engineSourcePath not set, try to determine the engineSourcePath by sky_engine setting.
         // A typical engineUri looks like: file://flutter-engine-local-path/src/out/host_debug_unopt/gen/dart-pkg/sky_engine/lib/
-        if (engineUri?.path != null) {
-          engineSourcePath = globals.fs.directory(engineUri.path)?.parent?.parent?.parent?.parent?.parent?.parent?.path;
-          if (engineSourcePath != null && (engineSourcePath == globals.fs.path.dirname(engineSourcePath) || engineSourcePath.isEmpty)) {
-            engineSourcePath = null;
-            throwToolExit(userMessages.runnerNoEngineSrcDir(kFlutterEnginePackageName, kFlutterEngineEnvironmentVariableName),
-              exitCode: 2);
-          }
+        engineSourcePath = globals.fs.directory(engineUri.path)?.parent?.parent?.parent?.parent?.parent?.parent?.path;
+        if (engineSourcePath == globals.fs.path.dirname(engineSourcePath) || engineSourcePath.isEmpty) {
+          engineSourcePath = null;
+          throwToolExit(userMessages.runnerNoEngineSrcDir(kFlutterEnginePackageName, kFlutterEngineEnvironmentVariableName),
+            exitCode: 2);
         }
-      } on FileSystemException {
+            } on FileSystemException {
         engineSourcePath = null;
       } on FormatException {
         engineSourcePath = null;
@@ -379,7 +372,7 @@ class FlutterCommandRunner extends CommandRunner<void> {
       engineSourcePath ??= _tryEnginePath(globals.fs.path.join(globals.fs.directory(Cache.flutterRoot).parent.path, 'engine', 'src'));
     }
 
-    if (engineSourcePath != null && _tryEnginePath(engineSourcePath) == null) {
+    if (_tryEnginePath(engineSourcePath) == null) {
       throwToolExit(userMessages.runnerNoEngineBuildDirInPath(engineSourcePath),
         exitCode: 2);
     }

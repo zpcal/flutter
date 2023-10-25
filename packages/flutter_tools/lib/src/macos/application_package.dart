@@ -5,7 +5,6 @@
 import 'package:meta/meta.dart';
 
 import '../application_package.dart';
-import '../base/file_system.dart';
 import '../base/utils.dart';
 import '../build_info.dart';
 import '../globals.dart' as globals;
@@ -143,7 +142,7 @@ class BuildableMacOSApp extends MacOSApp {
       return null;
     }
     final _ExecutableAndId executableAndId = MacOSApp._executableFromBundle(globals.fs.directory(directory));
-    return executableAndId?.executable;
+    return executableAndId.executable;
   }
 }
 

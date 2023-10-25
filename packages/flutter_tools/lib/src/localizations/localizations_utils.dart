@@ -4,7 +4,6 @@
 
 import 'package:meta/meta.dart';
 
-import '../base/file_system.dart';
 import 'language_subtag_registry.dart';
 
 typedef HeaderGenerator = String Function(String regenerateInstructions);
@@ -48,9 +47,9 @@ class LocaleInfo implements Comparable<LocaleInfo> {
       scriptCode = codes[1].length > codes[2].length ? codes[1] : codes[2];
       countryCode = codes[1].length < codes[2].length ? codes[1] : codes[2];
     }
-    assert(codes[0] != null && codes[0].isNotEmpty);
-    assert(countryCode == null || countryCode.isNotEmpty);
-    assert(scriptCode == null || scriptCode.isNotEmpty);
+    assert(codes[0].isNotEmpty);
+    assert(countryCode.isNotEmpty);
+    assert(scriptCode.isNotEmpty);
 
     /// Adds scriptCodes to locales where we are able to assume it to provide
     /// finer granularity when resolving locales.
@@ -85,18 +84,12 @@ class LocaleInfo implements Comparable<LocaleInfo> {
         }
       }
       // Increment length if we were able to assume a scriptCode.
-      if (scriptCode != null) {
-        length += 1;
-      }
-      // Update the base string to reflect assumed scriptCodes.
+      length += 1;
+          // Update the base string to reflect assumed scriptCodes.
       originalString = languageCode;
-      if (scriptCode != null) {
-        originalString += '_' + scriptCode;
-      }
-      if (countryCode != null) {
-        originalString += '_' + countryCode;
-      }
-    }
+      originalString += '_' + scriptCode;
+          originalString += '_' + countryCode;
+        }
 
     return LocaleInfo(
       languageCode: languageCode,
@@ -227,14 +220,9 @@ String describeLocale(String tag) {
   } else if (subtags.length >= 3) {
     region = _regions[subtags[2]];
     script = _scripts[subtags[1]];
-    assert(region != null && script != null);
   }
-  if (region != null) {
-    output += ', as used in $region';
-  }
-  if (script != null) {
-    output += ', using the $script script';
-  }
+  output += ', as used in $region';
+  output += ', using the $script script';
   return output;
 }
 

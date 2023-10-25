@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_driver/driver_extension.dart';
 import 'package:splash_screen_kitchen_sink/main.dart' as app;
 
 Completer<String> dataHandlerCompleter;
@@ -47,9 +47,7 @@ void createTestChannelBetweenAndroidAndFlutter() {
   // host driver test at the next opportunity.
   testChannel.setMessageHandler((String message) async {
     appToHostMessageQueue.add(message);
-    if (dataHandlerCompleter != null) {
-      dataHandlerCompleter.complete(appToHostMessageQueue.removeAt(0));
-    }
-    return '';
+    dataHandlerCompleter.complete(appToHostMessageQueue.removeAt(0));
+      return '';
   });
 }

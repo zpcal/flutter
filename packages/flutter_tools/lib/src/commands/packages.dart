@@ -81,7 +81,7 @@ class PackagesGetCommand extends FlutterCommand {
     final FlutterProject rootProject = FlutterProject.fromPath(target);
     final bool hasPlugins = rootProject.flutterPluginsFile.existsSync();
     if (hasPlugins) {
-      final int numberOfPlugins = (rootProject.flutterPluginsFile.readAsLinesSync()).length;
+      final int numberOfPlugins = rootProject.flutterPluginsFile.readAsLinesSync().length;
       usageValues[CustomDimensions.commandPackagesNumberPlugins] = '$numberOfPlugins';
     } else {
       usageValues[CustomDimensions.commandPackagesNumberPlugins] = '0';

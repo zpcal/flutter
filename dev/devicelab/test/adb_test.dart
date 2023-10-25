@@ -9,7 +9,6 @@ import 'package:collection/collection.dart' show ListEquality, MapEquality;
 import 'package:flutter_devicelab/framework/adb.dart';
 import 'package:meta/meta.dart';
 
-import 'common.dart';
 
 void main() {
   group('device', () {

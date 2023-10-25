@@ -7,7 +7,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:vector_math/vector_math_64.dart';
 
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('wrapped HitTestResult gets HitTestEntry added to wrapping HitTestResult', () async {

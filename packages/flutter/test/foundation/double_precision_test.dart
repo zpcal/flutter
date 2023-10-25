@@ -5,7 +5,6 @@
 // @dart = 2.8
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('debugFormatDouble formats doubles', () {

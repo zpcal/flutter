@@ -73,7 +73,7 @@ class HealthCheckResult {
   @override
   String toString() {
     final StringBuffer buf = StringBuffer(succeeded ? 'succeeded' : 'failed');
-    if (details != null && details.trim().isNotEmpty) {
+    if (details.trim().isNotEmpty) {
       buf.writeln();
       // Indent details by 4 spaces
       for (final String line in details.trim().split('\n')) {
@@ -141,7 +141,7 @@ void recursiveCopy(Directory source, Directory target) {
       dest.writeAsBytesSync(entity.readAsBytesSync());
       // Preserve executable bit
       final String modes = entity.statSync().modeString();
-      if (modes != null && modes.contains('x')) {
+      if (modes.contains('x')) {
         makeExecutable(dest);
       }
     }
@@ -275,8 +275,7 @@ Future<Process> startProcess(
   bool isBot = true, // set to false to pretend not to be on a bot (e.g. to test user-facing outputs)
   String workingDirectory,
 }) async {
-  assert(isBot != null);
-  final String command = '$executable ${arguments?.join(" ") ?? ""}';
+  final String command = '$executable ${arguments.join(" ") ?? ""}';
   final String finalWorkingDirectory = workingDirectory ?? cwd;
   print('\nExecuting: $command in $finalWorkingDirectory'
       + (environment != null ? ' with environment $environment' : ''));
@@ -385,7 +384,7 @@ Future<void> forwardStandardStreams(
         if (printStdout) {
           print('stdout: $line');
         }
-        output?.writeln(line);
+        output.writeln(line);
       }, onDone: () { stdoutDone.complete(); });
   process.stderr
       .transform<String>(utf8.decoder)
@@ -394,7 +393,7 @@ Future<void> forwardStandardStreams(
         if (printStderr) {
           print('stderr: $line');
         }
-        stderr?.writeln(line);
+        stderr.writeln(line);
       }, onDone: () { stderrDone.complete(); });
 
   return Future.wait<void>(<Future<void>>[
@@ -434,8 +433,8 @@ Future<String> eval(
 List<String> flutterCommandArgs(String command, List<String> options) {
   return <String>[
     command,
-    if (localEngine != null) ...<String>['--local-engine', localEngine],
-    if (localEngineSrcPath != null) ...<String>['--local-engine-src-path', localEngineSrcPath],
+    ...<String>['--local-engine', localEngine],
+    ...<String>['--local-engine-src-path', localEngineSrcPath],
     ...options,
   ];
 }

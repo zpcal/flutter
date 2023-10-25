@@ -26,7 +26,6 @@ import 'package:mockito/mockito.dart';
 import 'package:package_config/package_config.dart';
 import 'package:process/process.dart';
 
-import 'common.dart';
 
 // TODO(fujino): replace FakePlatform.fromPlatform() with FakePlatform()
 final Generator kNoColorTerminalPlatform = () {
@@ -104,10 +103,8 @@ class MockAndroidSdk extends Mock implements AndroidSdk {
   static void _createSdkFile(Directory dir, String filePath, { String contents }) {
     final File file = dir.childFile(filePath);
     file.createSync(recursive: true);
-    if (contents != null) {
-      file.writeAsStringSync(contents, flush: true);
+    file.writeAsStringSync(contents, flush: true);
     }
-  }
 
   static void _createDir(Directory dir, String path) {
     final Directory directory = globals.fs.directory(globals.fs.path.join(dir.path, path));
@@ -169,7 +166,7 @@ ProcessFactory flakyProcessFactory({
   stdout ??= () => const Stream<List<int>>.empty();
   stderr ??= () => const Stream<List<int>>.empty();
   return (List<String> command) {
-    if (filter != null && !filter(command)) {
+    if (!filter(command)) {
       return MockProcess();
     }
     if (flakesLeft == 0) {
@@ -421,7 +418,6 @@ class MemoryStdout extends MemoryIOSink implements io.Stdout {
   @override
   bool get hasTerminal => _hasTerminal;
   set hasTerminal(bool value) {
-    assert(value != null);
     _hasTerminal = value;
   }
   bool _hasTerminal = true;
@@ -432,27 +428,22 @@ class MemoryStdout extends MemoryIOSink implements io.Stdout {
   @override
   bool get supportsAnsiEscapes => _supportsAnsiEscapes;
   set supportsAnsiEscapes(bool value) {
-    assert(value != null);
     _supportsAnsiEscapes = value;
   }
   bool _supportsAnsiEscapes = true;
 
   @override
   int get terminalColumns {
-    if (_terminalColumns != null) {
-      return _terminalColumns;
-    }
-    throw const io.StdoutException('unspecified mock value');
+    return _terminalColumns;
+      throw const io.StdoutException('unspecified mock value');
   }
   set terminalColumns(int value) => _terminalColumns = value;
   int _terminalColumns;
 
   @override
   int get terminalLines {
-    if (_terminalLines != null) {
-      return _terminalLines;
-    }
-    throw const io.StdoutException('unspecified mock value');
+    return _terminalLines;
+      throw const io.StdoutException('unspecified mock value');
   }
   set terminalLines(int value) => _terminalLines = value;
   int _terminalLines;

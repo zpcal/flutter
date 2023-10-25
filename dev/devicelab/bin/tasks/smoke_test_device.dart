@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:flutter_devicelab/framework/adb.dart';
+import 'package:flutter_devicelab/framework/framework.dart';
 
 /// Smoke test of a successful task.
 Future<void> main() async {

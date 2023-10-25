@@ -5,9 +5,10 @@
 // @dart = 2.8
 
 import 'dart:ui' show Brightness;
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('MediaQuery does not have a default', (WidgetTester tester) async {

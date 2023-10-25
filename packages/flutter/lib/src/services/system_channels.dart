@@ -202,7 +202,7 @@ class SystemChannels {
   /// See also:
   ///
   ///  * [RawKeyboard], which uses this channel to expose key data.
-  ///  * [new RawKeyEvent.fromMessage], which can decode this data into the [RawKeyEvent]
+  ///  * [RawKeyEvent.fromMessage], which can decode this data into the [RawKeyEvent]
   ///    subclasses mentioned above.
   static const BasicMessageChannel<dynamic> keyEvent = BasicMessageChannel<dynamic>(
       'flutter/keyevent',

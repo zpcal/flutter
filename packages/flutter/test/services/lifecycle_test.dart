@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('initialLifecycleState is used to init state paused', (WidgetTester tester) async {

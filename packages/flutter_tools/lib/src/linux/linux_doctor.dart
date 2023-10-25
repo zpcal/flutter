@@ -65,7 +65,7 @@ class LinuxDoctorValidator extends DoctorValidator {
 
     final Map<String, _VersionInfo> installedVersions = <String, _VersionInfo>{
       // Sort the check to make the call order predictable for unit tests.
-      for (String binary in _requiredBinaryVersions.keys.toList()..sort())
+      for (final String binary in _requiredBinaryVersions.keys.toList()..sort())
           binary: await _getBinaryVersion(binary)
     };
 
@@ -171,7 +171,7 @@ class LinuxDoctorValidator extends DoctorValidator {
     } on ArgumentError {
       // ignore error.
     }
-    if (result == null || result.exitCode != 0) {
+    if (result.exitCode != 0) {
       return null;
     }
     final String firstLine = (result.stdout as String).split('\n').first.trim();
@@ -190,6 +190,6 @@ class LinuxDoctorValidator extends DoctorValidator {
     } on ArgumentError {
       // ignore error.
     }
-    return (result?.exitCode ?? 1) == 0;
+    return (result.exitCode ?? 1) == 0;
   }
 }

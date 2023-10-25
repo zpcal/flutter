@@ -5,11 +5,10 @@
 import 'dart:async';
 
 import 'package:file/memory.dart';
-import 'package:flutter_tools/src/base/file_system.dart';
-import 'package:flutter_tools/src/base/platform.dart';
-import 'package:vm_service/vm_service.dart' as vm_service;
 import 'package:flutter_tools/src/artifacts.dart';
+import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/io.dart';
+import 'package:flutter_tools/src/base/platform.dart';
 import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/compile.dart';
 import 'package:flutter_tools/src/devfs.dart';
@@ -19,6 +18,7 @@ import 'package:flutter_tools/src/run_hot.dart';
 import 'package:flutter_tools/src/vmservice.dart';
 import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
+import 'package:vm_service/vm_service.dart' as vm_service;
 
 import '../src/common.dart';
 import '../src/context.dart';
@@ -564,8 +564,7 @@ class TestFlutterDevice extends FlutterDevice {
     @required Device device,
     @required this.exception,
     @required ResidentCompiler generator,
-  })  : assert(exception != null),
-        super(device, buildInfo: BuildInfo.debug, generator: generator);
+  })  : super(device, buildInfo: BuildInfo.debug, generator: generator);
 
   /// The exception to throw when the connect method is called.
   final Exception exception;

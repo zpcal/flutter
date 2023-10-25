@@ -5,10 +5,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter_devicelab/framework/utils.dart';
-import 'package:flutter_devicelab/tasks/new_gallery.dart';
 import 'package:flutter_devicelab/framework/adb.dart';
 import 'package:flutter_devicelab/framework/framework.dart';
+import 'package:flutter_devicelab/framework/utils.dart';
+import 'package:flutter_devicelab/tasks/new_gallery.dart';
 import 'package:path/path.dart' as path;
 
 Future<void> main() async {

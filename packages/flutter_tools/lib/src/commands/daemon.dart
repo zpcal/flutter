@@ -10,7 +10,6 @@ import 'package:uuid/uuid.dart';
 
 import '../android/android_workflow.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/terminal.dart';
@@ -184,8 +183,8 @@ class Daemon {
   void _send(Map<String, dynamic> map) => sendCommand(map);
 
   Future<void> shutdown({ dynamic error }) async {
-    await devToolsDomain?.dispose();
-    await _commandSubscription?.cancel();
+    await devToolsDomain.dispose();
+    await _commandSubscription.cancel();
     for (final Domain domain in _domainMap.values) {
       await domain.dispose();
     }
@@ -306,12 +305,10 @@ class DaemonDomain extends Domain {
           print(message.message);
         } else if (message.level == 'error') {
           globals.stdio.stderrWrite('${message.message}\n');
-          if (message.stackTrace != null) {
-            globals.stdio.stderrWrite(
-              '${message.stackTrace.toString().trimRight()}\n',
-            );
-          }
-        }
+          globals.stdio.stderrWrite(
+            '${message.stackTrace.toString().trimRight()}\n',
+          );
+                }
       } else {
         if (message.stackTrace != null) {
           sendEvent('daemon.logMessage', <String, dynamic>{
@@ -357,7 +354,7 @@ class DaemonDomain extends Domain {
 
   @override
   Future<void> dispose() async {
-    await _subscription?.cancel();
+    await _subscription.cancel();
   }
 
   /// Enumerates the platforms supported by the provided project.
@@ -562,13 +559,11 @@ class AppDomain extends Domain {
         (DebugConnectionInfo info) {
           final Map<String, dynamic> params = <String, dynamic>{
             // The web vmservice proxy does not have an http address.
-            'port': info.httpUri?.port ?? info.wsUri.port,
+            'port': info.httpUri.port ?? info.wsUri.port,
             'wsUri': info.wsUri.toString(),
           };
-          if (info.baseUri != null) {
-            params['baseUri'] = info.baseUri;
-          }
-          _sendAppEvent(app, 'debugPort', params);
+          params['baseUri'] = info.baseUri;
+                  _sendAppEvent(app, 'debugPort', params);
         },
       ));
     }
@@ -758,7 +753,7 @@ class AppDomain extends Domain {
   void _sendAppEvent(AppInstance app, String name, [ Map<String, dynamic> args ]) {
     sendEvent('app.$name', <String, dynamic>{
       'appId': app.id,
-      ...?args,
+      ...args,
     });
   }
 }
@@ -880,10 +875,8 @@ class DeviceDomain extends Domain {
   Future<Device> _getDevice(String deviceId) async {
     for (final PollingDeviceDiscovery discoverer in _discoverers) {
       final Device device = (await discoverer.devices).firstWhere((Device device) => device.id == deviceId, orElse: () => null);
-      if (device != null) {
-        return device;
-      }
-    }
+      return device;
+        }
     return null;
   }
 }
@@ -900,14 +893,14 @@ class DevToolsDomain extends Domain {
     final DevToolsServerAddress server = await _devtoolsLauncher.serve();
 
     return<String, dynamic>{
-      'host': server?.host,
-      'port': server?.port,
+      'host': server.host,
+      'port': server.port,
     };
   }
 
   @override
   Future<void> dispose() async {
-    await _devtoolsLauncher?.close();
+    await _devtoolsLauncher.close();
   }
 }
 
@@ -946,8 +939,8 @@ Future<Map<String, dynamic>> _deviceToMap(Device device) async {
     'name': device.name,
     'platform': getNameForTargetPlatform(await device.targetPlatform),
     'emulator': await device.isLocalEmulator,
-    'category': device.category?.toString(),
-    'platformType': device.platformType?.toString(),
+    'category': device.category.toString(),
+    'platformType': device.platformType.toString(),
     'ephemeral': device.ephemeral,
     'emulatorId': await device.emulatorId,
   };
@@ -957,8 +950,8 @@ Map<String, dynamic> _emulatorToMap(Emulator emulator) {
   return <String, dynamic>{
     'id': emulator.id,
     'name': emulator.name,
-    'category': emulator.category?.toString(),
-    'platformType': emulator.platformType?.toString(),
+    'category': emulator.category.toString(),
+    'platformType': emulator.platformType.toString(),
   };
 }
 
@@ -1034,7 +1027,7 @@ class NotifyingLogger extends Logger {
     if (!verbose) {
       return;
     }
-    parent?.printError(message);
+    parent.printError(message);
   }
 
   @override
@@ -1045,7 +1038,6 @@ class NotifyingLogger extends Logger {
     bool multilineOutput = false,
     int progressIndicatorPadding = kDefaultStatusPadding,
   }) {
-    assert(timeout != null);
     printStatus(message);
     return SilentStatus(
       timeout: timeout,
@@ -1251,7 +1243,6 @@ class AppRunLogger extends Logger {
     bool multilineOutput = false,
     int progressIndicatorPadding = kDefaultStatusPadding,
   }) {
-    assert(timeout != null);
     final int id = _nextProgressId++;
 
     _sendProgressEvent(<String, dynamic>{

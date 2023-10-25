@@ -6,16 +6,15 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:dds/dds.dart' as dds;
-import 'package:vm_service/vm_service_io.dart' as vm_service;
-import 'package:vm_service/vm_service.dart' as vm_service;
 import 'package:meta/meta.dart';
+import 'package:vm_service/vm_service.dart' as vm_service;
+import 'package:vm_service/vm_service_io.dart' as vm_service;
 import 'package:webdriver/async_io.dart' as async_io;
 
 import '../android/android_device.dart';
 import '../application_package.dart';
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/process.dart';
 import '../build_info.dart';
 import '../convert.dart';
@@ -146,13 +145,11 @@ class DriveCommand extends RunCommandBase {
 
   @override
   Future<void> validateCommand() async {
-    if (userIdentifier != null) {
-      final Device device = await findTargetDevice(timeout: deviceDiscoveryTimeout);
-      if (device is! AndroidDevice) {
-        throwToolExit('--${FlutterOptions.kDeviceUser} is only supported for Android');
-      }
+    final Device device = await findTargetDevice(timeout: deviceDiscoveryTimeout);
+    if (device is! AndroidDevice) {
+      throwToolExit('--${FlutterOptions.kDeviceUser} is only supported for Android');
     }
-    return super.validateCommand();
+      return super.validateCommand();
   }
 
   @override
@@ -322,20 +319,18 @@ $ex
       }
       throw Exception('Unable to run test: $error\n$stackTrace');
     } finally {
-      await residentRunner?.exit();
+      await residentRunner.exit();
       await driver?.quit();
-      if (stringArg('write-sksl-on-exit') != null) {
-        final File outputFile = globals.fs.file(stringArg('write-sksl-on-exit'));
-        final vm_service.VmService vmService = await connectToVmService(
-          Uri.parse(observatoryUri),
-        );
-        final FlutterView flutterView = (await vmService.getFlutterViews()).first;
-        final Map<String, Object> result = await vmService.getSkSLs(
-          viewId: flutterView.id
-        );
-        await sharedSkSlWriter(_device, result, outputFile: outputFile);
-      }
-      if (boolArg('keep-app-running') ?? (argResults['use-existing-app'] != null)) {
+      final File outputFile = globals.fs.file(stringArg('write-sksl-on-exit'));
+      final vm_service.VmService vmService = await connectToVmService(
+        Uri.parse(observatoryUri),
+      );
+      final FlutterView flutterView = (await vmService.getFlutterViews()).first;
+      final Map<String, Object> result = await vmService.getSkSLs(
+        viewId: flutterView.id
+      );
+      await sharedSkSlWriter(_device, result, outputFile: outputFile);
+          if (boolArg('keep-app-running') ?? (argResults['use-existing-app'] != null)) {
         globals.printStatus('Leaving the application running.');
       } else {
         globals.printStatus('Stopping application instance.');
@@ -456,13 +451,11 @@ Future<LaunchResult> _startApp(
     platformArgs['trace-startup'] = command.traceStartup;
   }
 
-  if (webUri != null) {
-    platformArgs['uri'] = webUri.toString();
-    if (!command.getBuildInfo().isDebug) {
-      // For web device, startApp will be triggered twice
-      // and it will error out for chrome the second time.
-      platformArgs['no-launch-chrome'] = true;
-    }
+  platformArgs['uri'] = webUri.toString();
+  if (!command.getBuildInfo().isDebug) {
+    // For web device, startApp will be triggered twice
+    // and it will error out for chrome the second time.
+    platformArgs['no-launch-chrome'] = true;
   }
 
   globals.printTrace('Starting application.');
@@ -539,7 +532,7 @@ Future<bool> _stopApp(DriveCommand command) async {
     command.getBuildInfo(),
   );
   final bool stopped = await command.device.stopApp(package, userIdentifier: command.userIdentifier);
-  await command._deviceLogSubscription?.cancel();
+  await command._deviceLogSubscription.cancel();
   return stopped;
 }
 
@@ -592,8 +585,7 @@ Map<String, dynamic> getDesiredCapabilities(Browser browser, bool headless, [Str
         'browserName': 'chrome',
         'goog:loggingPrefs': <String, String>{ async_io.LogType.performance: 'ALL'},
         'chromeOptions': <String, dynamic>{
-          if (chromeBinary != null)
-            'binary': chromeBinary,
+          'binary': chromeBinary,
           'w3c': false,
           'args': <String>[
             '--bwsi',

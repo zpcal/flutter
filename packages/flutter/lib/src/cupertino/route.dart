@@ -8,11 +8,11 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui' show lerpDouble, ImageFilter;
 
+import 'package:flutter/animation.dart' show Curves;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/animation.dart' show Curves;
 
 import 'colors.dart';
 import 'interface_level.dart';

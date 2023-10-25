@@ -5,7 +5,6 @@
 import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
-import '../../base/file_system.dart';
 import '../../base/logger.dart';
 import '../../convert.dart';
 import '../../globals.dart' as globals;
@@ -43,9 +42,9 @@ void generateLocalizations({
 
   precacheLanguageAndRegionTags();
 
-  final String inputPathString = options?.arbDirectory?.toFilePath() ?? globals.fs.path.join('lib', 'l10n');
-  final String templateArbFileName = options?.templateArbFile?.toFilePath() ?? 'app_en.arb';
-  final String outputFileString = options?.outputLocalizationsFile?.toFilePath() ?? 'app_localizations.dart';
+  final String inputPathString = options.arbDirectory.toFilePath() ?? globals.fs.path.join('lib', 'l10n');
+  final String templateArbFileName = options.templateArbFile.toFilePath() ?? 'app_en.arb';
+  final String outputFileString = options.outputLocalizationsFile.toFilePath() ?? 'app_localizations.dart';
 
   try {
     localizationsGenerator
@@ -58,14 +57,14 @@ void generateLocalizations({
         classNameString: options.outputClass ?? 'AppLocalizations',
         preferredSupportedLocale: options.preferredSupportedLocales,
         headerString: options.header,
-        headerFile: options?.headerFile?.toFilePath(),
+        headerFile: options.headerFile.toFilePath(),
         useDeferredLoading: options.deferredLoading ?? false,
         useSyntheticPackage: options.useSyntheticPackage ?? true,
       )
       ..loadResources()
       ..writeOutputFiles()
       ..outputUnimplementedMessages(
-        options?.untranslatedMessagesFile?.toFilePath(),
+        options.untranslatedMessagesFile.toFilePath(),
         logger,
       );
   } on L10nException catch (e) {
@@ -134,11 +133,11 @@ class GenerateLocalizationsTarget extends Target {
     final Depfile depfile = Depfile(
       <File>[
         configFile,
-        for (dynamic inputFile in dependencies['inputs'] as List<dynamic>)
+        for (final dynamic inputFile in dependencies['inputs'] as List<dynamic>)
           environment.fileSystem.file(inputFile)
       ],
       <File>[
-        for (dynamic outputFile in dependencies['outputs'] as List<dynamic>)
+        for (final dynamic outputFile in dependencies['outputs'] as List<dynamic>)
           environment.fileSystem.file(outputFile)
       ]
     );
@@ -162,7 +161,7 @@ class LocalizationOptions {
     this.headerFile,
     this.deferredLoading,
     this.useSyntheticPackage = true,
-  }) : assert(useSyntheticPackage != null);
+  });
 
   /// The `--arb-dir` argument.
   ///
@@ -257,7 +256,7 @@ bool _tryReadBool(YamlMap yamlMap, String key, Logger logger) {
     logger.printError('Expected "$key" to have a bool value, instead was "$value"');
     throw Exception();
   }
-  return value as bool;
+  return value;
 }
 
 // Try to read a `String` value or null from `yamlMap`, otherwise throw.
@@ -270,7 +269,7 @@ String _tryReadString(YamlMap yamlMap, String key, Logger logger) {
     logger.printError('Expected "$key" to have a String value, instead was "$value"');
     throw Exception();
   }
-  return value as String;
+  return value;
 }
 
 List<String> _tryReadStringList(YamlMap yamlMap, String key, Logger logger) {

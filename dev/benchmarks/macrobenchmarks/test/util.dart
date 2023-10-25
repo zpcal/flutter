@@ -5,12 +5,11 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/widgets.dart';
-
-import 'package:macrobenchmarks/common.dart';
 import 'package:e2e/e2e.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:macrobenchmarks/common.dart';
 import 'package:macrobenchmarks/main.dart' as app;
 
 typedef ControlCallback = Future<void> Function(WidgetController controller);
@@ -52,21 +51,15 @@ void macroPerfTestE2E(
     // Cannot be pumpAndSettle because some tests have infinite animation.
     await tester.pump(const Duration(milliseconds: 20));
 
-    if (pageDelay != null) {
-      // Wait for the page to load
-      await tester.binding.delayed(pageDelay);
-    }
-
-    if (setup != null) {
-      await setup(tester);
-    }
-
+    // Wait for the page to load
+    await tester.binding.delayed(pageDelay);
+  
+    await setup(tester);
+  
     await watchPerformance(binding, () async {
       final Future<void> durationFuture = tester.binding.delayed(duration);
-      if (body != null) {
-        await body(tester);
-      }
-      await durationFuture;
+      await body(tester);
+          await durationFuture;
     });
   }, semanticsEnabled: false, timeout: Timeout(timeout));
 }

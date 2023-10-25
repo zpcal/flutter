@@ -84,13 +84,13 @@ Future<json_rpc.Peer> _waitAndConnect(
       // This is a fine warning as this most likely means the port is stale.
       _log.fine('$e: ${e.message}');
       await peer?.close();
-      await socket?.close();
+      await socket.close();
       rethrow;
     } catch (e) {
       _log.fine('Dart VM connection failed $e: ${e.message}');
       // Other unknown errors will be handled with reconnects.
       await peer?.close();
-      await socket?.close();
+      await socket.close();
       if (timer.elapsed < timeout) {
         _log.info('Attempting to reconnect');
         await Future<void>.delayed(_kReconnectAttemptInterval);
@@ -215,10 +215,8 @@ class DartVm {
         await invokeRpc('_flutter.listViews', timeout: timeout);
     for (final Map<String, dynamic> jsonView in (rpcResponse['views'] as List<dynamic>).cast<Map<String, dynamic>>()) {
       final FlutterView flutterView = FlutterView._fromJson(jsonView);
-      if (flutterView != null) {
-        views.add(flutterView);
-      }
-    }
+      views.add(flutterView);
+        }
     return views;
   }
 
@@ -246,13 +244,11 @@ class FlutterView {
     final Map<String, dynamic> isolate = json['isolate'] as Map<String, dynamic>;
     final String id = json['id'] as String;
     String name;
-    if (isolate != null) {
-      name = isolate['name'] as String;
-      if (name == null) {
-        throw RpcFormatError('Unable to find name for isolate "$isolate"');
-      }
+    name = isolate['name'] as String;
+    if (name == null) {
+      throw RpcFormatError('Unable to find name for isolate "$isolate"');
     }
-    if (id == null) {
+      if (id == null) {
       throw RpcFormatError(
           'Unable to find view name for the following JSON structure "$json"');
     }

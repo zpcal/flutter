@@ -52,8 +52,7 @@ abstract class Command {
     final Map<String, String> result = <String, String>{
       'command': kind,
     };
-    if (timeout != null)
-      result['timeout'] = '${timeout.inMilliseconds}';
+    result['timeout'] = '${timeout.inMilliseconds}';
     return result;
   }
 }

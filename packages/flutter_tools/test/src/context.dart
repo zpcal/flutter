@@ -17,13 +17,14 @@ import 'package:flutter_tools/src/base/signals.dart';
 import 'package:flutter_tools/src/base/template.dart';
 import 'package:flutter_tools/src/base/terminal.dart';
 import 'package:flutter_tools/src/base/time.dart';
-import 'package:flutter_tools/src/build_runner/mustache_template.dart';
 import 'package:flutter_tools/src/build_info.dart';
+import 'package:flutter_tools/src/build_runner/mustache_template.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/context_runner.dart';
 import 'package:flutter_tools/src/dart/pub.dart';
 import 'package:flutter_tools/src/device.dart';
 import 'package:flutter_tools/src/doctor.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/ios/plist_parser.dart';
 import 'package:flutter_tools/src/ios/simulators.dart';
 import 'package:flutter_tools/src/ios/xcodeproj.dart';
@@ -31,16 +32,15 @@ import 'package:flutter_tools/src/persistent_tool_state.dart';
 import 'package:flutter_tools/src/project.dart';
 import 'package:flutter_tools/src/reporting/reporting.dart';
 import 'package:flutter_tools/src/version.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
 
 import 'common.dart';
-import 'fake_process_manager.dart';
 import 'mocks.dart';
 import 'throwing_pub.dart';
 
 export 'package:flutter_tools/src/base/context.dart' show Generator;
+
 export 'fake_process_manager.dart' show ProcessManager, FakeProcessManager, FakeCommand;
 
 /// Return the test logger. This assumes that the current Logger is a BufferLogger.
@@ -195,7 +195,7 @@ class FakeDeviceManager implements DeviceManager {
 
   @override
   String get specifiedDeviceId {
-    if (_specifiedDeviceId == null || _specifiedDeviceId == 'all') {
+    if (_specifiedDeviceId == 'all') {
       return null;
     }
     return _specifiedDeviceId;
@@ -211,7 +211,7 @@ class FakeDeviceManager implements DeviceManager {
 
   @override
   bool get hasSpecifiedAllDevices {
-    return _specifiedDeviceId != null && _specifiedDeviceId == 'all';
+    return _specifiedDeviceId == 'all';
   }
 
   @override

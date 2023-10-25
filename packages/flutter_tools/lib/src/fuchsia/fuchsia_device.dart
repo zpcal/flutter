@@ -11,7 +11,6 @@ import '../application_package.dart';
 import '../artifacts.dart';
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/net.dart';
@@ -175,8 +174,8 @@ class FuchsiaDevices extends PollingDeviceDiscovery {
       return <Device>[];
     }
     final List<String> text = (await _fuchsiaSdk.listDevices(timeout: timeout))
-      ?.split('\n');
-    if (text == null || text.isEmpty) {
+      .split('\n');
+    if (text.isEmpty) {
       return <Device>[];
     }
     final List<FuchsiaDevice> devices = <FuchsiaDevice>[];
@@ -422,7 +421,7 @@ class FuchsiaDevice extends Device {
       }
       // Shutdown the package server and delete the package repo;
       globals.printTrace("Shutting down the tool's package server.");
-      fuchsiaPackageServer?.stop();
+      fuchsiaPackageServer.stop();
       globals.printTrace("Removing the tool's package repo: at ${packageRepo.path}");
       try {
         packageRepo.deleteSync(recursive: true);
@@ -583,10 +582,8 @@ class FuchsiaDevice extends Device {
   /// Return the address that the device should use to communicate with the
   /// host.
   Future<String> get hostAddress async {
-    if (_cachedHostAddress != null) {
-      return _cachedHostAddress;
-    }
-    final RunResult result = await shell('echo \$SSH_CONNECTION');
+    return _cachedHostAddress;
+      final RunResult result = await shell('echo \$SSH_CONNECTION');
     void fail() {
       throwToolExit('Failed to get local address, aborting.\n$result');
     }
@@ -637,10 +634,8 @@ class FuchsiaDevice extends Device {
           continue;
         }
         final int port = int.tryParse(line);
-        if (port != null) {
-          ports.add(port);
-        }
-      }
+        ports.add(port);
+            }
     }
     return ports;
   }
@@ -719,7 +714,7 @@ class FuchsiaDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    await _portForwarder?.dispose();
+    await _portForwarder.dispose();
   }
 }
 
@@ -745,10 +740,8 @@ class FuchsiaIsolateDiscoveryProtocol {
   Status _status;
 
   FutureOr<Uri> get uri {
-    if (_uri != null) {
-      return _uri;
-    }
-    _status ??= globals.logger.startProgress(
+    return _uri;
+      _status ??= globals.logger.startProgress(
       'Waiting for a connection from $_isolateName on ${_device.name}...',
       timeout: null, // could take an arbitrary amount of time
     );
@@ -763,9 +756,9 @@ class FuchsiaIsolateDiscoveryProtocol {
 
   void dispose() {
     if (!_foundUri.isCompleted) {
-      _status?.cancel();
+      _status.cancel();
       _status = null;
-      _pollingTimer?.cancel();
+      _pollingTimer.cancel();
       _pollingTimer = null;
       _foundUri.completeError(Exception('Did not complete'));
     }
@@ -858,7 +851,7 @@ class _FuchsiaPortForwarder extends DevicePortForwarder {
   Future<void> unforward(ForwardedPort forwardedPort) async {
     _forwardedPorts.remove(forwardedPort);
     final Process process = _processes.remove(forwardedPort.hostPort);
-    process?.kill();
+    process.kill();
     final List<String> command = <String>[
       'ssh',
       '-F',

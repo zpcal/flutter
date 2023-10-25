@@ -11,7 +11,6 @@ import '../android/android_builder.dart';
 import '../android/android_sdk.dart';
 import '../application_package.dart';
 import '../base/common.dart' show throwToolExit, unawaited;
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
@@ -24,7 +23,6 @@ import '../protocol_discovery.dart';
 
 import 'android.dart';
 import 'android_console.dart';
-import 'android_sdk.dart';
 
 // TODO(jonahwilliams): update google3 client after roll to remove export.
 export 'android_device_discovery.dart';
@@ -139,7 +137,7 @@ class AndroidDevice extends Device {
         // Fall back to a best-effort heuristic-based approach.
         final String characteristics = await _getProperty('ro.build.characteristics');
         _logger.printTrace('ro.build.characteristics = $characteristics');
-        _isLocalEmulator = characteristics != null && characteristics.contains('emulator');
+        _isLocalEmulator = characteristics.contains('emulator');
       }
     }
     return _isLocalEmulator;
@@ -162,7 +160,7 @@ class AndroidDevice extends Device {
     final RegExp emulatorPortRegex = RegExp(r'emulator-(\d+)');
 
     final Match portMatch = emulatorPortRegex.firstMatch(id);
-    if (portMatch == null || portMatch.groupCount < 1) {
+    if (portMatch.groupCount < 1) {
       return null;
     }
 
@@ -206,7 +204,7 @@ class AndroidDevice extends Device {
           // be able to retrieve this property, in which case we fall back
           // to assuming 64 bit.
           final String abilist = await _getProperty('ro.product.cpu.abilist');
-          if (abilist == null || abilist.contains('arm64-v8a')) {
+          if (abilist.contains('arm64-v8a')) {
             _applicationPlatform = TargetPlatform.android_arm64;
           } else {
             _applicationPlatform = TargetPlatform.android_arm;
@@ -291,22 +289,20 @@ class AndroidDevice extends Device {
   bool _isValidAdbVersion(String adbVersion) {
     // Sample output: 'Android Debug Bridge version 1.0.31'
     final Match versionFields = RegExp(r'(\d+)\.(\d+)\.(\d+)').firstMatch(adbVersion);
-    if (versionFields != null) {
-      final int majorVersion = int.parse(versionFields[1]);
-      final int minorVersion = int.parse(versionFields[2]);
-      final int patchVersion = int.parse(versionFields[3]);
-      if (majorVersion > 1) {
-        return true;
-      }
-      if (majorVersion == 1 && minorVersion > 0) {
-        return true;
-      }
-      if (majorVersion == 1 && minorVersion == 0 && patchVersion >= 39) {
-        return true;
-      }
-      return false;
+    final int majorVersion = int.parse(versionFields[1]);
+    final int minorVersion = int.parse(versionFields[2]);
+    final int patchVersion = int.parse(versionFields[3]);
+    if (majorVersion > 1) {
+      return true;
     }
-    _logger.printError(
+    if (majorVersion == 1 && minorVersion > 0) {
+      return true;
+    }
+    if (majorVersion == 1 && minorVersion == 0 && patchVersion >= 39) {
+      return true;
+    }
+    return false;
+      _logger.printError(
         'Unrecognized adb version string $adbVersion. Skipping version check.');
     return true;
   }
@@ -400,8 +396,7 @@ class AndroidDevice extends Device {
         'pm',
         'list',
         'packages',
-        if (userIdentifier != null)
-          ...<String>['--user', userIdentifier],
+        ...<String>['--user', userIdentifier],
         app.id
       ]);
       return LineSplitter.split(listOut.stdout).contains('package:${app.id}');
@@ -441,8 +436,7 @@ class AndroidDevice extends Device {
         'install',
         '-t',
         '-r',
-        if (userIdentifier != null)
-          ...<String>['--user', userIdentifier],
+        ...<String>['--user', userIdentifier],
         app.file.path
       ]));
     status.stop();
@@ -450,11 +444,9 @@ class AndroidDevice extends Device {
     // Parsing the output to check for failures.
     final RegExp failureExp = RegExp(r'^Failure.*$', multiLine: true);
     final String failure = failureExp.stringMatch(installResult.stdout);
-    if (failure != null) {
-      _logger.printError('Package install error: $failure');
-      return false;
-    }
-    if (installResult.exitCode != 0) {
+    _logger.printError('Package install error: $failure');
+    return false;
+      if (installResult.exitCode != 0) {
       if (installResult.stderr.contains('Bad user number')) {
         _logger.printError('Error: User "$userIdentifier" not found. Run "adb shell pm list users" to see list of available identifiers.');
       } else {
@@ -489,8 +481,7 @@ class AndroidDevice extends Device {
       final RunResult uninstallResult = await _processUtils.run(
         adbCommandForDevice(<String>[
           'uninstall',
-          if (userIdentifier != null)
-            ...<String>['--user', userIdentifier],
+          ...<String>['--user', userIdentifier],
           app.id]),
         throwOnError: true,
       );
@@ -501,11 +492,9 @@ class AndroidDevice extends Device {
     }
     final RegExp failureExp = RegExp(r'^Failure.*$', multiLine: true);
     final String failure = failureExp.stringMatch(uninstallOut);
-    if (failure != null) {
-      _logger.printError('Package uninstall error: $failure');
-      return false;
-    }
-
+    _logger.printError('Package uninstall error: $failure');
+    return false;
+  
     return true;
   }
 
@@ -635,16 +624,14 @@ class AndroidDevice extends Device {
       '--ez', 'enable-dart-profiling', 'true',
       if (traceStartup)
         ...<String>['--ez', 'trace-startup', 'true'],
-      if (route != null)
-        ...<String>['--es', 'route', route],
+      ...<String>['--es', 'route', route],
       if (debuggingOptions.enableSoftwareRendering)
         ...<String>['--ez', 'enable-software-rendering', 'true'],
       if (debuggingOptions.skiaDeterministicRendering)
         ...<String>['--ez', 'skia-deterministic-rendering', 'true'],
       if (debuggingOptions.traceSkia)
         ...<String>['--ez', 'trace-skia', 'true'],
-      if (debuggingOptions.traceAllowlist != null)
-        ...<String>['--ez', 'trace-allowlist', debuggingOptions.traceAllowlist],
+      ...<String>['--ez', 'trace-allowlist', debuggingOptions.traceAllowlist],
       if (debuggingOptions.traceSystrace)
         ...<String>['--ez', 'trace-systrace', 'true'],
       if (debuggingOptions.endlessTraceBuffer)
@@ -670,8 +657,7 @@ class AndroidDevice extends Device {
           ...<String>['--ez', 'use-test-fonts', 'true'],
         if (debuggingOptions.verboseSystemLogs)
           ...<String>['--ez', 'verbose-logging', 'true'],
-        if (userIdentifier != null)
-          ...<String>['--user', userIdentifier],
+        ...<String>['--user', userIdentifier],
       ],
       package.launchActivity,
     ];
@@ -734,8 +720,7 @@ class AndroidDevice extends Device {
       'shell',
       'am',
       'force-stop',
-      if (userIdentifier != null)
-        ...<String>['--user', userIdentifier],
+      ...<String>['--user', userIdentifier],
       app.id,
     ]);
     return _processUtils.stream(command).then<bool>(
@@ -806,7 +791,7 @@ class AndroidDevice extends Device {
       return null;
     }
     final Match timeMatch = _timeRegExp.firstMatch(output);
-    return timeMatch?.group(0);
+    return timeMatch.group(0);
   }
 
   @override
@@ -833,9 +818,9 @@ class AndroidDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    _logReader?._stop();
-    _pastLogReader?._stop();
-    await _portForwarder?.dispose();
+    _logReader._stop();
+    _pastLogReader._stop();
+    await _portForwarder.dispose();
   }
 }
 
@@ -1039,11 +1024,11 @@ class AdbLogReader extends DeviceLogReader {
       if (includePastLogs) ...<String>[
         '-s',
         'flutter',
-      ] else if (apiVersion != null && apiVersion >= kLollipopVersionCode) ...<String>[
+      ] else if (apiVersion >= kLollipopVersionCode) ...<String>[
         // Otherwise, filter for logs appearing past the present.
         // '-T 0` means the timestamp of the logcat command invocation.
         '-T',
-        if (device.lastLogcatTimestamp != null) '\'${device.lastLogcatTimestamp}\'' else '0',
+        '\'${device.lastLogcatTimestamp}\'',
       ],
     ];
     final Process process = await processManager.start(device.adbCommandForDevice(args));
@@ -1117,7 +1102,7 @@ class AdbLogReader extends DeviceLogReader {
       return;
     }
     final Match timeMatch = AndroidDevice._timeRegExp.firstMatch(line);
-    if (timeMatch == null || line.length == timeMatch.end) {
+    if (line.length == timeMatch.end) {
       _acceptedLastLine = false;
       return;
     }
@@ -1133,17 +1118,15 @@ class AdbLogReader extends DeviceLogReader {
 
         final Match fatalMatch = _tombstoneLine.firstMatch(line);
 
-        if (fatalMatch != null) {
-          acceptLine = true;
+        acceptLine = true;
 
-          line = fatalMatch[1];
+        line = fatalMatch[1];
 
-          if (_tombstoneTerminator.hasMatch(fatalMatch[1])) {
-            // Hit crash terminator, stop logging the crash info
-            _fatalCrash = false;
-          }
+        if (_tombstoneTerminator.hasMatch(fatalMatch[1])) {
+          // Hit crash terminator, stop logging the crash info
+          _fatalCrash = false;
         }
-      } else if (appPid != null && int.parse(logMatch.group(1)) == appPid) {
+            } else if (int.parse(logMatch.group(1)) == appPid) {
         acceptLine = true;
 
         if (_fatalLog.hasMatch(line)) {
@@ -1177,7 +1160,7 @@ class AdbLogReader extends DeviceLogReader {
 
   void _stop() {
     _linesController.close();
-    _adbProcess?.kill();
+    _adbProcess.kill();
   }
 
   @override
@@ -1245,7 +1228,7 @@ class AndroidDevicePortForwarder extends DevicePortForwarder {
       final int devicePort = _extractPort(splitLine[2]);
 
       // Failed, skip.
-      if (hostPort == null || devicePort == null) {
+      if (devicePort == null) {
         continue;
       }
 

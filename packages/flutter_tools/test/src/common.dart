@@ -6,24 +6,24 @@ import 'dart:async';
 
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
-import 'package:flutter_tools/src/base/logger.dart';
-import 'package:flutter_tools/src/base/platform.dart';
-import 'package:flutter_tools/src/convert.dart';
-import 'package:vm_service/vm_service.dart' as vm_service;
-import 'package:path/path.dart' as path; // ignore: package_path_import
-
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_tools/src/base/common.dart';
 import 'package:flutter_tools/src/base/context.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/io.dart';
+import 'package:flutter_tools/src/base/logger.dart';
+import 'package:flutter_tools/src/base/platform.dart';
 import 'package:flutter_tools/src/commands/create.dart';
+import 'package:flutter_tools/src/convert.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/runner/flutter_command.dart';
 import 'package:flutter_tools/src/runner/flutter_command_runner.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:meta/meta.dart';
-import 'package:fake_async/fake_async.dart';
+import 'package:path/path.dart' as path; // ignore: package_path_import
 import 'package:test_api/test_api.dart' as test_package show TypeMatcher, test; // ignore: deprecated_member_use
 import 'package:test_api/test_api.dart' hide TypeMatcher, isInstanceOf; // ignore: deprecated_member_use
+import 'package:vm_service/vm_service.dart' as vm_service;
+
 // ignore: deprecated_member_use
 export 'package:test_core/test_core.dart' hide TypeMatcher, isInstanceOf, test; // Defines a 'package:test' shim.
 
@@ -97,12 +97,8 @@ final Matcher throwsAssertionError = throwsA(isA<AssertionError>());
 /// Matcher for functions that throw [ToolExit].
 Matcher throwsToolExit({ int exitCode, Pattern message }) {
   Matcher matcher = isToolExit;
-  if (exitCode != null) {
-    matcher = allOf(matcher, (ToolExit e) => e.exitCode == exitCode);
-  }
-  if (message != null) {
-    matcher = allOf(matcher, (ToolExit e) => e.message?.contains(message) ?? false);
-  }
+  matcher = allOf(matcher, (ToolExit e) => e.exitCode == exitCode);
+  matcher = allOf(matcher, (ToolExit e) => e.message?.contains(message) ?? false);
   return throwsA(matcher);
 }
 
@@ -112,9 +108,7 @@ final test_package.TypeMatcher<ToolExit> isToolExit = isA<ToolExit>();
 /// Matcher for functions that throw [ProcessException].
 Matcher throwsProcessException({ Pattern message }) {
   Matcher matcher = isProcessException;
-  if (message != null) {
-    matcher = allOf(matcher, (ProcessException e) => e.message?.contains(message));
-  }
+  matcher = allOf(matcher, (ProcessException e) => e.message?.contains(message));
   return throwsA(matcher);
 }
 

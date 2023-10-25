@@ -29,7 +29,7 @@ class IntelliJPlugins {
 
       final String versionText = _readPackageVersion(packageName);
       final Version version = Version.parse(versionText);
-      if (version != null && minVersion != null && version < minVersion) {
+      if (version < minVersion) {
         messages.add(ValidationMessage.error(
             '$title plugin version $versionText - the recommended minimum version is $minVersion'));
       } else {

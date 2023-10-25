@@ -52,7 +52,7 @@ abstract class PlatformCodeGenerator extends BaseCodeGenerator {
   // Used by platform code generators.
   List<Key> get numpadKeyData {
     return keyData.data.where((Key entry) {
-      return entry.constantName.startsWith('numpad') && entry.keyLabel != null;
+      return entry.constantName.startsWith('numpad');
     }).toList();
   }
 

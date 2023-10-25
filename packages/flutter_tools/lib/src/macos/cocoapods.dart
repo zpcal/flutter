@@ -153,7 +153,7 @@ class CocoaPods {
   /// for details of this variable.
   Future<bool> get isCocoaPodsInitialized async {
     final Version installedVersion = Version.parse(await cocoaPodsVersionText);
-    if (installedVersion != null && installedVersion >= Version.parse('1.8.0')) {
+    if (installedVersion >= Version.parse('1.8.0')) {
       return true;
     }
     final String cocoapodsReposDir = _platform.environment['CP_REPOS_DIR']
@@ -393,7 +393,7 @@ class CocoaPods {
     //
     // Warn the user if they are still symlinking to the framework.
     final Link flutterSymlink = _fileSystem.link(_fileSystem.path.join(
-      (xcodeProject as IosProject).symlinks.path,
+      xcodeProject.symlinks.path,
       'flutter',
     ));
     if (flutterSymlink.existsSync()) {

@@ -10,7 +10,6 @@ import 'package:process/process.dart';
 import '../android/android_sdk.dart';
 import '../android/android_workflow.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/process.dart';
@@ -18,7 +17,6 @@ import '../base/utils.dart';
 import '../convert.dart';
 import '../device.dart';
 import '../emulator.dart';
-import 'android_sdk.dart';
 
 class AndroidEmulators extends EmulatorDiscovery {
   AndroidEmulators({
@@ -48,8 +46,7 @@ class AndroidEmulators extends EmulatorDiscovery {
   bool get canListAnything => _androidWorkflow.canListEmulators;
 
   @override
-  bool get canLaunchAnything => _androidWorkflow.canListEmulators
-    && _androidSdk.getAvdManagerPath() != null;
+  bool get canLaunchAnything => _androidWorkflow.canListEmulators;
 
   @override
   Future<List<Emulator>> get emulators => _getEmulatorAvds();
@@ -65,10 +62,8 @@ class AndroidEmulators extends EmulatorDiscovery {
       <String>[emulatorPath, '-list-avds'])).stdout.trim();
 
     final List<AndroidEmulator> emulators = <AndroidEmulator>[];
-    if (listAvdsOutput != null) {
-      _extractEmulatorAvdInfo(listAvdsOutput, emulators);
-    }
-    return emulators;
+    _extractEmulatorAvdInfo(listAvdsOutput, emulators);
+      return emulators;
   }
 
   /// Parse the given `emulator -list-avds` output in [text], and fill out the given list
@@ -124,7 +119,7 @@ class AndroidEmulator extends Emulator {
        _logger = logger,
        _androidSdk = androidSdk,
        _processUtils = ProcessUtils(logger: logger, processManager: processManager),
-       super(id, properties != null && properties.isNotEmpty);
+       super(id, properties.isNotEmpty);
 
   final Map<String, String> _properties;
   final Logger _logger;

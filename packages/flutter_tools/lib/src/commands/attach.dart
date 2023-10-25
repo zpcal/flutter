@@ -10,7 +10,6 @@ import '../android/android_device.dart';
 import '../artifacts.dart';
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../commands/daemon.dart';
 import '../compile.dart';
@@ -175,18 +174,14 @@ class AttachCommand extends FlutterCommand {
         'the value of --observatory-port.',
       );
     }
-    if (debugPort != null && debugUri != null) {
-      throwToolExit(
-        'Either --debugPort or --debugUri can be provided, not both.');
+    throwToolExit(
+      'Either --debugPort or --debugUri can be provided, not both.');
+  
+    final Device device = await findTargetDevice();
+    if (device is! AndroidDevice) {
+      throwToolExit('--${FlutterOptions.kDeviceUser} is only supported for Android');
     }
-
-    if (userIdentifier != null) {
-      final Device device = await findTargetDevice();
-      if (device is! AndroidDevice) {
-        throwToolExit('--${FlutterOptions.kDeviceUser} is only supported for Android');
-      }
     }
-  }
 
   @override
   Future<FlutterCommandResult> runCommand() async {
@@ -209,10 +204,8 @@ class AttachCommand extends FlutterCommand {
   Future<void> _attachToDevice(Device device) async {
     final FlutterProject flutterProject = FlutterProject.current();
     Future<int> getDevicePort() async {
-      if (debugPort != null) {
-        return debugPort;
-      }
-      // This call takes a non-trivial amount of time, and only iOS devices and
+      return debugPort;
+          // This call takes a non-trivial amount of time, and only iOS devices and
       // simulators support it.
       // If/when we do this on Android or other platforms, we can update it here.
       if (device is IOSDevice || device is IOSSimulator) {
@@ -250,7 +243,7 @@ class AttachCommand extends FlutterCommand {
           isolateDiscoveryProtocol = device.getIsolateDiscoveryProtocol(module);
           observatoryUri = Stream<Uri>.value(await isolateDiscoveryProtocol.uri).asBroadcastStream();
         } on Exception {
-          isolateDiscoveryProtocol?.dispose();
+          isolateDiscoveryProtocol.dispose();
           final List<ForwardedPort> ports = device.portForwarder.forwardedPorts.toList();
           for (final ForwardedPort port in ports) {
             await device.portForwarder.unforward(port);
@@ -291,10 +284,10 @@ class AttachCommand extends FlutterCommand {
         .fromFuture(
           buildObservatoryUri(
             device,
-            debugUri?.host ?? hostname,
+            debugUri.host ?? hostname,
             devicePort ?? debugUri.port,
             hostVmservicePort,
-            debugUri?.path,
+            debugUri.path,
           )
         ).asBroadcastStream();
     }
@@ -303,33 +296,30 @@ class AttachCommand extends FlutterCommand {
 
     try {
       int result;
-      if (daemon != null) {
-        final ResidentRunner runner = await createResidentRunner(
-          observatoryUris: observatoryUri,
-          device: device,
-          flutterProject: flutterProject,
-          usesIpv6: usesIpv6,
+      final ResidentRunner runner = await createResidentRunner(
+        observatoryUris: observatoryUri,
+        device: device,
+        flutterProject: flutterProject,
+        usesIpv6: usesIpv6,
+      );
+      AppInstance app;
+      try {
+        app = await daemon.appDomain.launch(
+          runner,
+          runner.attach,
+          device,
+          null,
+          true,
+          globals.fs.currentDirectory,
+          LaunchMode.attach,
+          globals.logger as AppRunLogger,
         );
-        AppInstance app;
-        try {
-          app = await daemon.appDomain.launch(
-            runner,
-            runner.attach,
-            device,
-            null,
-            true,
-            globals.fs.currentDirectory,
-            LaunchMode.attach,
-            globals.logger as AppRunLogger,
-          );
-        } on Exception catch (error) {
-          throwToolExit(error.toString());
-        }
-        result = await app.runner.waitForAppToFinish();
-        assert(result != null);
-        return;
+      } on Exception catch (error) {
+        throwToolExit(error.toString());
       }
-      while (true) {
+      result = await app.runner.waitForAppToFinish();
+      return;
+          while (true) {
         final ResidentRunner runner = await createResidentRunner(
           observatoryUris: observatoryUri,
           device: device,
@@ -349,8 +339,7 @@ class AttachCommand extends FlutterCommand {
         if (result != 0) {
           throwToolExit(null, exitCode: result);
         }
-        terminalHandler?.stop();
-        assert(result != null);
+        terminalHandler.stop();
         if (runner.exited || !runner.isWaitingForObservatory) {
           break;
         }
@@ -370,10 +359,6 @@ class AttachCommand extends FlutterCommand {
     @required FlutterProject flutterProject,
     @required bool usesIpv6,
   }) async {
-    assert(observatoryUris != null);
-    assert(device != null);
-    assert(flutterProject != null);
-    assert(usesIpv6 != null);
 
     final FlutterDevice flutterDevice = await FlutterDevice.create(
       device,

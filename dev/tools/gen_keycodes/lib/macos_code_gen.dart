@@ -18,10 +18,8 @@ class MacOsCodeGenerator extends PlatformCodeGenerator {
   String get _macOsScanCodeMap {
     final StringBuffer macOsScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.macOsScanCode != null) {
-        macOsScanCodeMap.writeln('  { ${toHex(entry.macOsScanCode)}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
-      }
-    }
+      macOsScanCodeMap.writeln('  { ${toHex(entry.macOsScanCode)}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
+        }
     return macOsScanCodeMap.toString().trimRight();
   }
 
@@ -29,20 +27,16 @@ class MacOsCodeGenerator extends PlatformCodeGenerator {
   String get _macOsNumpadMap {
     final StringBuffer macOsNumPadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.macOsScanCode != null) {
-        macOsNumPadMap.writeln('  { ${toHex(entry.macOsScanCode)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-      }
-    }
+      macOsNumPadMap.writeln('  { ${toHex(entry.macOsScanCode)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
+        }
     return macOsNumPadMap.toString().trimRight();
   }
 
   String get _macOsFunctionKeyMap {
     final StringBuffer macOsFunctionKeyMap = StringBuffer();
     for (final Key entry in functionKeyData) {
-      if (entry.macOsScanCode != null) {
-        macOsFunctionKeyMap.writeln('  { ${toHex(entry.macOsScanCode)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-      }
-    }
+      macOsFunctionKeyMap.writeln('  { ${toHex(entry.macOsScanCode)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
+        }
     return macOsFunctionKeyMap.toString().trimRight();
   }
 

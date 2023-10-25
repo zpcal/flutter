@@ -47,7 +47,7 @@ class ProxyValidator extends DoctorValidator {
       else
         ...<ValidationMessage>[
           ValidationMessage('NO_PROXY is $_noProxy'),
-          for (String host in const <String>['127.0.0.1', 'localhost'])
+          for (final String host in const <String>['127.0.0.1', 'localhost'])
             if (_noProxy.contains(host))
               ValidationMessage('NO_PROXY contains $host')
             else

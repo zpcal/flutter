@@ -6,7 +6,6 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_driver/src/common/find.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../common.dart';
 
 void main() {
   final MockDeserialize mockDeserialize = MockDeserialize();

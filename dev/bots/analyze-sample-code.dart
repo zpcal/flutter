@@ -229,13 +229,11 @@ class SampleChecker {
         }
       }
       // If we made a snapshot, remove it (so as not to clutter up the tree).
-      if (_snippetsSnapshotPath != null) {
-        final File snapshot = File(_snippetsSnapshotPath);
-        if (snapshot.existsSync()) {
-          snapshot.deleteSync();
-        }
+      final File snapshot = File(_snippetsSnapshotPath);
+      if (snapshot.existsSync()) {
+        snapshot.deleteSync();
       }
-    }
+        }
     return _exitCode;
   }
 
@@ -289,7 +287,7 @@ class SampleChecker {
       ...sample.args,
     ];
     if (verbose)
-      print('Generating sample for ${sample.start?.filename}:${sample.start?.line}');
+      print('Generating sample for ${sample.start.filename}:${sample.start.line}');
     final ProcessResult process = _runSnippetsScript(args);
     if (verbose)
       stderr.write('${process.stderr}');
@@ -407,7 +405,7 @@ class SampleChecker {
             startLine = Line('', filename: relativeFilePath, line: lineNumber + 1, indent: 3);
             inPreamble = true;
           } else if (sampleMatch != null) {
-            inSnippet = sampleMatch != null && (sampleMatch[1] == 'sample' || sampleMatch[1] == 'dartpad');
+            inSnippet = sampleMatch[1] == 'sample' || sampleMatch[1] == 'dartpad';
             if (inSnippet) {
               startLine = Line(
                 '',
@@ -658,7 +656,7 @@ linter:
           }
           final Line actualLine = actualSection.code[lineNumber - 1];
 
-          if (actualLine?.filename == null) {
+          if (actualLine.filename == null) {
             if (errorCode == 'missing_identifier' && lineNumber > 1) {
               if (fileContents[lineNumber - 2].endsWith(',')) {
                 final Line actualLine = sections[file.path].code[lineNumber - 2];
@@ -763,10 +761,8 @@ linter:
         }
       }
       if (subblocks > 0) {
-        if (subline != null) {
-          subsections.add(_processBlock(subline, buffer));
-        }
-        // Combine all of the subsections into one section, now that they've been processed.
+        subsections.add(_processBlock(subline, buffer));
+              // Combine all of the subsections into one section, now that they've been processed.
         return Section.combine(subsections);
       } else {
         return Section.fromStrings(line, block.toList());
@@ -784,10 +780,8 @@ class Line {
   final String code;
 
   String toStringWithColumn(int column) {
-    if (column != null && indent != null) {
-      return '$filename:$line:${column + indent}: $code';
-    }
-    return toString();
+    return '$filename:$line:${column + indent}: $code';
+      return toString();
   }
 
   @override
@@ -818,8 +812,6 @@ class Section {
     return Section(codeLines);
   }
   factory Section.surround(Line firstLine, String prefix, List<String> code, String postfix) {
-    assert(prefix != null);
-    assert(postfix != null);
     final List<Line> codeLines = <Line>[];
     for (int i = 0; i < code.length; ++i) {
       codeLines.add(

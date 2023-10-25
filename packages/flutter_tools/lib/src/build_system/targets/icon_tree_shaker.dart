@@ -3,12 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:meta/meta.dart';
-import 'package:process/process.dart';
 import 'package:mime/mime.dart' as mime;
+import 'package:process/process.dart';
 
 import '../../artifacts.dart';
 import '../../base/common.dart';
-import '../../base/file_system.dart';
 import '../../base/io.dart';
 import '../../base/logger.dart';
 import '../../convert.dart';
@@ -49,16 +48,13 @@ class IconTreeShaker {
     @required Logger logger,
     @required FileSystem fileSystem,
     @required Artifacts artifacts,
-  }) : assert(_environment != null),
-       assert(processManager != null),
-       assert(logger != null),
+  }) : assert(processManager != null),
        assert(fileSystem != null),
-       assert(artifacts != null),
        _processManager = processManager,
        _logger = logger,
        _fs = fileSystem,
        _artifacts = artifacts,
-       _fontManifest = fontManifest?.string {
+       _fontManifest = fontManifest.string {
     if (_environment.defines[kIconTreeShakerFlag] == 'true' &&
         _environment.defines[kBuildMode] == 'debug') {
       logger.printError('Font subetting is not supported in debug mode. The '
@@ -96,8 +92,7 @@ class IconTreeShaker {
   final Artifacts _artifacts;
 
   /// Whether font subsetting should be used for this [Environment].
-  bool get enabled => _fontManifest != null
-                   && _environment.defines[kIconTreeShakerFlag] == 'true'
+  bool get enabled => _environment.defines[kIconTreeShakerFlag] == 'true'
                    && _environment.defines[kBuildMode] != 'debug';
 
   // Fills the [_iconData] map.
@@ -179,7 +174,6 @@ class IconTreeShaker {
       return false;
     }
     await (_iconDataProcessing ??= _getIconData(_environment));
-    assert(_iconData != null);
 
     final _IconTreeShakerData iconTreeShakerData = _iconData[relativePath];
     if (iconTreeShakerData == null) {
@@ -284,7 +278,7 @@ class IconTreeShaker {
         'Invalid ConstFinder output: expected a top level JSON object, '
         'got $jsonDecode.');
     }
-    final Map<String, dynamic> constFinderMap = jsonDecode as Map<String, dynamic>;
+    final Map<String, dynamic> constFinderMap = jsonDecode;
     final _ConstFinderResult constFinderResult = _ConstFinderResult(constFinderMap);
     if (constFinderResult.hasNonConstantLocations) {
       _logger.printError('This application cannot tree shake icons fonts. '
@@ -360,9 +354,7 @@ class _IconTreeShakerData {
     @required this.family,
     @required this.relativePath,
     @required this.codePoints,
-  }) : assert(family != null),
-       assert(relativePath != null),
-       assert(codePoints != null);
+  });
 
   /// The font family name, e.g. "MaterialIcons".
   final String family;

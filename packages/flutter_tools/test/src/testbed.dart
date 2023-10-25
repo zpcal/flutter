@@ -13,22 +13,20 @@ import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/base/logger.dart';
 import 'package:flutter_tools/src/base/os.dart';
 import 'package:flutter_tools/src/base/process.dart';
-
 import 'package:flutter_tools/src/base/signals.dart';
 import 'package:flutter_tools/src/base/terminal.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/context_runner.dart';
 import 'package:flutter_tools/src/dart/pub.dart';
 import 'package:flutter_tools/src/features.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/reporting/reporting.dart';
 import 'package:flutter_tools/src/version.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:meta/meta.dart';
 import 'package:process/process.dart';
 
 import 'common.dart' as tester;
 import 'context.dart';
-import 'fake_process_manager.dart';
 import 'throwing_pub.dart';
 
 export 'package:flutter_tools/src/base/context.dart' show Generator;
@@ -110,9 +108,9 @@ class Testbed {
     final Map<Type, Generator> testOverrides = <Type, Generator>{
       ..._testbedDefaults,
       // Add the initial setUp overrides
-      ...?_overrides,
+      ..._overrides,
       // Add the test-specific overrides
-      ...?overrides,
+      ...overrides,
     };
     if (testOverrides.containsKey(ProcessUtils)) {
       throw StateError('Do not inject ProcessUtils for testing, use ProcessManager instead.');
@@ -141,10 +139,8 @@ class Testbed {
           ),
           body: () async {
             Cache.flutterRoot = '';
-            if (_setup != null) {
-              await _setup();
-            }
-            await test();
+            await _setup();
+                      await test();
             Cache.flutterRoot = originalFlutterRoot;
             for (final MapEntry<Timer, StackTrace> entry in timers.entries) {
               if (entry.key.isActive) {

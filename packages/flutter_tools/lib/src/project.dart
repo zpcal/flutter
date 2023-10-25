@@ -74,9 +74,7 @@ class FlutterProjectFactory {
 class FlutterProject {
   @visibleForTesting
   FlutterProject(this.directory, this.manifest, this._exampleManifest)
-    : assert(directory != null),
-      assert(manifest != null),
-      assert(_exampleManifest != null);
+    : assert(directory != null);
 
   /// Returns a [FlutterProject] view of the given directory or a ToolExit error,
   /// if `pubspec.yaml` or `example/pubspec.yaml` is invalid.
@@ -124,7 +122,7 @@ class FlutterProject {
   }
 
   String _organizationNameFromPackageName(String packageName) {
-    if (packageName != null && 0 <= packageName.lastIndexOf('.')) {
+    if (0 <= packageName.lastIndexOf('.')) {
       return packageName.substring(0, packageName.lastIndexOf('.'));
     }
     return null;
@@ -447,28 +445,24 @@ class IosProject extends FlutterProjectPlatform implements XcodeBasedProject {
       } on FileNotFoundException {
         // iOS tooling not found; likely not running OSX; let [fromPlist] be null
       }
-      if (fromPlist != null && !fromPlist.contains(r'$')) {
+      if (!fromPlist.contains(r'$')) {
         // Info.plist has no build variables in product bundle ID.
         return fromPlist;
       }
     }
     final Map<String, String> allBuildSettings = await buildSettingsForBuildInfo(buildInfo);
-    if (allBuildSettings != null) {
-      if (fromPlist != null) {
-        // Perform variable substitution using build settings.
-        return xcode.substituteXcodeVariables(fromPlist, allBuildSettings);
-      }
+    // Perform variable substitution using build settings.
+    return xcode.substituteXcodeVariables(fromPlist, allBuildSettings);
       return allBuildSettings['PRODUCT_BUNDLE_IDENTIFIER'];
-    }
-
+  
     // On non-macOS platforms, parse the first PRODUCT_BUNDLE_IDENTIFIER from
     // the project file. This can return the wrong bundle identifier if additional
     // bundles have been added to the project and are found first, like frameworks
     // or companion watchOS projects. However, on non-macOS platforms this is
     // only used for display purposes and to regenerate organization names, so
     // best-effort is probably fine.
-    final String fromPbxproj = _firstMatchInFile(xcodeProjectInfoFile, _productBundleIdPattern)?.group(2);
-    if (fromPbxproj != null && (fromPlist == null || fromPlist == _productBundleIdVariable)) {
+    final String fromPbxproj = _firstMatchInFile(xcodeProjectInfoFile, _productBundleIdPattern).group(2);
+    if (fromPlist == _productBundleIdVariable) {
       return fromPbxproj;
     }
 
@@ -492,10 +486,8 @@ class IosProject extends FlutterProjectPlatform implements XcodeBasedProject {
     String productName;
     if (globals.xcodeProjectInterpreter.isInstalled) {
       final Map<String, String> xcodeBuildSettings = await buildSettingsForBuildInfo(buildInfo);
-      if (xcodeBuildSettings != null) {
-        productName = xcodeBuildSettings['FULL_PRODUCT_NAME'];
-      }
-    }
+      productName = xcodeBuildSettings['FULL_PRODUCT_NAME'];
+        }
     if (productName == null) {
       globals.printTrace('FULL_PRODUCT_NAME not present, defaulting to $_hostAppProjectName');
     }
@@ -540,7 +532,7 @@ class IosProject extends FlutterProjectPlatform implements XcodeBasedProject {
       xcodeProject.path,
       scheme: scheme,
     );
-    if (buildSettings != null && buildSettings.isNotEmpty) {
+    if (buildSettings.isNotEmpty) {
       // No timeouts, flakes, or errors.
       return buildSettings;
     }
@@ -753,12 +745,12 @@ class AndroidProject extends FlutterProjectPlatform {
 
   String get applicationId {
     final File gradleFile = hostAppGradleRoot.childDirectory('app').childFile('build.gradle');
-    return _firstMatchInFile(gradleFile, _applicationIdPattern)?.group(1);
+    return _firstMatchInFile(gradleFile, _applicationIdPattern).group(1);
   }
 
   String get group {
     final File gradleFile = hostAppGradleRoot.childFile('build.gradle');
-    return _firstMatchInFile(gradleFile, _groupPattern)?.group(1);
+    return _firstMatchInFile(gradleFile, _groupPattern).group(1);
   }
 
   /// The build directory where the Android artifacts are placed.
@@ -932,10 +924,8 @@ Match _firstMatchInFile(File file, RegExp regExp) {
   }
   for (final String line in file.readAsLinesSync()) {
     final Match match = regExp.firstMatch(line);
-    if (match != null) {
-      return match;
+    return match;
     }
-  }
   return null;
 }
 
@@ -1106,7 +1096,7 @@ class LinuxProject extends FlutterProjectPlatform implements CmakeBasedProject {
   Future<void> ensureReadyForPlatformSpecificTooling() async {}
 
   String get applicationId {
-    return _firstMatchInFile(cmakeFile, _applicationIdPattern)?.group(1);
+    return _firstMatchInFile(cmakeFile, _applicationIdPattern).group(1);
   }
 }
 

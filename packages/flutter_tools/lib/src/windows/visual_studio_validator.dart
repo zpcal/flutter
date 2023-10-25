@@ -45,10 +45,8 @@ class VisualStudioValidator extends DoctorValidator {
       }
 
       final String windows10SdkVersion = _visualStudio.getWindows10SDKVersion();
-      if (windows10SdkVersion != null) {
-        messages.add(ValidationMessage(_userMessages.windows10SdkVersion(windows10SdkVersion)));
-      }
-
+      messages.add(ValidationMessage(_userMessages.windows10SdkVersion(windows10SdkVersion)));
+    
       // Messages for faulty installations.
       if (!_visualStudio.isAtLeastMinimumVersion) {
         status = ValidationType.partial;

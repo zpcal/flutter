@@ -12,10 +12,10 @@ import 'package:flutter_tools/src/bundle.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/commands/build_bundle.dart';
 import 'package:flutter_tools/src/features.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/reporting/reporting.dart';
 import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 
 import '../../src/common.dart';
 import '../../src/context.dart';
@@ -62,7 +62,7 @@ void main() {
     final CommandRunner<void> runner = createTestCommandRunner(command);
     await runner.run(<String>[
       'bundle',
-      ...?arguments,
+      ...arguments,
       '--target=$projectPath/lib/main.dart',
       '--no-pub'
     ]);

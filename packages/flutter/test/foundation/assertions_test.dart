@@ -5,7 +5,6 @@
 // @dart = 2.8
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 import 'capture_output.dart';
 
@@ -242,7 +241,7 @@ void main() {
       AssertionError error;
       try {
         throw FlutterError.fromParts(<DiagnosticsNode>[
-          (ErrorDescription('Error description without a summary'))]);
+          ErrorDescription('Error description without a summary')]);
       } on AssertionError catch (e) {
         error = e;
       }

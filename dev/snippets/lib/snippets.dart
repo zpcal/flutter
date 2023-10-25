@@ -88,7 +88,7 @@ class SnippetGenerator {
         // "```dart preamble" section if that section would be empty.
         final _ComponentTuple result = injections
             .firstWhere((_ComponentTuple tuple) => tuple.name == match[1], orElse: () => null);
-        return result?.mergedContent ?? (metadata[match[1]] ?? '').toString();
+        return result.mergedContent ?? (metadata[match[1]] ?? '').toString();
       }
     }).trim();
   }
@@ -161,24 +161,22 @@ class SnippetGenerator {
     final RegExp codeStartEnd = RegExp(r'^\s*```([-\w]+|[-\w]+ ([-\w]+))?\s*$');
     for (final String line in input.split('\n')) {
       final Match match = codeStartEnd.firstMatch(line);
-      if (match != null) { // If we saw the start or end of a code block
-        inCodeBlock = !inCodeBlock;
-        if (match[1] != null) {
-          language = match[1];
-          if (match[2] != null) {
-            components.add(_ComponentTuple('code-${match[2]}', <String>[], language: language));
-          } else {
-            components.add(_ComponentTuple('code', <String>[], language: language));
-          }
+ // If we saw the start or end of a code block
+      inCodeBlock = !inCodeBlock;
+      if (match[1] != null) {
+        language = match[1];
+        if (match[2] != null) {
+          components.add(_ComponentTuple('code-${match[2]}', <String>[], language: language));
         } else {
-          language = null;
+          components.add(_ComponentTuple('code', <String>[], language: language));
         }
-        continue;
+      } else {
+        language = null;
       }
-      if (!inCodeBlock) {
+      continue;
+          if (!inCodeBlock) {
         description.add(line);
       } else {
-        assert(language != null);
         components.last.contents.add(line);
       }
     }
@@ -231,8 +229,7 @@ class SnippetGenerator {
     @required Map<String, Object> metadata,
   }) {
     assert(template != null || type != SnippetType.sample);
-    assert(metadata != null && metadata['id'] != null);
-    assert(input != null);
+    assert(metadata['id'] != null);
     assert(!showDartPad || type == SnippetType.sample, 'Only application samples work with dartpad.');
     final List<_ComponentTuple> snippetData = parseInput(_loadFileAsUtf8(input));
     switch (type) {
@@ -272,7 +269,7 @@ class SnippetGenerator {
         );
         metadata.addAll(<String, Object>{
           'file': path.basename(outputFile.path),
-          'description': description?.mergedContent,
+          'description': description.mergedContent,
         });
         metadataFile.writeAsStringSync(jsonEncoder.convert(metadata));
         break;

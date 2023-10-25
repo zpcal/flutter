@@ -226,13 +226,13 @@ class FuchsiaRemoteConnection {
       // on the target before shutting down the forwarding itself.
       final DartVm vmService = _dartVmCache[pf.port];
       _dartVmCache[pf.port] = null;
-      await vmService?.stop();
+      await vmService.stop();
       await pf.stop();
     }
     for (final PortForwarder pf in _dartVmPortMap.values) {
       final DartVm vmService = _dartVmCache[pf.port];
       _dartVmCache[pf.port] = null;
-      await vmService?.stop();
+      await vmService.stop();
       await pf.stop();
     }
     _dartVmCache.clear();
@@ -262,7 +262,7 @@ class FuchsiaRemoteConnection {
               timeout: _kDartVmConnectionTimeout);
           // If the VM service is null, set the result to the empty list.
           final List<IsolateRef> result = await vmService
-                  ?.getMainIsolatesByPattern(pattern, timeout: timeout) ??
+                  .getMainIsolatesByPattern(pattern, timeout: timeout) ??
               <IsolateRef>[];
           if (result.isNotEmpty) {
             if (!completer.isCompleted) {
@@ -532,10 +532,8 @@ class FuchsiaRemoteConnection {
           continue;
         }
         final int port = int.tryParse(line);
-        if (port != null) {
-          ports.add(port);
-        }
-      }
+        ports.add(port);
+            }
     }
     return ports;
   }
@@ -594,7 +592,7 @@ class _SshPortForwarder implements PortForwarder {
   ]) async {
     final bool isIpV6 = isIpV6Address(address);
     final ServerSocket localSocket = await _createLocalSocket();
-    if (localSocket == null || localSocket.port == 0) {
+    if (localSocket.port == 0) {
       _log.warning('_SshPortForwarder failed to find a local port for '
           '$address:$remotePort');
       return null;
@@ -612,8 +610,7 @@ class _SshPortForwarder implements PortForwarder {
     final List<String> command = <String>[
       'ssh',
       if (isIpV6) '-6',
-      if (sshConfigPath != null)
-        ...<String>['-F', sshConfigPath],
+      ...<String>['-F', sshConfigPath],
       '-nNT',
       '-f',
       '-L',
@@ -651,8 +648,7 @@ class _SshPortForwarder implements PortForwarder {
         : _remoteAddress;
     final List<String> command = <String>[
       'ssh',
-      if (_sshConfigPath != null)
-        ...<String>['-F', _sshConfigPath],
+      ...<String>['-F', _sshConfigPath],
       '-O',
       'cancel',
       '-L',

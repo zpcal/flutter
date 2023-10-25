@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:file/file.dart';
 import 'package:file/memory.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_tools/src/devfs.dart';
 import 'package:flutter_tools/src/vmservice.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_config/package_config.dart';
-import 'package:fake_async/fake_async.dart';
 
 import '../src/common.dart';
 import '../src/context.dart';

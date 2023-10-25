@@ -6,7 +6,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'base/file_system.dart';
 import 'build_info.dart';
 import 'device.dart';
 import 'globals.dart' as globals;
@@ -92,14 +91,12 @@ class ColdRunner extends ResidentRunner {
       }
     }
 
-    if (flutterDevices.first.observatoryUris != null) {
-      // For now, only support one debugger connection.
-      connectionInfoCompleter?.complete(DebugConnectionInfo(
-        httpUri: flutterDevices.first.vmService.httpAddress,
-        wsUri: flutterDevices.first.vmService.wsAddress,
-      ));
-    }
-
+    // For now, only support one debugger connection.
+    connectionInfoCompleter.complete(DebugConnectionInfo(
+      httpUri: flutterDevices.first.vmService.httpAddress,
+      wsUri: flutterDevices.first.vmService.wsAddress,
+    ));
+  
     globals.printTrace('Application running.');
 
     for (final FlutterDevice device in flutterDevices) {
@@ -125,7 +122,7 @@ class ColdRunner extends ResidentRunner {
       appFinished();
     }
 
-    appStartedCompleter?.complete();
+    appStartedCompleter.complete();
 
     writeVmserviceFile();
 
@@ -159,7 +156,7 @@ class ColdRunner extends ResidentRunner {
         globals.printTrace('Connected to $view.');
       }
     }
-    appStartedCompleter?.complete();
+    appStartedCompleter.complete();
     if (stayResident) {
       return waitForAppToFinish();
     }

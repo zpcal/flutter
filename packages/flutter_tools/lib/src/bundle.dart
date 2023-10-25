@@ -11,7 +11,6 @@ import 'package:pool/pool.dart';
 
 import 'asset.dart';
 import 'base/common.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'build_info.dart';
 import 'build_system/build_system.dart';
@@ -111,13 +110,11 @@ class BundleBuilder {
       dartDefines: buildInfo.dartDefines,
     );
     // Work around for flutter_tester placing kernel artifacts in odd places.
-    if (applicationKernelFilePath != null) {
-      final File outputDill = globals.fs.directory(assetDirPath).childFile('kernel_blob.bin');
-      if (outputDill.existsSync()) {
-        outputDill.copySync(applicationKernelFilePath);
-      }
+    final File outputDill = globals.fs.directory(assetDirPath).childFile('kernel_blob.bin');
+    if (outputDill.existsSync()) {
+      outputDill.copySync(applicationKernelFilePath);
     }
-    return;
+      return;
   }
 }
 
@@ -151,9 +148,9 @@ Future<void> buildWithAssemble({
       kTargetFile: mainPath,
       kBuildMode: getNameForBuildMode(buildMode),
       kTargetPlatform: getNameForTargetPlatform(targetPlatform),
-      kTrackWidgetCreation: trackWidgetCreation?.toString(),
+      kTrackWidgetCreation: trackWidgetCreation.toString(),
       kIconTreeShakerFlag: treeShakeIcons ? 'true' : null,
-      if (dartDefines != null && dartDefines.isNotEmpty)
+      if (dartDefines.isNotEmpty)
         kDartDefines: encodeDartDefines(dartDefines),
     },
     artifacts: globals.artifacts,
@@ -176,18 +173,16 @@ Future<void> buildWithAssemble({
     }
     throwToolExit('Failed to build bundle.');
   }
-  if (depfilePath != null) {
-    final Depfile depfile = Depfile(result.inputFiles, result.outputFiles);
-    final File outputDepfile = globals.fs.file(depfilePath);
-    if (!outputDepfile.parent.existsSync()) {
-      outputDepfile.parent.createSync(recursive: true);
-    }
-    final DepfileService depfileService = DepfileService(
-      fileSystem: globals.fs,
-      logger: globals.logger,
-    );
-    depfileService.writeToFile(depfile, outputDepfile);
+  final Depfile depfile = Depfile(result.inputFiles, result.outputFiles);
+  final File outputDepfile = globals.fs.file(depfilePath);
+  if (!outputDepfile.parent.existsSync()) {
+    outputDepfile.parent.createSync(recursive: true);
   }
+  final DepfileService depfileService = DepfileService(
+    fileSystem: globals.fs,
+    logger: globals.logger,
+  );
+  depfileService.writeToFile(depfile, outputDepfile);
 }
 
 Future<AssetBundle> buildAssets({

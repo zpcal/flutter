@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 
 class RenderSolidColorBox extends RenderDecoratedBox {
   RenderSolidColorBox(this.backgroundColor, { this.desiredSize = Size.infinite })

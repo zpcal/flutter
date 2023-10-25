@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../build_system/build_system.dart';
 import '../build_system/targets/localizations.dart';
 
@@ -14,8 +13,6 @@ Future<void> generateLocalizationsSyntheticPackage({
   @required Environment environment,
   @required BuildSystem buildSystem,
 }) async {
-  assert(environment != null);
-  assert(buildSystem != null);
 
   final FileSystem fileSystem = environment.fileSystem;
   final File l10nYamlFile = fileSystem.file(
@@ -46,7 +43,7 @@ Future<void> generateLocalizationsSyntheticPackage({
   } else {
     final YamlMap yamlMap = yamlNode as YamlMap;
     final Object value = yamlMap['synthetic-package'];
-    if (value is! bool && value != null) {
+    if (value is! bool) {
       throwToolExit(
         'Expected "synthetic-package" to have a bool value, '
         'instead was "$value"'
@@ -66,7 +63,7 @@ Future<void> generateLocalizationsSyntheticPackage({
     environment,
   );
 
-  if (result == null || result.hasException) {
+  if (result.hasException) {
     throwToolExit('Generating synthetic localizations package has failed.');
   }
 }

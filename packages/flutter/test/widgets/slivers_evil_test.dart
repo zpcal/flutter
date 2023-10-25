@@ -4,10 +4,10 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class TestSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   TestSliverPersistentHeaderDelegate(this._maxExtent);

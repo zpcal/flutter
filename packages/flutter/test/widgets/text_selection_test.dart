@@ -4,12 +4,12 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class MockClipboard {
   MockClipboard({

@@ -5,8 +5,8 @@
 // @dart = 2.8
 
 import 'package:flutter/rendering.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('SliverFillViewport control test', (WidgetTester tester) async {

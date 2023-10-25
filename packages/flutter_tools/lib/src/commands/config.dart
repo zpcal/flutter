@@ -68,10 +68,8 @@ class ConfigCommand extends FlutterCommand {
     final Map<String, Feature> featuresByName = <String, Feature>{};
     final String channel = globals.flutterVersion.channel;
     for (final Feature feature in allFeatures) {
-      if (feature.configSetting != null) {
-        featuresByName[feature.configSetting] = feature;
-      }
-    }
+      featuresByName[feature.configSetting] = feature;
+        }
     String values = globals.config.keys
         .map<String>((String key) {
           String configFooter = '';
@@ -104,10 +102,8 @@ class ConfigCommand extends FlutterCommand {
 
     if (boolArg('clear-features')) {
       for (final Feature feature in allFeatures) {
-        if (feature.configSetting != null) {
-          globals.config.removeValue(feature.configSetting);
-        }
-      }
+        globals.config.removeValue(feature.configSetting);
+            }
       return FlutterCommandResult.success();
     }
 
@@ -174,10 +170,10 @@ class ConfigCommand extends FlutterCommand {
     }
 
     // Ensure we send any calculated ones, if overrides don't exist.
-    if (results['android-studio-dir'] == null && androidStudio != null) {
+    if (results['android-studio-dir'] == null) {
       results['android-studio-dir'] = androidStudio.directory;
     }
-    if (results['android-sdk'] == null && globals.androidSdk != null) {
+    if (results['android-sdk'] == null) {
       results['android-sdk'] = globals.androidSdk.directory;
     }
 

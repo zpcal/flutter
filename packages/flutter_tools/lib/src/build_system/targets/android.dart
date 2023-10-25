@@ -4,7 +4,6 @@
 
 import '../../artifacts.dart';
 import '../../base/build.dart';
-import '../../base/file_system.dart';
 import '../../build_info.dart';
 import '../../globals.dart' as globals hide fs, artifacts, logger, processManager;
 import '../build_system.dart';
@@ -234,17 +233,15 @@ class AndroidAot extends AotElfBase {
     final bool dartObfuscation = environment.defines[kDartObfuscation] == 'true';
     final String codeSizeDirectory = environment.defines[kCodeSizeDirectory];
 
-    if (codeSizeDirectory != null) {
-      final File codeSizeFile = environment.fileSystem
-        .directory(codeSizeDirectory)
-        .childFile('snapshot.$_androidAbiName.json');
-      final File precompilerTraceFile = environment.fileSystem
-        .directory(codeSizeDirectory)
-        .childFile('trace.$_androidAbiName.json');
-      extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
-      extraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
-    }
-
+    final File codeSizeFile = environment.fileSystem
+      .directory(codeSizeDirectory)
+      .childFile('snapshot.$_androidAbiName.json');
+    final File precompilerTraceFile = environment.fileSystem
+      .directory(codeSizeDirectory)
+      .childFile('trace.$_androidAbiName.json');
+    extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
+    extraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
+  
     final int snapshotExitCode = await snapshotter.build(
       platform: targetPlatform,
       buildMode: buildMode,

@@ -260,9 +260,9 @@ class _SlidersState extends State<_Sliders> {
                     textAlign: TextAlign.center,
                     onSubmitted: (String value) {
                       final double newValue = double.tryParse(value);
-                      if (newValue != null && newValue != _continuousValue) {
+                      if (newValue != _continuousValue) {
                         setState(() {
-                          _continuousValue = newValue.clamp(0.0, 100.0) as double;
+                          _continuousValue = newValue.clamp(0.0, 100.0);
                         });
                       }
                     },

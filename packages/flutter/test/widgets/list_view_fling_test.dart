@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 const double kHeight = 10.0;
 const double kFlingOffset = kHeight * 20.0;

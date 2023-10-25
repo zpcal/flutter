@@ -5,7 +5,6 @@
 import 'package:meta/meta.dart';
 import 'package:process/process.dart';
 
-import 'base/file_system.dart';
 import 'base/platform.dart';
 import 'base/utils.dart';
 import 'build_info.dart';
@@ -175,8 +174,7 @@ class EngineBuildPaths {
   const EngineBuildPaths({
     @required this.targetEngine,
     @required this.hostEngine,
-  }) : assert(targetEngine != null),
-       assert(hostEngine != null);
+  });
 
   final String targetEngine;
   final String hostEngine;
@@ -258,7 +256,7 @@ class CachedArtifacts implements Artifacts {
   String _getDesktopArtifactPath(Artifact artifact, TargetPlatform platform, BuildMode mode) {
     // When platform is null, a generic host platform artifact is being requested
     // and not the gen_snapshot for darwin as a target platform.
-    if (platform != null && artifact == Artifact.genSnapshot) {
+    if (artifact == Artifact.genSnapshot) {
       final String engineDir = _getEngineArtifactsPath(platform, mode);
       return _fileSystem.path.join(engineDir, _artifactToFileName(artifact));
     }
@@ -343,7 +341,6 @@ class CachedArtifacts implements Artifacts {
   }
 
   String _getHostArtifactPath(Artifact artifact, TargetPlatform platform, BuildMode mode) {
-    assert(platform != null);
     switch (artifact) {
       case Artifact.genSnapshot:
         // For script snapshots any gen_snapshot binary will do. Returning gen_snapshot for
@@ -439,7 +436,7 @@ class CachedArtifacts implements Artifacts {
         // TODO(jonahwilliams): remove once debug desktop artifacts are uploaded
         // under a separate directory from the host artifacts.
         // https://github.com/flutter/flutter/issues/38935
-        if (mode == BuildMode.debug || mode == null) {
+        if (mode == BuildMode.debug) {
           return _fileSystem.path.join(engineDir, platformName);
         }
         final String suffix = mode != BuildMode.debug ? '-${snakeCase(getModeName(mode), '-')}' : '';
@@ -455,7 +452,6 @@ class CachedArtifacts implements Artifacts {
       case TargetPlatform.android_arm64:
       case TargetPlatform.android_x64:
       case TargetPlatform.android_x86:
-        assert(mode != null, 'Need to specify a build mode for platform $platform.');
         final String suffix = mode != BuildMode.debug ? '-${snakeCase(getModeName(mode), '-')}' : '';
         return _fileSystem.path.join(engineDir, platformName + suffix);
       case TargetPlatform.android:
@@ -678,7 +674,7 @@ class OverrideArtifacts implements Artifacts {
     this.engineDartBinary,
     this.platformKernelDill,
     this.flutterPatchedSdk,
-  }) : assert(parent != null);
+  });
 
   final Artifacts parent;
   final File frontendServer;
@@ -720,13 +716,9 @@ class _TestArtifacts implements Artifacts {
   String getArtifactPath(Artifact artifact, {TargetPlatform platform, BuildMode mode}) {
     final StringBuffer buffer = StringBuffer();
     buffer.write(artifact);
-    if (platform != null) {
-      buffer.write('.$platform');
-    }
-    if (mode != null) {
+    buffer.write('.$platform');
       buffer.write('.$mode');
-    }
-    return buffer.toString();
+      return buffer.toString();
   }
 
   @override

@@ -4,9 +4,9 @@
 
 // @dart = 2.8
 
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/painting.dart';
 
 void main() {
   // Here and below, see: https://github.com/dart-lang/sdk/issues/26980

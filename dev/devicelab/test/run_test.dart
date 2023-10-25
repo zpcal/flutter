@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:process/process.dart';
 
-import 'common.dart';
 
 void main() {
   const ProcessManager processManager = LocalProcessManager();
@@ -33,7 +32,7 @@ void main() {
         {String deviceId}
       ) async {
       final ProcessResult result = await runScript(testNames, <String>[
-        if (deviceId != null) ...<String>['-d', deviceId],
+        ...<String>['-d', deviceId],
       ]);
       expect(result.exitCode, expectedExitCode,
           reason:

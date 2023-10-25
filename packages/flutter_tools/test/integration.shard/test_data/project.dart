@@ -32,16 +32,10 @@ abstract class Project {
   Future<void> setUpIn(Directory dir) async {
     this.dir = dir;
     writeFile(fileSystem.path.join(dir.path, 'pubspec.yaml'), pubspec);
-    if (main != null) {
-      writeFile(fileSystem.path.join(dir.path, 'lib', 'main.dart'), main);
-    }
-    if (test != null) {
+    writeFile(fileSystem.path.join(dir.path, 'lib', 'main.dart'), main);
       writeFile(fileSystem.path.join(dir.path, 'test', 'test.dart'), test);
-    }
-    if (generatedFile != null) {
       writeFile(fileSystem.path.join(dir.path, '.dart_tool', 'flutter_gen', 'flutter_gen.dart'), generatedFile);
-    }
-    writeFile(fileSystem.path.join(dir.path, 'web', 'index.html'), _kDefaultHtml);
+      writeFile(fileSystem.path.join(dir.path, 'web', 'index.html'), _kDefaultHtml);
     writePackages(dir.path);
     await getPackages(dir.path);
   }

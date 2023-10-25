@@ -5,9 +5,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
 
 final Map<int, Color> m2SwatchColors = <int, Color>{
   50: const Color(0xfff2e7fe),
@@ -368,8 +368,7 @@ class _OptionsState extends State<Options> {
 
 class _ControlTile extends StatelessWidget {
   const _ControlTile({Key key, @required this.label, @required this.child})
-      : assert(label != null),
-        assert(child != null),
+      : assert(child != null),
         super(key: key);
 
   final String label;

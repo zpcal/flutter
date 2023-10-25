@@ -11,7 +11,6 @@ import 'package:vm_service/vm_service.dart' as vm_service;
 
 import '../application_package.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/os.dart';
@@ -74,8 +73,8 @@ class IOSDevices extends PollingDeviceDiscovery {
     deviceNotifier.updateWithNewList(await pollingGetDevices());
 
     // cancel any outstanding subscriptions.
-    await _observedDeviceEventsSubscription?.cancel();
-    _observedDeviceEventsSubscription = _xcdevice.observedDeviceEvents()?.listen(
+    await _observedDeviceEventsSubscription.cancel();
+    _observedDeviceEventsSubscription = _xcdevice.observedDeviceEvents().listen(
       _onDeviceEvent,
       onError: (dynamic error, StackTrace stack) {
         _logger.printTrace('Process exception running xcdevice observe:\n$error\n$stack');
@@ -102,14 +101,14 @@ class IOSDevices extends PollingDeviceDiscovery {
       // so repopulate them all.
       final List<Device> devices = await pollingGetDevices();
       deviceNotifier.updateWithNewList(devices);
-    } else if (eventType == XCDeviceEvent.detach && knownDevice != null) {
+    } else if (eventType == XCDeviceEvent.detach) {
       deviceNotifier.removeItem(knownDevice);
     }
   }
 
   @override
   Future<void> stopPolling() async {
-    await _observedDeviceEventsSubscription?.cancel();
+    await _observedDeviceEventsSubscription.cancel();
   }
 
   @override
@@ -186,7 +185,7 @@ class IOSDevice extends Device {
 
   /// May be 0 if version cannot be parsed.
   int get majorSdkVersion {
-    final String majorVersionString = _sdkVersion?.split('.')?.first?.trim();
+    final String majorVersionString = _sdkVersion.split('.').first.trim();
     return majorVersionString != null ? int.tryParse(majorVersionString) ?? 0 : 0;
   }
 
@@ -334,7 +333,7 @@ class IOSDevice extends Device {
         _logger.printError('');
         return LaunchResult.failed();
       }
-      packageId = buildResult.xcodeBuildExecution?.buildSettings['PRODUCT_BUNDLE_IDENTIFIER'];
+      packageId = buildResult.xcodeBuildExecution.buildSettings['PRODUCT_BUNDLE_IDENTIFIER'];
     } else {
       if (!await installApp(package)) {
         return LaunchResult.failed();
@@ -353,7 +352,7 @@ class IOSDevice extends Device {
     // Step 2.5: Generate a potential open port using the provided argument,
     // or randomly with the package name as a seed. Intentionally choose
     // ports within the ephemeral port range.
-    final int assumedObservatoryPort = debuggingOptions?.deviceVmServicePort
+    final int assumedObservatoryPort = debuggingOptions.deviceVmServicePort
       ?? math.Random(packageId.hashCode).nextInt(16383) + 49152;
 
     // Step 3: Attempt to install the application on the device.
@@ -381,7 +380,7 @@ class IOSDevice extends Device {
       if (debuggingOptions.enableSoftwareRendering) '--enable-software-rendering',
       if (debuggingOptions.skiaDeterministicRendering) '--skia-deterministic-rendering',
       if (debuggingOptions.traceSkia) '--trace-skia',
-      if (debuggingOptions.traceAllowlist != null) '--trace-allowlist="${debuggingOptions.traceAllowlist}"',
+      '--trace-allowlist="${debuggingOptions.traceAllowlist}"',
       if (debuggingOptions.endlessTraceBuffer) '--endless-trace-buffer',
       if (debuggingOptions.dumpSkpOnShaderCompilation) '--dump-skp-on-shader-compilation',
       if (debuggingOptions.verboseSystemLogs) '--verbose-logging',
@@ -519,10 +518,10 @@ class IOSDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    _logReaders?.forEach((IOSApp application, DeviceLogReader logReader) {
+    _logReaders.forEach((IOSApp application, DeviceLogReader logReader) {
       logReader.dispose();
     });
-    await _portForwarder?.dispose();
+    await _portForwarder.dispose();
   }
 }
 
@@ -739,14 +738,12 @@ class IOSDeviceLogReader extends DeviceLogReader {
 
       final Match match = _runnerLineRegex.firstMatch(line);
 
-      if (match != null) {
-        final String logLine = line.substring(match.end);
-        // Only display the log line after the initial device and executable information.
-        _linesController.add(decodeSyslog(logLine));
+      final String logLine = line.substring(match.end);
+      // Only display the log line after the initial device and executable information.
+      _linesController.add(decodeSyslog(logLine));
 
-        printing = true;
-      }
-    };
+      printing = true;
+        };
   }
 
   @override
@@ -754,7 +751,7 @@ class IOSDeviceLogReader extends DeviceLogReader {
     for (final StreamSubscription<void> loggingSubscription in _loggingSubscriptions) {
       loggingSubscription.cancel();
     }
-    _idevicesyslogProcess?.kill();
+    _idevicesyslogProcess.kill();
   }
 }
 
@@ -812,11 +809,11 @@ class IOSDevicePortForwarder extends DevicePortForwarder {
 
   @override
   Future<int> forward(int devicePort, { int hostPort }) async {
-    final bool autoselect = hostPort == null || hostPort == 0;
+    final bool autoselect = hostPort == 0;
     if (autoselect) {
-      final int freePort = await _operatingSystemUtils?.findFreePort();
+      final int freePort = await _operatingSystemUtils.findFreePort();
       // Dynamic port range 49152 - 65535.
-      hostPort = freePort == null || freePort == 0 ? 49152 : freePort;
+      hostPort = freePort == 0 ? 49152 : freePort;
     }
 
     Process process;
@@ -840,7 +837,6 @@ class IOSDevicePortForwarder extends DevicePortForwarder {
       }
     }
     assert(connected);
-    assert(process != null);
 
     final ForwardedPort forwardedPort = ForwardedPort.withContext(
       hostPort, devicePort, process,

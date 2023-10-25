@@ -25,7 +25,7 @@ void main() {
     // fixed we fix them here.
     // TODO(dantup): Remove this function once the above issue is fixed and
     // rolls into Flutter.
-    return path?.replaceAll('/', globals.fs.path.separator);
+    return path.replaceAll('/', globals.fs.path.separator);
   }
   void writePubspecFile(String path, String name, { String fontsSection }) {
     if (fontsSection == null) {

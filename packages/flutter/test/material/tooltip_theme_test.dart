@@ -4,12 +4,12 @@
 
 // @dart = 2.8
 
-import 'package:flutter/services.dart';
-import 'package:flutter/src/material/tooltip_theme.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/src/material/tooltip_theme.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../rendering/mock_canvas.dart';
 import '../widgets/semantics_tester.dart';

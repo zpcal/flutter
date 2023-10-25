@@ -10,7 +10,6 @@ import 'package:process/process.dart';
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
@@ -100,7 +99,7 @@ class AnalyzeContinuously extends AnalyzeBase {
 
   void _handleAnalysisStatus(AnalysisServer server, bool isAnalyzing) {
     if (isAnalyzing) {
-      analysisStatus?.cancel();
+      analysisStatus.cancel();
       if (!firstAnalysis) {
         logger.printStatus('\n');
       }
@@ -108,7 +107,7 @@ class AnalyzeContinuously extends AnalyzeBase {
       analyzedPaths.clear();
       analysisTimer = Stopwatch()..start();
     } else {
-      analysisStatus?.stop();
+      analysisStatus.stop();
       analysisStatus = null;
       analysisTimer.stop();
 
@@ -137,10 +136,8 @@ class AnalyzeContinuously extends AnalyzeBase {
 
       for (final AnalysisError error in errors) {
         logger.printStatus(error.toString());
-        if (error.code != null) {
-          logger.printTrace('error code: ${error.code}');
-        }
-      }
+        logger.printTrace('error code: ${error.code}');
+            }
 
       dumpErrors(errors.map<String>((AnalysisError error) => error.toLegacyString()));
 

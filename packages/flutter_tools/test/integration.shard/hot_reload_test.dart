@@ -26,7 +26,7 @@ void main() {
   });
 
   tearDown(() async {
-    await flutter?.stop();
+    await flutter.stop();
     tryToDelete(tempDir);
   });
 
@@ -253,8 +253,7 @@ void main() {
 }
 
 bool _isHotReloadCompletionEvent(Map<String, dynamic> event) {
-  return event != null &&
-      event['event'] == 'app.progress' &&
+  return event['event'] == 'app.progress' &&
       event['params'] != null &&
       event['params']['progressId'] == 'hot.reload' &&
       event['params']['finished'] == true;

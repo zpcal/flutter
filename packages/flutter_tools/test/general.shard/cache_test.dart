@@ -20,7 +20,6 @@ import 'package:process/process.dart';
 
 import '../src/common.dart';
 import '../src/context.dart';
-import '../src/testbed.dart';
 
 void main() {
   group('$Cache.checkLockAcquired', () {

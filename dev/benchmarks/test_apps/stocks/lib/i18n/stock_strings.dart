@@ -65,7 +65,7 @@ import 'stock_strings_es.dart';
 /// be consistent with the languages listed in the StockStrings.supportedLocales
 /// property.
 abstract class StockStrings {
-  StockStrings(String locale) : assert(locale != null), localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  StockStrings(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   // ignore: unused_field
   final String localeName;

@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:meta/meta.dart';
 
 import '../common/diagnostics_tree.dart';
 import '../common/error.dart';
@@ -262,16 +262,15 @@ class FlutterDriverExtension with DeserializeFinderFactory {
       final CommandHandlerCallback commandHandler = _commandHandlers[commandKind];
       final CommandDeserializerCallback commandDeserializer =
           _commandDeserializers[commandKind];
-      if (commandHandler == null || commandDeserializer == null)
+      if (commandDeserializer == null)
         throw 'Extension $_extensionMethod does not support command $commandKind';
       final Command command = commandDeserializer(params);
       assert(WidgetsBinding.instance.isRootWidgetAttached || !command.requiresRootWidgetAttached,
           'No root widget is attached; have you remembered to call runApp()?');
       Future<Result> responseFuture = commandHandler(command);
-      if (command.timeout != null)
-        responseFuture = responseFuture.timeout(command.timeout);
+      responseFuture = responseFuture.timeout(command.timeout);
       final Result response = await responseFuture;
-      return _makeResponse(response?.toJson());
+      return _makeResponse(response.toJson());
     } on TimeoutException catch (error, stackTrace) {
       final String message = 'Timeout while executing $commandKind: $error\n$stackTrace';
       _log(message);
@@ -474,7 +473,6 @@ class FlutterDriverExtension with DeserializeFinderFactory {
   }
 
   Future<Result> _waitForCondition(Command command) async {
-    assert(command != null);
     final WaitForCondition waitForConditionCommand = command as WaitForCondition;
     final WaitCondition condition = deserializeCondition(waitForConditionCommand.condition);
     await condition.wait();

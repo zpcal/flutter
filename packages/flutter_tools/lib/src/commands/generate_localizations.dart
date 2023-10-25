@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../globals.dart' as globals;
 import '../localizations/gen_l10n.dart';
 import '../localizations/gen_l10n_types.dart';

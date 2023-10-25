@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../flutter_test_alternative.dart';
 
 typedef HandleEventCallback = void Function(PointerEvent event);
 

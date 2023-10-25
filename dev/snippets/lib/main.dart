@@ -114,7 +114,6 @@ void main(List<String> argList) {
 
   final SnippetType snippetType = SnippetType.values
       .firstWhere((SnippetType type) => getEnumName(type) == args[_kTypeOption], orElse: () => null);
-  assert(snippetType != null, "Unable to find '${args[_kTypeOption]}' in SnippetType enum.");
 
   if (args[_kShowDartPad] == true && snippetType != SnippetType.sample) {
     errorExit('${args[_kTypeOption]} was selected, but the --dartpad flag is only valid '
@@ -135,7 +134,7 @@ void main(List<String> argList) {
   String template;
   if (snippetType == SnippetType.sample) {
     final String templateArg = args[_kTemplateOption] as String;
-    if (templateArg == null || templateArg.isEmpty) {
+    if (templateArg.isEmpty) {
       stderr.writeln(parser.usage);
       errorExit('The --$_kTemplateOption option must be specified on the command '
           'line for application samples.');
@@ -143,7 +142,7 @@ void main(List<String> argList) {
     template = templateArg.replaceAll(RegExp(r'.tmpl$'), '');
   }
 
-  String emptyToNull(String value) => value?.isEmpty ?? true ? null : value;
+  String emptyToNull(String value) => value.isEmpty ?? true ? null : value;
   final String packageName = emptyToNull(args[_kPackageOption] as String);
   final String libraryName = emptyToNull(args[_kLibraryOption] as String);
   final String elementName = emptyToNull(args[_kElementOption] as String);
@@ -152,19 +151,13 @@ void main(List<String> argList) {
   if (args[_kOutputOption] != null) {
     id.add(path.basename(path.basenameWithoutExtension(args[_kOutputOption] as String)));
   } else {
-    if (packageName != null && packageName != 'flutter') {
+    if (packageName != 'flutter') {
       id.add(packageName);
     }
-    if (libraryName != null) {
-      id.add(libraryName);
-    }
-    if (elementName != null) {
+    id.add(libraryName);
       id.add(elementName);
-    }
-    if (serial != null) {
       id.add(serial);
-    }
-    if (id.isEmpty) {
+      if (id.isEmpty) {
       errorExit('Unable to determine ID. At least one of --$_kPackageOption, '
           '--$_kLibraryOption, --$_kElementOption, -$_kSerialOption, or the environment variables '
           'PACKAGE_NAME, LIBRARY_NAME, ELEMENT_NAME, or INVOCATION_INDEX must be non-empty.');

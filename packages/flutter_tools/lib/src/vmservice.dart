@@ -181,61 +181,55 @@ vm_service.VmService setUpVmService(
   PrintStructuredErrorLogMethod printStructuredErrorLogMethod,
   vm_service.VmService vmService
 ) {
-  if (reloadSources != null) {
-    vmService.registerServiceCallback('reloadSources', (Map<String, dynamic> params) async {
-      final String isolateId = _validateRpcStringParam('reloadSources', params, 'isolateId');
-      final bool force = _validateRpcBoolParam('reloadSources', params, 'force');
-      final bool pause = _validateRpcBoolParam('reloadSources', params, 'pause');
+  vmService.registerServiceCallback('reloadSources', (Map<String, dynamic> params) async {
+    final String isolateId = _validateRpcStringParam('reloadSources', params, 'isolateId');
+    final bool force = _validateRpcBoolParam('reloadSources', params, 'force');
+    final bool pause = _validateRpcBoolParam('reloadSources', params, 'pause');
 
-      await reloadSources(isolateId, force: force, pause: pause);
+    await reloadSources(isolateId, force: force, pause: pause);
 
-      return <String, dynamic>{
-        'result': <String, Object>{
-          'type': 'Success',
-        }
-      };
-    });
-    vmService.registerService('reloadSources', 'Flutter Tools');
-  }
+    return <String, dynamic>{
+      'result': <String, Object>{
+        'type': 'Success',
+      }
+    };
+  });
+  vmService.registerService('reloadSources', 'Flutter Tools');
 
-  if (reloadMethod != null) {
-    // Register a special method for hot UI. while this is implemented
-    // currently in the same way as hot reload, it leaves the tool free
-    // to change to a more efficient implementation in the future.
-    //
-    // `library` should be the file URI of the updated code.
-    // `class` should be the name of the Widget subclass to be marked dirty. For example,
-    // if the build method of a StatelessWidget is updated, this is the name of class.
-    // If the build method of a StatefulWidget is updated, then this is the name
-    // of the Widget class that created the State object.
-    vmService.registerServiceCallback('reloadMethod', (Map<String, dynamic> params) async {
-      final String libraryId = _validateRpcStringParam('reloadMethod', params, 'library');
-      final String classId = _validateRpcStringParam('reloadMethod', params, 'class');
+  // Register a special method for hot UI. while this is implemented
+  // currently in the same way as hot reload, it leaves the tool free
+  // to change to a more efficient implementation in the future.
+  //
+  // `library` should be the file URI of the updated code.
+  // `class` should be the name of the Widget subclass to be marked dirty. For example,
+  // if the build method of a StatelessWidget is updated, this is the name of class.
+  // If the build method of a StatefulWidget is updated, then this is the name
+  // of the Widget class that created the State object.
+  vmService.registerServiceCallback('reloadMethod', (Map<String, dynamic> params) async {
+    final String libraryId = _validateRpcStringParam('reloadMethod', params, 'library');
+    final String classId = _validateRpcStringParam('reloadMethod', params, 'class');
 
-      globals.printTrace('reloadMethod not yet supported, falling back to hot reload');
+    globals.printTrace('reloadMethod not yet supported, falling back to hot reload');
 
-      await reloadMethod(libraryId: libraryId, classId: classId);
-      return <String, dynamic>{
-        'result': <String, Object>{
-          'type': 'Success',
-        }
-      };
-    });
-    vmService.registerService('reloadMethod', 'Flutter Tools');
-  }
+    await reloadMethod(libraryId: libraryId, classId: classId);
+    return <String, dynamic>{
+      'result': <String, Object>{
+        'type': 'Success',
+      }
+    };
+  });
+  vmService.registerService('reloadMethod', 'Flutter Tools');
 
-  if (restart != null) {
-    vmService.registerServiceCallback('hotRestart', (Map<String, dynamic> params) async {
-      final bool pause = _validateRpcBoolParam('compileExpression', params, 'pause');
-      await restart(pause: pause);
-      return <String, dynamic>{
-        'result': <String, Object>{
-          'type': 'Success',
-        }
-      };
-    });
-    vmService.registerService('hotRestart', 'Flutter Tools');
-  }
+  vmService.registerServiceCallback('hotRestart', (Map<String, dynamic> params) async {
+    final bool pause = _validateRpcBoolParam('compileExpression', params, 'pause');
+    await restart(pause: pause);
+    return <String, dynamic>{
+      'result': <String, Object>{
+        'type': 'Success',
+      }
+    };
+  });
+  vmService.registerService('hotRestart', 'Flutter Tools');
 
   vmService.registerServiceCallback('flutterVersion', (Map<String, dynamic> params) async {
     final FlutterVersion version = context.get<FlutterVersion>() ?? FlutterVersion();
@@ -251,59 +245,51 @@ vm_service.VmService setUpVmService(
   });
   vmService.registerService('flutterVersion', 'Flutter Tools');
 
-  if (compileExpression != null) {
-    vmService.registerServiceCallback('compileExpression', (Map<String, dynamic> params) async {
-      final String isolateId = _validateRpcStringParam('compileExpression', params, 'isolateId');
-      final String expression = _validateRpcStringParam('compileExpression', params, 'expression');
-      final List<String> definitions = List<String>.from(params['definitions'] as List<dynamic>);
-      final List<String> typeDefinitions = List<String>.from(params['typeDefinitions'] as List<dynamic>);
-      final String libraryUri = params['libraryUri'] as String;
-      final String klass = params['klass'] as String;
-      final bool isStatic = _validateRpcBoolParam('compileExpression', params, 'isStatic');
+  vmService.registerServiceCallback('compileExpression', (Map<String, dynamic> params) async {
+    final String isolateId = _validateRpcStringParam('compileExpression', params, 'isolateId');
+    final String expression = _validateRpcStringParam('compileExpression', params, 'expression');
+    final List<String> definitions = List<String>.from(params['definitions'] as List<dynamic>);
+    final List<String> typeDefinitions = List<String>.from(params['typeDefinitions'] as List<dynamic>);
+    final String libraryUri = params['libraryUri'] as String;
+    final String klass = params['klass'] as String;
+    final bool isStatic = _validateRpcBoolParam('compileExpression', params, 'isStatic');
 
-      final String kernelBytesBase64 = await compileExpression(isolateId,
-          expression, definitions, typeDefinitions, libraryUri, klass,
-          isStatic);
-      return <String, dynamic>{
+    final String kernelBytesBase64 = await compileExpression(isolateId,
+        expression, definitions, typeDefinitions, libraryUri, klass,
+        isStatic);
+    return <String, dynamic>{
+      'type': 'Success',
+      'result': <String, dynamic>{'kernelBytes': kernelBytesBase64},
+    };
+  });
+  vmService.registerService('compileExpression', 'Flutter Tools');
+  vmService.registerServiceCallback('flutterMemoryInfo', (Map<String, dynamic> params) async {
+    final MemoryInfo result = await device.queryMemoryInfo();
+    return <String, dynamic>{
+      'result': <String, Object>{
         'type': 'Success',
-        'result': <String, dynamic>{'kernelBytes': kernelBytesBase64},
-      };
-    });
-    vmService.registerService('compileExpression', 'Flutter Tools');
+        ...result.toJson(),
+      }
+    };
+  });
+  vmService.registerService('flutterMemoryInfo', 'Flutter Tools');
+  vmService.registerServiceCallback('flutterGetSkSL', (Map<String, dynamic> params) async {
+    final String filename = await skSLMethod();
+    return <String, dynamic>{
+      'result': <String, Object>{
+        'type': 'Success',
+        'filename': filename,
+      }
+    };
+  });
+  vmService.registerService('flutterGetSkSL', 'Flutter Tools');
+  try {
+    vmService.streamListen(vm_service.EventStreams.kExtension);
+  } on vm_service.RPCError {
+    // It is safe to ignore this error because we expect an error to be
+    // thrown if we're already subscribed.
   }
-  if (device != null) {
-    vmService.registerServiceCallback('flutterMemoryInfo', (Map<String, dynamic> params) async {
-      final MemoryInfo result = await device.queryMemoryInfo();
-      return <String, dynamic>{
-        'result': <String, Object>{
-          'type': 'Success',
-          ...result.toJson(),
-        }
-      };
-    });
-    vmService.registerService('flutterMemoryInfo', 'Flutter Tools');
-  }
-  if (skSLMethod != null) {
-    vmService.registerServiceCallback('flutterGetSkSL', (Map<String, dynamic> params) async {
-      final String filename = await skSLMethod();
-      return <String, dynamic>{
-        'result': <String, Object>{
-          'type': 'Success',
-          'filename': filename,
-        }
-      };
-    });
-    vmService.registerService('flutterGetSkSL', 'Flutter Tools');
-  }
-  if (printStructuredErrorLogMethod != null) {
-    try {
-      vmService.streamListen(vm_service.EventStreams.kExtension);
-    } on vm_service.RPCError {
-      // It is safe to ignore this error because we expect an error to be
-      // thrown if we're already subscribed.
-    }
-    vmService.onExtensionEvent.listen(printStructuredErrorLogMethod);
-  }
+  vmService.onExtensionEvent.listen(printStructuredErrorLogMethod);
   return vmService;
 }
 
@@ -382,14 +368,14 @@ Future<vm_service.VmService> _connect(
 
 String _validateRpcStringParam(String methodName, Map<String, dynamic> params, String paramName) {
   final dynamic value = params[paramName];
-  if (value is! String || (value as String).isEmpty) {
+  if (value is! String || value.isEmpty) {
     throw vm_service.RPCError(
       methodName,
       RPCErrorCodes.kInvalidParams,
       "Invalid '$paramName': $value",
     );
   }
-  return value as String;
+  return value;
 }
 
 bool _validateRpcBoolParam(String methodName, Map<String, dynamic> params, String paramName) {
@@ -414,11 +400,9 @@ class FlutterView {
   factory FlutterView.parse(Map<String, Object> json) {
     final Map<String, Object> rawIsolate = json['isolate'] as Map<String, Object>;
     vm_service.IsolateRef isolate;
-    if (rawIsolate != null) {
-      rawIsolate['number'] = rawIsolate['number']?.toString();
-      isolate = vm_service.IsolateRef.parse(rawIsolate);
-    }
-    return FlutterView(
+    rawIsolate['number'] = rawIsolate['number']?.toString();
+    isolate = vm_service.IsolateRef.parse(rawIsolate);
+      return FlutterView(
       id: json['id'] as String,
       uiIsolate: isolate,
     );
@@ -452,7 +436,6 @@ extension FlutterVmService on vm_service.VmService {
     @required String viewId,
     @required String uiIsolateId,
   }) async {
-    assert(assetsDirectory != null);
     await callMethod(kSetAssetBundlePathMethod,
       isolateId: uiIsolateId,
       args: <String, dynamic>{
@@ -572,7 +555,7 @@ extension FlutterVmService on vm_service.VmService {
       'ext.flutter.$name',
       isolateId: isolateId,
     );
-    if (state != null && state.containsKey('enabled') && state['enabled'] is String) {
+    if (state.containsKey('enabled') && state['enabled'] is String) {
       state = await invokeFlutterExtensionRpcRaw(
         'ext.flutter.$name',
         isolateId: isolateId,
@@ -646,7 +629,7 @@ extension FlutterVmService on vm_service.VmService {
       isolateId: isolateId,
     );
     // result might be null when the service extension is not initialized
-    return result != null && result['enabled'] == 'true';
+    return result['enabled'] == 'true';
   }
 
   Future<Map<String, dynamic>> uiWindowScheduleFrame({
@@ -702,7 +685,7 @@ extension FlutterVmService on vm_service.VmService {
         ? <String, dynamic>{'value': platform}
         : <String, String>{},
     );
-    if (result != null && result['value'] is String) {
+    if (result['value'] is String) {
       return result['value'] as String;
     }
     return 'unknown';
@@ -724,7 +707,7 @@ extension FlutterVmService on vm_service.VmService {
         ? <String, dynamic>{'value': brightness.toString()}
         : <String, String>{},
     );
-    if (result != null && result['value'] is String) {
+    if (result['value'] is String) {
       return (result['value'] as String) == 'Brightness.light'
         ? Brightness.light
         : Brightness.dark;
@@ -745,7 +728,7 @@ extension FlutterVmService on vm_service.VmService {
         method,
         args: <String, Object>{
           'isolateId': isolateId,
-          ...?args,
+          ...args,
         },
       );
       return response.json;
@@ -813,7 +796,6 @@ extension FlutterVmService on vm_service.VmService {
 
   /// Set the VM timeline flags.
   Future<vm_service.Response> setVMTimelineFlags(List<String> recordedStreams) {
-    assert(recordedStreams != null);
     return callServiceExtension(
       'setVMTimelineFlags',
       args: <String, dynamic>{

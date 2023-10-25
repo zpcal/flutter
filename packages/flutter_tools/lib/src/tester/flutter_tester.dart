@@ -10,7 +10,6 @@ import 'package:process/process.dart';
 import '../application_package.dart';
 import '../artifacts.dart';
 import '../base/config.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../build_info.dart';
@@ -211,17 +210,15 @@ class FlutterTesterDevice extends Device {
       );
 
       final Uri observatoryUri = await observatoryDiscovery.uri;
-      if (observatoryUri != null) {
-        return LaunchResult.succeeded(observatoryUri: observatoryUri);
-      }
-      _logger.printError(
+      return LaunchResult.succeeded(observatoryUri: observatoryUri);
+          _logger.printError(
         'Failed to launch $package: '
         'The log reader failed unexpectedly.',
       );
     } on Exception catch (error) {
       _logger.printError('Failed to launch $package: $error');
     } finally {
-      await observatoryDiscovery?.cancel();
+      await observatoryDiscovery.cancel();
     }
     return LaunchResult.failed();
   }
@@ -231,7 +228,7 @@ class FlutterTesterDevice extends Device {
     ApplicationPackage app, {
     String userIdentifier,
   }) async {
-    _process?.kill();
+    _process.kill();
     _process = null;
     return true;
   }
@@ -247,8 +244,8 @@ class FlutterTesterDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    _logReader?.dispose();
-    await _portForwarder?.dispose();
+    _logReader.dispose();
+    await _portForwarder.dispose();
   }
 }
 

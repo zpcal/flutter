@@ -44,66 +44,52 @@ class _CalculatorState extends State<Calculator> {
 
   void handleNumberTap(int n) {
     final CalcExpression expression = _expression.appendDigit(n);
-    if (expression != null) {
-      setState(() {
-        pushExpression(expression);
-      });
+    setState(() {
+      pushExpression(expression);
+    });
     }
-  }
 
   void handlePointTap() {
     final CalcExpression expression = _expression.appendPoint();
-    if (expression != null) {
-      setState(() {
-        pushExpression(expression);
-      });
+    setState(() {
+      pushExpression(expression);
+    });
     }
-  }
 
   void handlePlusTap() {
     final CalcExpression expression = _expression.appendOperation(Operation.Addition);
-    if (expression != null) {
-      setState(() {
-        pushExpression(expression);
-      });
+    setState(() {
+      pushExpression(expression);
+    });
     }
-  }
 
   void handleMinusTap() {
     final CalcExpression expression = _expression.appendMinus();
-    if (expression != null) {
-      setState(() {
-        pushExpression(expression);
-      });
+    setState(() {
+      pushExpression(expression);
+    });
     }
-  }
 
   void handleMultTap() {
     final CalcExpression expression = _expression.appendOperation(Operation.Multiplication);
-    if (expression != null) {
-      setState(() {
-        pushExpression(expression);
-      });
+    setState(() {
+      pushExpression(expression);
+    });
     }
-  }
 
   void handleDivTap() {
     final CalcExpression expression = _expression.appendOperation(Operation.Division);
-    if (expression != null) {
-      setState(() {
-        pushExpression(expression);
-      });
+    setState(() {
+      pushExpression(expression);
+    });
     }
-  }
 
   void handleEqualsTap() {
     final CalcExpression resultExpression = _expression.computeResult();
-    if (resultExpression != null) {
-      setState(() {
-        setResult(resultExpression);
-      });
+    setState(() {
+      setResult(resultExpression);
+    });
     }
-  }
 
   void handleDelTap() {
     setState(() {

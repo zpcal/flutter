@@ -4,7 +4,6 @@
 
 // @dart = 2.8
 
-import 'basic.dart';
 import 'framework.dart';
 
 /// Builder callback used by [DualTransitionBuilder].

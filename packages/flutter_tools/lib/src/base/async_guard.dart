@@ -82,8 +82,7 @@ Future<T> asyncGuard<T>(
   Future<T> Function() fn, {
   Function onError,
 }) {
-  if (onError != null &&
-      onError is! _UnaryOnError<T> &&
+  if (onError is! _UnaryOnError<T> &&
       onError is! _BinaryOnError<T>) {
     throw ArgumentError('onError must be a unary function accepting an Object, '
                         'or a binary function accepting an Object and '

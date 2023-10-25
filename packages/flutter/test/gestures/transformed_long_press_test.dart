@@ -4,10 +4,10 @@
 
 // @dart = 2.8
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/gestures.dart';
 
 void main() {
   testWidgets('gets local coordinates', (WidgetTester tester) async {

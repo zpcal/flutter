@@ -5,7 +5,6 @@
 
 import 'dart:math' as math;
 
-import 'basic_types.dart';
 
 /// Position a child box within a container box, either above or below a target
 /// point.

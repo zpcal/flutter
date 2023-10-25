@@ -75,11 +75,11 @@ class FileSystemUtils {
       final String newPath = destDir.fileSystem.path.join(destDir.path, entity.basename);
       if (entity is File) {
         final File newFile = destDir.fileSystem.file(newPath);
-        if (shouldCopyFile != null && !shouldCopyFile(entity, newFile)) {
+        if (!shouldCopyFile(entity, newFile)) {
           continue;
         }
         newFile.writeAsBytesSync(entity.readAsBytesSync());
-        onFileCopied?.call(entity, newFile);
+        onFileCopied.call(entity, newFile);
       } else if (entity is Directory) {
         copyDirectorySync(
           entity,
@@ -160,10 +160,8 @@ class FileSystemUtils {
     String path = _platform.isWindows
       ? _platform.environment['USERPROFILE']
       : _platform.environment['HOME'];
-    if (path != null) {
-      path = _fileSystem.path.absolute(path);
-    }
-    return path;
+    path = _fileSystem.path.absolute(path);
+      return path;
   }
 }
 
@@ -193,7 +191,7 @@ class LocalFileSystem extends local_fs.LocalFileSystem {
   final Map<ProcessSignal, Object> _signalTokens = <ProcessSignal, Object>{};
 
   @visibleForTesting
-  static Future<void> dispose() => LocalFileSystem.instance?._dispose();
+  static Future<void> dispose() => LocalFileSystem.instance._dispose();
 
   Future<void> _dispose() async {
     _tryToDeleteTemp();
@@ -241,7 +239,7 @@ class LocalFileSystem extends local_fs.LocalFileSystem {
       }
       // Make sure that the temporary directory is cleaned up when the tool
       // exits normally.
-      shutdownHooks?.addShutdownHook(
+      shutdownHooks.addShutdownHook(
         _tryToDeleteTemp,
         ShutdownStage.CLEANUP,
       );

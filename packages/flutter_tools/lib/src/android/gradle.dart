@@ -11,7 +11,6 @@ import 'package:xml/xml.dart';
 import '../artifacts.dart';
 import '../base/analyze_size.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/process.dart';
@@ -149,7 +148,7 @@ Future<void> checkGradleDependencies() async {
     workingDirectory: flutterProject.android.hostAppGradleRoot.path,
     environment: gradleEnvironment,
   );
-  globals.androidSdk?.reinitialize();
+  globals.androidSdk.reinitialize();
   progress.stop();
 }
 
@@ -224,12 +223,6 @@ Future<void> buildGradleApp({
   bool shouldBuildPluginAsAar = false,
   int retries = 1,
 }) async {
-  assert(project != null);
-  assert(androidBuildInfo != null);
-  assert(target != null);
-  assert(isBuildingBundle != null);
-  assert(localGradleErrors != null);
-  assert(globals.androidSdk != null);
 
   if (!project.android.isUsingGradle) {
     _exitWithProjectNotUsingGradleMessage();
@@ -305,31 +298,22 @@ Future<void> buildGradleApp({
         .map(getPlatformNameForAndroidArch).join(',');
     command.add('-Ptarget-platform=$targetPlatforms');
   }
-  if (target != null) {
-    command.add('-Ptarget=$target');
-  }
-  assert(buildInfo.trackWidgetCreation != null);
+  command.add('-Ptarget=$target');
   command.add('-Ptrack-widget-creation=${buildInfo.trackWidgetCreation}');
 
-  if (buildInfo.extraFrontEndOptions != null) {
-    command.add('-Pextra-front-end-options=${encodeDartDefines(buildInfo.extraFrontEndOptions)}');
-  }
-  if (buildInfo.extraGenSnapshotOptions != null) {
-    command.add('-Pextra-gen-snapshot-options=${encodeDartDefines(buildInfo.extraGenSnapshotOptions)}');
-  }
-  if (buildInfo.fileSystemRoots != null && buildInfo.fileSystemRoots.isNotEmpty) {
+  command.add('-Pextra-front-end-options=${encodeDartDefines(buildInfo.extraFrontEndOptions)}');
+  command.add('-Pextra-gen-snapshot-options=${encodeDartDefines(buildInfo.extraGenSnapshotOptions)}');
+  if (buildInfo.fileSystemRoots.isNotEmpty) {
     command.add('-Pfilesystem-roots=${buildInfo.fileSystemRoots.join('|')}');
   }
-  if (buildInfo.fileSystemScheme != null) {
-    command.add('-Pfilesystem-scheme=${buildInfo.fileSystemScheme}');
-  }
+  command.add('-Pfilesystem-scheme=${buildInfo.fileSystemScheme}');
   if (androidBuildInfo.splitPerAbi) {
     command.add('-Psplit-per-abi=true');
   }
   if (androidBuildInfo.shrink) {
     command.add('-Pshrink=true');
   }
-  if (androidBuildInfo.buildInfo.dartDefines?.isNotEmpty ?? false) {
+  if (androidBuildInfo.buildInfo.dartDefines.isNotEmpty ?? false) {
     command.add('-Pdart-defines=${encodeDartDefines(androidBuildInfo.buildInfo.dartDefines)}');
   }
   if (shouldBuildPluginAsAar) {
@@ -342,24 +326,16 @@ Future<void> buildGradleApp({
   if (androidBuildInfo.fastStart) {
     command.add('-Pfast-start=true');
   }
-  if (androidBuildInfo.buildInfo.splitDebugInfoPath != null) {
-    command.add('-Psplit-debug-info=${androidBuildInfo.buildInfo.splitDebugInfoPath}');
-  }
+  command.add('-Psplit-debug-info=${androidBuildInfo.buildInfo.splitDebugInfoPath}');
   if (androidBuildInfo.buildInfo.treeShakeIcons) {
     command.add('-Ptree-shake-icons=true');
   }
   if (androidBuildInfo.buildInfo.dartObfuscation) {
     command.add('-Pdart-obfuscation=true');
   }
-  if (androidBuildInfo.buildInfo.bundleSkSLPath != null) {
-    command.add('-Pbundle-sksl-path=${androidBuildInfo.buildInfo.bundleSkSLPath}');
-  }
-  if (androidBuildInfo.buildInfo.performanceMeasurementFile != null) {
-    command.add('-Pperformance-measurement-file=${androidBuildInfo.buildInfo.performanceMeasurementFile}');
-  }
-  if (buildInfo.codeSizeDirectory != null) {
-    command.add('-Pcode-size-directory=${buildInfo.codeSizeDirectory}');
-  }
+  command.add('-Pbundle-sksl-path=${androidBuildInfo.buildInfo.bundleSkSLPath}');
+  command.add('-Pperformance-measurement-file=${androidBuildInfo.buildInfo.performanceMeasurementFile}');
+  command.add('-Pcode-size-directory=${buildInfo.codeSizeDirectory}');
   command.add(assembleTask);
 
   GradleHandledError detectedGradleError;
@@ -371,11 +347,9 @@ Future<void> buildGradleApp({
       // Don't pipe.
       return null;
     }
-    if (detectedGradleError != null) {
-      // Pipe stdout/stderr from Gradle.
-      return line;
-    }
-    for (final GradleHandledError gradleError in localGradleErrors) {
+    // Pipe stdout/stderr from Gradle.
+    return line;
+      for (final GradleHandledError gradleError in localGradleErrors) {
       if (gradleError.test(line)) {
         detectedGradleErrorLine = line;
         detectedGradleError = gradleError;
@@ -470,10 +444,8 @@ Future<void> buildGradleApp({
       ? '' // Don't display the size when building a debug variant.
       : ' (${getSizeAsMB(bundleFile.lengthSync())})';
 
-    if (buildInfo.codeSizeDirectory != null) {
-      await _performCodeSizeAnalysis('aab', bundleFile, androidBuildInfo);
-    }
-
+    await _performCodeSizeAnalysis('aab', bundleFile, androidBuildInfo);
+  
     globals.printStatus(
       '$successMark Built ${globals.fs.path.relative(bundleFile.path)}$appSize.',
       color: TerminalColor.green,
@@ -509,9 +481,7 @@ Future<void> buildGradleApp({
     color: TerminalColor.green,
   );
 
-  if (buildInfo.codeSizeDirectory != null) {
-    await _performCodeSizeAnalysis('apk', apkFile, androidBuildInfo);
-  }
+  await _performCodeSizeAnalysis('apk', apkFile, androidBuildInfo);
 }
 
 Future<void> _performCodeSizeAnalysis(
@@ -558,11 +528,7 @@ Future<void> buildGradleAar({
   @required Directory outputDirectory,
   @required String buildNumber,
 }) async {
-  assert(project != null);
-  assert(target != null);
-  assert(androidBuildInfo != null);
   assert(outputDirectory != null);
-  assert(globals.androidSdk != null);
 
   final FlutterManifest manifest = project.manifest;
   if (!manifest.isModule && !manifest.isPlugin) {
@@ -599,12 +565,10 @@ Future<void> buildGradleAar({
     command.add('-q');
   }
 
-  if (target != null && target.isNotEmpty) {
+  if (target.isNotEmpty) {
     command.add('-Ptarget=$target');
   }
-  if (buildInfo.splitDebugInfoPath != null) {
-    command.add('-Psplit-debug-info=${buildInfo.splitDebugInfoPath}');
-  }
+  command.add('-Psplit-debug-info=${buildInfo.splitDebugInfoPath}');
   if (buildInfo.treeShakeIcons) {
     command.add('-Pfont-subset=true');
   }
@@ -698,8 +662,7 @@ void printHowToConsumeAar({
   @required FileSystem fileSystem,
   String buildNumber,
 }) {
-  assert(buildModes != null && buildModes.isNotEmpty);
-  assert(androidPackage != null);
+  assert(buildModes.isNotEmpty);
   assert(repoDirectory != null);
   buildNumber ??= '1.0';
 
@@ -871,17 +834,15 @@ Iterable<String> findApkFilesModule(
     if (apkFile.existsSync()) {
       return <File>[apkFile];
     }
-    if (buildInfo.flavor != null) {
-      // Android Studio Gradle plugin v3 adds flavor to path.
-      apkFile = apkDirectory
-        .childDirectory(buildInfo.flavor)
-        .childDirectory(modeName)
-        .childFile(apkFileName);
-      if (apkFile.existsSync()) {
-        return <File>[apkFile];
-      }
+    // Android Studio Gradle plugin v3 adds flavor to path.
+    apkFile = apkDirectory
+      .childDirectory(buildInfo.flavor)
+      .childDirectory(modeName)
+      .childFile(apkFileName);
+    if (apkFile.existsSync()) {
+      return <File>[apkFile];
     }
-    return const <File>[];
+      return const <File>[];
   });
   if (apks.isEmpty) {
     _exitWithExpectedFileNotFound(
@@ -902,13 +863,13 @@ Iterable<String> listApkPaths(
 ) {
   final String buildType = camelCase(androidBuildInfo.buildInfo.modeName);
   final List<String> apkPartialName = <String>[
-    if (androidBuildInfo.buildInfo.flavor?.isNotEmpty ?? false)
+    if (androidBuildInfo.buildInfo.flavor.isNotEmpty ?? false)
       androidBuildInfo.buildInfo.flavor,
     '$buildType.apk',
   ];
   if (androidBuildInfo.splitPerAbi) {
     return <String>[
-      for (AndroidArch androidArch in androidBuildInfo.targetArchs)
+      for (final AndroidArch androidArch in androidBuildInfo.targetArchs)
         <String>[
           'app',
           getNameForAndroidArch(androidArch),
@@ -934,23 +895,21 @@ File findBundleFile(FlutterProject project, BuildInfo buildInfo) {
       .childDirectory(camelCase(buildInfo.modeName))
       .childFile('app-${buildInfo.modeName}.aab'),
   ];
-  if (buildInfo.flavor != null) {
-    // The Android Gradle plugin 3.0.0 adds the flavor name to the path.
-    // For example: In release mode, if the flavor name is `foo_bar`, then
-    // the directory name is `foo_barRelease`.
-    fileCandidates.add(
-      getBundleDirectory(project)
-        .childDirectory('${buildInfo.flavor}${camelCase('_' + buildInfo.modeName)}')
-        .childFile('app.aab'));
+  // The Android Gradle plugin 3.0.0 adds the flavor name to the path.
+  // For example: In release mode, if the flavor name is `foo_bar`, then
+  // the directory name is `foo_barRelease`.
+  fileCandidates.add(
+    getBundleDirectory(project)
+      .childDirectory('${buildInfo.flavor}${camelCase('_' + buildInfo.modeName)}')
+      .childFile('app.aab'));
 
-    // The Android Gradle plugin 3.5.0 adds the flavor name to file name.
-    // For example: In release mode, if the flavor name is `foo_bar`, then
-    // the file name name is `app-foo_bar-release.aab`.
-    fileCandidates.add(
-      getBundleDirectory(project)
-        .childDirectory('${buildInfo.flavor}${camelCase('_' + buildInfo.modeName)}')
-        .childFile('app-${buildInfo.flavor}-${buildInfo.modeName}.aab'));
-  }
+  // The Android Gradle plugin 3.5.0 adds the flavor name to file name.
+  // For example: In release mode, if the flavor name is `foo_bar`, then
+  // the file name name is `app-foo_bar-release.aab`.
+  fileCandidates.add(
+    getBundleDirectory(project)
+      .childDirectory('${buildInfo.flavor}${camelCase('_' + buildInfo.modeName)}')
+      .childFile('app-${buildInfo.flavor}-${buildInfo.modeName}.aab'));
   for (final File bundleFile in fileCandidates) {
     if (bundleFile.existsSync()) {
       return bundleFile;
@@ -968,8 +927,6 @@ void _exitWithExpectedFileNotFound({
   @required FlutterProject project,
   @required String fileExtension,
 }) {
-  assert(project != null);
-  assert(fileExtension != null);
 
   final String androidGradlePluginVersion =
   getGradleVersionForAndroidPlugin(project.android.hostAppGradleRoot);
@@ -1038,8 +995,6 @@ Directory _getLocalEngineRepo({
   @required String engineOutPath,
   @required AndroidBuildInfo androidBuildInfo,
 }) {
-  assert(engineOutPath != null);
-  assert(androidBuildInfo != null);
 
   final String abi = _getAbiByLocalEnginePath(engineOutPath);
   final Directory localEngineRepo = globals.fs.systemTempDirectory

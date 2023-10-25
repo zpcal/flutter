@@ -18,10 +18,8 @@ class FuchsiaCodeGenerator extends PlatformCodeGenerator {
   String get _fuchsiaKeyCodeMap {
     final StringBuffer fuchsiaKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.usbHidCode != null) {
-        fuchsiaKeyCodeMap.writeln('  { ${toHex(entry.flutterId)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-      }
-    }
+      fuchsiaKeyCodeMap.writeln('  { ${toHex(entry.flutterId)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
+        }
     return fuchsiaKeyCodeMap.toString().trimRight();
   }
 
@@ -29,10 +27,8 @@ class FuchsiaCodeGenerator extends PlatformCodeGenerator {
   String get _fuchsiaHidCodeMap {
     final StringBuffer fuchsiaScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.usbHidCode != null) {
-        fuchsiaScanCodeMap.writeln(' { ${toHex(entry.usbHidCode)}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
-      }
-    }
+      fuchsiaScanCodeMap.writeln(' { ${toHex(entry.usbHidCode)}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
+        }
     return fuchsiaScanCodeMap.toString().trimRight();
   }
 

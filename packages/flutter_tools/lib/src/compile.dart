@@ -12,7 +12,6 @@ import 'package:usage/uuid/uuid.dart';
 import 'artifacts.dart';
 import 'base/common.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/io.dart';
 import 'base/logger.dart';
 import 'build_info.dart';
@@ -249,10 +248,8 @@ class KernelCompiler {
       throwToolExit('Unable to find Dart binary at $engineDartPath');
     }
     Uri mainUri;
-    if (packagesPath != null) {
-      mainUri = packageConfig.toPackageUri(_fileSystem.file(mainPath).uri);
-    }
-    if (outputFilePath != null && !_fileSystem.isFileSync(outputFilePath)) {
+    mainUri = packageConfig.toPackageUri(_fileSystem.file(mainPath).uri);
+      if (!_fileSystem.isFileSync(outputFilePath)) {
       _fileSystem.file(outputFilePath).createSync(recursive: true);
     }
     final List<String> command = <String>[
@@ -272,37 +269,36 @@ class KernelCompiler {
         '--aot',
         '--tfa',
       ],
-      if (packagesPath != null) ...<String>[
-        '--packages',
-        packagesPath,
-      ],
-      if (outputFilePath != null) ...<String>[
-        '--output-dill',
-        outputFilePath,
-      ],
-      if (depFilePath != null && (fileSystemRoots == null || fileSystemRoots.isEmpty)) ...<String>[
+      ...<String>[
+      '--packages',
+      packagesPath,
+    ],
+      ...<String>[
+      '--output-dill',
+      outputFilePath,
+    ],
+      if (fileSystemRoots.isEmpty) ...<String>[
         '--depfile',
         depFilePath,
       ],
-      if (fileSystemRoots != null)
-        for (final String root in fileSystemRoots) ...<String>[
-          '--filesystem-root',
-          root,
-        ],
-      if (fileSystemScheme != null) ...<String>[
-        '--filesystem-scheme',
-        fileSystemScheme,
+      for (final String root in fileSystemRoots) ...<String>[
+        '--filesystem-root',
+        root,
       ],
-      if (initializeFromDill != null) ...<String>[
-        '--initialize-from-dill',
-        initializeFromDill,
-      ],
-      if (platformDill != null) ...<String>[
-        '--platform',
-        platformDill,
-      ],
-      ...?extraFrontEndOptions,
-      mainUri?.toString() ?? mainPath,
+      ...<String>[
+      '--filesystem-scheme',
+      fileSystemScheme,
+    ],
+      ...<String>[
+      '--initialize-from-dill',
+      initializeFromDill,
+    ],
+      ...<String>[
+      '--platform',
+      platformDill,
+    ],
+      ...extraFrontEndOptions,
+      mainUri.toString() ?? mainPath,
     ];
 
     _logger.printTrace(command.join(' '));
@@ -538,8 +534,7 @@ class DefaultResidentCompiler implements ResidentCompiler {
     this.librariesSpec,
     // Deprecated
     List<String> experimentalFlags, // ignore: avoid_unused_constructor_parameters
-  }) : assert(sdkRoot != null),
-       _logger = logger ?? globals.logger,
+  }) : _logger = logger ?? globals.logger,
        _processManager = processManager ?? globals.processManager,
        _artifacts = artifacts ?? globals.artifacts,
        _stdoutHandler = StdoutHandler(logger: logger),
@@ -592,7 +587,6 @@ class DefaultResidentCompiler implements ResidentCompiler {
     @required PackageConfig packageConfig,
     bool suppressErrors = false,
   }) async {
-    assert(outputPath != null);
     if (!_controller.hasListener) {
       _controller.stream.listen(_handleCompilationRequest);
     }
@@ -680,39 +674,38 @@ class DefaultResidentCompiler implements ResidentCompiler {
       '-Ddart.developer.causal_async_stacks=${buildMode == BuildMode.debug}',
       for (final Object dartDefine in dartDefines)
         '-D$dartDefine',
-      if (outputPath != null) ...<String>[
-        '--output-dill',
-        outputPath,
-      ],
-      if (librariesSpec != null) ...<String>[
-        '--libraries-spec',
-        librariesSpec,
-      ],
-      if (packagesPath != null) ...<String>[
-        '--packages',
-        packagesPath,
-      ],
+      ...<String>[
+      '--output-dill',
+      outputPath,
+    ],
+      ...<String>[
+      '--libraries-spec',
+      librariesSpec,
+    ],
+      ...<String>[
+      '--packages',
+      packagesPath,
+    ],
       ...buildModeOptions(buildMode),
       if (trackWidgetCreation) '--track-widget-creation',
-      if (fileSystemRoots != null)
-        for (final String root in fileSystemRoots) ...<String>[
-          '--filesystem-root',
-          root,
-        ],
-      if (fileSystemScheme != null) ...<String>[
-        '--filesystem-scheme',
-        fileSystemScheme,
+      for (final String root in fileSystemRoots) ...<String>[
+        '--filesystem-root',
+        root,
       ],
-      if (initializeFromDill != null) ...<String>[
-        '--initialize-from-dill',
-        initializeFromDill,
-      ],
-      if (platformDill != null) ...<String>[
-        '--platform',
-        platformDill,
-      ],
+      ...<String>[
+      '--filesystem-scheme',
+      fileSystemScheme,
+    ],
+      ...<String>[
+      '--initialize-from-dill',
+      initializeFromDill,
+    ],
+      ...<String>[
+      '--platform',
+      platformDill,
+    ],
       if (unsafePackageSerialization == true) '--unsafe-package-serialization',
-      ...?extraFrontEndOptions,
+      ...extraFrontEndOptions,
     ];
     _logger.printTrace(command.join(' '));
     _server = await _processManager.start(command);
@@ -781,9 +774,9 @@ class DefaultResidentCompiler implements ResidentCompiler {
     _server.stdin
       ..writeln('compile-expression $inputKey')
       ..writeln(request.expression);
-    request.definitions?.forEach(_server.stdin.writeln);
+    request.definitions.forEach(_server.stdin.writeln);
     _server.stdin.writeln(inputKey);
-    request.typeDefinitions?.forEach(_server.stdin.writeln);
+    request.typeDefinitions.forEach(_server.stdin.writeln);
     _server.stdin
       ..writeln(inputKey)
       ..writeln(request.libraryUri ?? '')
@@ -830,9 +823,9 @@ class DefaultResidentCompiler implements ResidentCompiler {
       ..writeln(request.libraryUri ?? '')
       ..writeln(request.line)
       ..writeln(request.column);
-    request.jsModules?.forEach((String k, String v) { _server.stdin.writeln('$k:$v'); });
+    request.jsModules.forEach((String k, String v) { _server.stdin.writeln('$k:$v'); });
     _server.stdin.writeln(inputKey);
-    request.jsFrameValues?.forEach((String k, String v) { _server.stdin.writeln('$k:$v'); });
+    request.jsFrameValues.forEach((String k, String v) { _server.stdin.writeln('$k:$v'); });
     _server.stdin
       ..writeln(inputKey)
       ..writeln(request.moduleName ?? '')
@@ -874,7 +867,7 @@ class DefaultResidentCompiler implements ResidentCompiler {
 
   @override
   void reset() {
-    _server?.stdin?.writeln('reset');
+    _server.stdin.writeln('reset');
     _logger.printTrace('<- reset');
   }
 

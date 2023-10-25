@@ -5,12 +5,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:vm_service/vm_service.dart';
-import 'package:vm_service/vm_service_io.dart';
 import 'package:flutter_devicelab/framework/adb.dart';
-import 'package:path/path.dart' as path;
 import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:flutter_devicelab/framework/utils.dart';
+import 'package:path/path.dart' as path;
+import 'package:vm_service/vm_service.dart';
+import 'package:vm_service/vm_service_io.dart';
 
 final Directory integrationTestDir = Directory(
   path.join(flutterDirectory.path, 'dev/integration_tests/ui'),
@@ -43,7 +43,7 @@ class TrackWidgetCreationEnabledTask {
       final Process runProcess = await startProcess(
         path.join(flutterDirectory.path, 'bin', 'flutter'),
         flutterCommandArgs('run', <String>[
-          ...?additionalArgs,
+          ...additionalArgs,
           '--vmservice-out-file=info',
           '--track-widget-creation',
           '-v',
@@ -78,7 +78,7 @@ class TrackWidgetCreationEnabledTask {
       final Process runProcess = await startProcess(
         path.join(flutterDirectory.path, 'bin', 'flutter'),
         flutterCommandArgs('run', <String>[
-           ...?additionalArgs,
+           ...additionalArgs,
            '--vmservice-out-file=info',
           '--no-track-widget-creation',
           '-v',

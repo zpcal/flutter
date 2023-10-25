@@ -273,7 +273,7 @@ Future<void> main() async {
 
       String modes = readonlyDebugAssetFile.statSync().modeString();
       print('\nread-only.txt file access modes = $modes');
-      if (modes != null && modes.compareTo(fileReadWriteMode) != 0) {
+      if (modes.compareTo(fileReadWriteMode) != 0) {
         return TaskResult.failure('Failed to make assets user-readable and writable');
       }
 
@@ -345,7 +345,7 @@ Future<void> main() async {
 
       modes = readonlyReleaseAssetFile.statSync().modeString();
       print('\nread-only.txt file access modes = $modes');
-      if (modes != null && modes.compareTo(fileReadWriteMode) != 0) {
+      if (modes.compareTo(fileReadWriteMode) != 0) {
         return TaskResult.failure('Failed to make assets user-readable and writable');
       }
 

@@ -140,7 +140,6 @@ class _BorderContainer extends StatefulWidget {
     @required this.fillColor,
     @required this.hoverColor,
     @required this.isHovering,
-    this.child,
   }) : assert(border != null),
        assert(gap != null),
        assert(fillColor != null),

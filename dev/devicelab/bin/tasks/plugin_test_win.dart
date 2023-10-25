@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:flutter_devicelab/tasks/plugin_tests.dart';
 import 'package:flutter_devicelab/framework/framework.dart';
+import 'package:flutter_devicelab/tasks/plugin_tests.dart';
 
 Future<void> main() async {
   await task(combine(<TaskFunction>[

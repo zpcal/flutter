@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import '../../base/file_system.dart';
 import '../../base/logger.dart';
 import '../../project.dart';
 import 'ios_migrator.dart';
@@ -42,9 +41,9 @@ class ProjectBaseConfigurationMigration extends IOSMigrator {
     final RegExpMatch match = projectBuildConfigurationList.firstMatch(originalProjectContents);
 
     // If the PBXProject "Runner" build configuration identifiers can't be parsed, default to the generated template identifiers.
-    final String debugIdentifier = match?.group(1) ?? '97C147031CF9000F007C117D';
-    final String releaseIdentifier = match?.group(2) ?? '97C147041CF9000F007C117D';
-    final String profileIdentifier = match?.group(3) ?? '249021D3217E4FDB00AE95B9';
+    final String debugIdentifier = match.group(1) ?? '97C147031CF9000F007C117D';
+    final String releaseIdentifier = match.group(2) ?? '97C147041CF9000F007C117D';
+    final String profileIdentifier = match.group(3) ?? '249021D3217E4FDB00AE95B9';
 
     // Debug
     final String debugBaseConfigurationOriginal = '''

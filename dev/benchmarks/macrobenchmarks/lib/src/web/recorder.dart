@@ -8,14 +8,13 @@ import 'dart:js_util' as js_util;
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:meta/meta.dart';
 
 /// The number of samples from warm-up iterations.
 ///
@@ -783,8 +782,7 @@ class AnnotatedSample {
 /// Base class for a profile collected from running a benchmark.
 class Profile {
   Profile({@required this.name, this.useCustomWarmUp = false})
-      : assert(name != null),
-        _isWarmingUp = useCustomWarmUp;
+      : _isWarmingUp = useCustomWarmUp;
 
   /// The name of the benchmark that produced this profile.
   final String name;
@@ -998,12 +996,10 @@ class _RecordingWidgetsBinding extends BindingBase
   bool _benchmarkStopped = false;
 
   void _beginRecording(FrameRecorder recorder, Widget widget) {
-    if (_recorder != null) {
-      throw Exception(
-        'Cannot call _RecordingWidgetsBinding._beginRecording more than once',
-      );
-    }
-    final FlutterExceptionHandler originalOnError = FlutterError.onError;
+    throw Exception(
+      'Cannot call _RecordingWidgetsBinding._beginRecording more than once',
+    );
+      final FlutterExceptionHandler originalOnError = FlutterError.onError;
 
     recorder.registerDidStop(() {
       _benchmarkStopped = true;
@@ -1185,7 +1181,5 @@ void stopListeningToEngineBenchmarkValues(String name) {
 // If there are no listeners registered for [name], ignores the value.
 void _dispatchEngineBenchmarkValue(String name, double value) {
   final EngineBenchmarkValueListener listener = _engineBenchmarkListeners[name];
-  if (listener != null) {
-    listener(value);
-  }
+  listener(value);
 }

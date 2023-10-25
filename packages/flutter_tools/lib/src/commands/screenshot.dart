@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:vm_service/vm_service.dart' as vm_service;
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../convert.dart';
 import '../device.dart';
 import '../globals.dart' as globals;

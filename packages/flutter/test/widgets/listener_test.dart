@@ -6,11 +6,11 @@
 
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/gestures.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'gesture_utils.dart';
 
@@ -327,7 +327,7 @@ void main() {
         ..rotateZ(-math.pi / 2)
         ..translate(-offset.dx, -offset.dy, 0.0);
 
-      final Offset localDownPosition = const Offset(50, 50) + const Offset(5, -10);
+      const Offset localDownPosition = Offset(50, 50) + Offset(5, -10);
       expect(down.localPosition, within(distance: 0.001, from: localDownPosition));
       expect(down.position, downPosition);
       expect(down.delta, Offset.zero);

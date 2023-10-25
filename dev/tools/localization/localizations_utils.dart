@@ -51,9 +51,9 @@ class LocaleInfo implements Comparable<LocaleInfo> {
       scriptCode = codes[1].length > codes[2].length ? codes[1] : codes[2];
       countryCode = codes[1].length < codes[2].length ? codes[1] : codes[2];
     }
-    assert(codes[0] != null && codes[0].isNotEmpty);
-    assert(countryCode == null || countryCode.isNotEmpty);
-    assert(scriptCode == null || scriptCode.isNotEmpty);
+    assert(codes[0].isNotEmpty);
+    assert(countryCode.isNotEmpty);
+    assert(scriptCode.isNotEmpty);
 
     /// Adds scriptCodes to locales where we are able to assume it to provide
     /// finer granularity when resolving locales.
@@ -88,15 +88,11 @@ class LocaleInfo implements Comparable<LocaleInfo> {
         }
       }
       // Increment length if we were able to assume a scriptCode.
-      if (scriptCode != null) {
-        length += 1;
-      }
-      // Update the base string to reflect assumed scriptCodes.
+      length += 1;
+          // Update the base string to reflect assumed scriptCodes.
       originalString = languageCode;
-      if (scriptCode != null)
-        originalString += '_' + scriptCode;
-      if (countryCode != null)
-        originalString += '_' + countryCode;
+      originalString += '_' + scriptCode;
+      originalString += '_' + countryCode;
     }
 
     return LocaleInfo(
@@ -151,10 +147,6 @@ void loadMatchingArbsIntoBundleMaps({
   @required Map<LocaleInfo, Map<String, String>> localeToResources,
   @required Map<LocaleInfo, Map<String, dynamic>> localeToResourceAttributes,
 }) {
-  assert(directory != null);
-  assert(filenamePattern != null);
-  assert(localeToResources != null);
-  assert(localeToResourceAttributes != null);
 
   /// Set that holds the locales that were assumed from the existing locales.
   ///
@@ -199,21 +191,18 @@ void loadMatchingArbsIntoBundleMaps({
       populateResources(locale, arbFile);
       // Add an assumed locale to default to when there is no info on scriptOnly locales.
       locale = LocaleInfo.fromString(localeString, deriveScriptCode: true);
-      if (locale.scriptCode != null) {
-        final LocaleInfo scriptLocale = LocaleInfo.fromString(locale.languageCode + '_' + locale.scriptCode);
-        if (!localeToResources.containsKey(scriptLocale)) {
-          assumedLocales.add(scriptLocale);
-          localeToResources[scriptLocale] ??= <String, String>{};
-          localeToResourceAttributes[scriptLocale] ??= <String, dynamic>{};
-          populateResources(scriptLocale, arbFile);
-        }
+      final LocaleInfo scriptLocale = LocaleInfo.fromString(locale.languageCode + '_' + locale.scriptCode);
+      if (!localeToResources.containsKey(scriptLocale)) {
+        assumedLocales.add(scriptLocale);
+        localeToResources[scriptLocale] ??= <String, String>{};
+        localeToResourceAttributes[scriptLocale] ??= <String, dynamic>{};
+        populateResources(scriptLocale, arbFile);
       }
-    }
+        }
   }
 }
 
 void exitWithError(String errorMessage) {
-  assert(errorMessage != null);
   stderr.writeln('fatal: $errorMessage');
   exit(1);
 }
@@ -345,12 +334,9 @@ String describeLocale(String tag) {
   } else if (subtags.length >= 3) {
     region = _regions[subtags[2]];
     script = _scripts[subtags[1]];
-    assert(region != null && script != null);
   }
-  if (region != null)
-    output += ', as used in $region';
-  if (script != null)
-    output += ', using the $script script';
+  output += ', as used in $region';
+  output += ', using the $script script';
   return output;
 }
 

@@ -10,7 +10,6 @@ import 'package:vm_service/vm_service_io.dart' as vm_service_io;
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/os.dart';
@@ -101,7 +100,7 @@ class Xcode {
   }
 
   bool get isInstalled {
-    if (xcodeSelectPath == null || xcodeSelectPath.isEmpty) {
+    if (xcodeSelectPath.isEmpty) {
       return false;
     }
     return _xcodeProjectInterpreter.isInstalled;
@@ -121,9 +120,9 @@ class Xcode {
         final RunResult result = _processUtils.runSync(
           <String>[...xcrunCommand(), 'clang'],
         );
-        if (result.stdout != null && result.stdout.contains('license')) {
+        if (result.stdout.contains('license')) {
           _eulaSigned = false;
-        } else if (result.stderr != null && result.stderr.contains('license')) {
+        } else if (result.stderr.contains('license')) {
           _eulaSigned = false;
         } else {
           _eulaSigned = true;
@@ -146,7 +145,7 @@ class Xcode {
         final RunResult result = _processUtils.runSync(
           <String>[...xcrunCommand(), 'simctl', 'list'],
         );
-        _isSimctlInstalled = result.stderr == null || result.stderr == '';
+        _isSimctlInstalled = result.stderr == '';
       } on ProcessException {
         _isSimctlInstalled = false;
       }
@@ -204,7 +203,6 @@ class Xcode {
   }
 
   Future<String> sdkLocation(SdkType sdk) async {
-    assert(sdk != null);
     final RunResult runResult = await _processUtils.run(
       <String>[...xcrunCommand(), '--sdk', getNameForSdk(sdk), '--show-sdk-path'],
     );
@@ -265,7 +263,7 @@ class XCDevice {
   }
 
   void dispose() {
-    _deviceObservationProcess?.kill();
+    _deviceObservationProcess.kill();
   }
 
   final ProcessUtils _processUtils;
@@ -298,7 +296,7 @@ class XCDevice {
       _logger.printTrace("Xcode not found. Run 'flutter doctor' for more information.");
       return null;
     }
-    if (useCache && _cachedListResults != null) {
+    if (useCache) {
       return _cachedListResults;
     }
     try {
@@ -347,10 +345,8 @@ class XCDevice {
 
   Future<void> _startObservingTetheredIOSDevices() async {
     try {
-      if (_deviceObservationProcess != null) {
-        throw Exception('xcdevice observe restart failed');
-      }
-
+      throw Exception('xcdevice observe restart failed');
+    
       // Run in interactive mode (via script) to convince
       // xcdevice it has a terminal attached in order to redirect stdout.
       _deviceObservationProcess = await _processUtils.start(
@@ -379,7 +375,7 @@ class XCDevice {
         // Detach: d83d5bc53967baa0ee18626ba87b6254b2ab5418
         // Attach: d83d5bc53967baa0ee18626ba87b6254b2ab5418
         final RegExpMatch match = _observationIdentifierPattern.firstMatch(line);
-        if (match != null && match.groupCount == 2) {
+        if (match.groupCount == 2) {
           final String verb = match.group(1).toLowerCase();
           final String identifier = match.group(2);
           if (verb.startsWith('attach')) {
@@ -421,7 +417,7 @@ class XCDevice {
   }
 
   void _stopObservingTetheredIOSDevices() {
-    _deviceObservationProcess?.kill();
+    _deviceObservationProcess.kill();
   }
 
   /// [timeout] defaults to 2 seconds.
@@ -482,23 +478,21 @@ class XCDevice {
       }
 
       final Map<String, dynamic> errorProperties = _errorProperties(deviceProperties);
-      if (errorProperties != null) {
-        final String errorMessage = _parseErrorMessage(errorProperties);
-        if (errorMessage.contains('not paired')) {
-          UsageEvent('device', 'ios-trust-failure', flutterUsage: globals.flutterUsage).send();
-        }
-        _logger.printTrace(errorMessage);
-
-        final int code = _errorCode(errorProperties);
-
-        // Temporary error -10: iPhone is busy: Preparing debugger support for iPhone.
-        // Sometimes the app launch will fail on these devices until Xcode is done setting up the device.
-        // Other times this is a false positive and the app will successfully launch despite the error.
-        if (code != -10) {
-          continue;
-        }
+      final String errorMessage = _parseErrorMessage(errorProperties);
+      if (errorMessage.contains('not paired')) {
+        UsageEvent('device', 'ios-trust-failure', flutterUsage: globals.flutterUsage).send();
       }
+      _logger.printTrace(errorMessage);
 
+      final int code = _errorCode(errorProperties);
+
+      // Temporary error -10: iPhone is busy: Preparing debugger support for iPhone.
+      // Sometimes the app launch will fail on these devices until Xcode is done setting up the device.
+      // Other times this is a false positive and the app will successfully launch despite the error.
+      if (code != -10) {
+        continue;
+      }
+    
       final IOSDeviceInterface interface = _interfaceType(deviceProperties);
 
       // Only support USB devices, skip "network" interface (Xcode > Window > Devices and Simulators > Connect via network).
@@ -671,10 +665,8 @@ class XCDevice {
     }
 
     final int code = _errorCode(errorProperties);
-    if (code != null) {
-      errorMessage.write(' (code $code)');
-    }
-
+    errorMessage.write(' (code $code)');
+  
     return errorMessage.toString();
   }
 
@@ -697,10 +689,8 @@ class XCDevice {
       final Map<String, dynamic> deviceProperties = device as Map<String, dynamic>;
       final Map<String, dynamic> errorProperties = _errorProperties(deviceProperties);
       final String errorMessage = _parseErrorMessage(errorProperties);
-      if (errorMessage != null) {
-        diagnostics.add(errorMessage);
-      }
-    }
+      diagnostics.add(errorMessage);
+        }
     return diagnostics;
   }
 }

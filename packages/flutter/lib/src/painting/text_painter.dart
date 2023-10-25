@@ -8,7 +8,6 @@ import 'dart:ui' as ui show Paragraph, ParagraphBuilder, ParagraphConstraints, P
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'basic_types.dart';
 import 'inline_span.dart';
 import 'placeholder_span.dart';
 import 'strut_style.dart';

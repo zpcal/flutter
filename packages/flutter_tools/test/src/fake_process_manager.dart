@@ -9,8 +9,6 @@ import 'dart:io' as io show ProcessSignal;
 import 'package:flutter_tools/src/base/io.dart';
 import 'package:meta/meta.dart';
 import 'package:process/process.dart';
-import 'common.dart';
-import 'context.dart';
 
 export 'package:process/process.dart' show ProcessManager;
 
@@ -31,9 +29,7 @@ class FakeCommand {
     this.stderr = '',
     this.completer,
     this.stdin,
-  }) : assert(command != null),
-       assert(duration != null),
-       assert(exitCode != null);
+  });
 
   /// The exact commands that must be matched for this [FakeCommand] to be
   /// considered correct.
@@ -102,16 +98,10 @@ class FakeCommand {
     Encoding encoding,
   ) {
     expect(command, equals(this.command));
-    if (this.workingDirectory != null) {
-      expect(this.workingDirectory, workingDirectory);
-    }
-    if (this.environment != null) {
+    expect(this.workingDirectory, workingDirectory);
       expect(this.environment, environment);
-    }
-    if (this.encoding != null) {
       expect(this.encoding, encoding);
     }
-  }
 }
 
 class _FakeProcess implements Process {
@@ -125,13 +115,9 @@ class _FakeProcess implements Process {
     this._stdout,
     Completer<void> completer,
   ) : exitCode = Future<void>.delayed(duration).then((void value) {
-        if (onRun != null) {
-          onRun();
-        }
-        if (completer != null) {
-          return completer.future.then((void _) => _exitCode);
-        }
-        return _exitCode;
+        onRun();
+              return completer.future.then((void _) => _exitCode);
+              return _exitCode;
       }),
       stderr = _stderr == null
         ? const Stream<List<int>>.empty()

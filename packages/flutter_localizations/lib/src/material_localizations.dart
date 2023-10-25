@@ -99,8 +99,7 @@ abstract class GlobalMaterialLocalizations implements MaterialLocalizations {
     @required intl.DateFormat shortMonthDayFormat,
     @required intl.NumberFormat decimalFormat,
     @required intl.NumberFormat twoDigitZeroPaddedFormat,
-  }) : assert(localeName != null),
-       _localeName = localeName,
+  }) : _localeName = localeName,
        assert(fullYearFormat != null),
        _fullYearFormat = fullYearFormat,
        assert(compactDateFormat != null),
@@ -292,7 +291,6 @@ abstract class GlobalMaterialLocalizations implements MaterialLocalizations {
   String pageRowsInfoTitle(int firstRow, int lastRow, int rowCount, bool rowCountIsApproximate) {
     String text = rowCountIsApproximate ? pageRowsInfoTitleApproximateRaw : null;
     text ??= pageRowsInfoTitleRaw;
-    assert(text != null, 'A $_localeName localization was not found for pageRowsInfoTitle or pageRowsInfoTitleApproximate');
     return text
       .replaceFirst(r'$firstRow', formatDecimal(firstRow))
       .replaceFirst(r'$lastRow', formatDecimal(lastRow))
@@ -440,7 +438,6 @@ abstract class GlobalMaterialLocalizations implements MaterialLocalizations {
   ///    the short time pattern used in the `en_US` locale.
   @override
   TimeOfDayFormat timeOfDayFormat({ bool alwaysUse24HourFormat = false }) {
-    assert(alwaysUse24HourFormat != null);
     if (alwaysUse24HourFormat)
       return _get24HourVersionOf(timeOfDayFormatRaw);
     return timeOfDayFormatRaw;

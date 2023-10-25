@@ -17,7 +17,6 @@ import 'package:flutter_tools/src/commands/build_windows.dart';
 import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/runner/flutter_command.dart';
 
-import '../../src/common.dart';
 import '../../src/context.dart';
 
 void main() {

@@ -9,7 +9,6 @@ import 'package:meta/meta.dart';
 import 'package:process/process.dart';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
@@ -64,7 +63,7 @@ class AnalysisServer {
       _fileSystem.path.join(sdkPath, 'bin', 'dart'),
       '--disable-dart-dev',
       snapshot,
-      for (String experiment in _experiments)
+      for (final String experiment in _experiments)
         ...<String>[
           '--enable-experiment',
           experiment,
@@ -186,7 +185,7 @@ class AnalysisServer {
   Future<bool> dispose() async {
     await _analyzingController.close();
     await _errorsController.close();
-    return _process?.kill();
+    return _process.kill();
   }
 }
 

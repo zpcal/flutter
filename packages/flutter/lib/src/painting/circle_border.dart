@@ -7,7 +7,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 import 'borders.dart';
 import 'edge_insets.dart';
 

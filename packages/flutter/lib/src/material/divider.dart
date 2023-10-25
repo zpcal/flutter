@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 
 import 'divider_theme.dart';
 import 'theme.dart';

@@ -4,10 +4,10 @@
 
 // @dart = 2.8
 
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/gestures.dart' show DragStartBehavior;
 
 class Leaf extends StatefulWidget {
   const Leaf({ Key key, this.child }) : super(key: key);

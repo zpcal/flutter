@@ -194,7 +194,7 @@ class _DefaultUsage implements Usage {
     final String version = versionOverride ?? flutterVersion.getVersionString(redactUnknownBranches: true);
     final bool suppressEnvFlag = globals.platform.environment['FLUTTER_SUPPRESS_ANALYTICS'] == 'true';
     final String logFilePath = logFile ?? globals.platform.environment['FLUTTER_ANALYTICS_LOG_FILE'];
-    final bool usingLogFile = logFilePath != null && logFilePath.isNotEmpty;
+    final bool usingLogFile = logFilePath.isNotEmpty;
 
     analyticsIOFactory ??= _defaultAnalyticsIOFactory;
 
@@ -251,8 +251,7 @@ class _DefaultUsage implements Usage {
     // separated list.
     final String enabledFeatures = allFeatures
       .where((Feature feature) {
-        return feature.configSetting != null &&
-               globals.config.getValue(feature.configSetting) == true;
+        return globals.config.getValue(feature.configSetting) == true;
       })
       .map((Feature feature) => feature.configSetting)
       .join(',');
@@ -306,7 +305,7 @@ class _DefaultUsage implements Usage {
     }
 
     final Map<String, String> paramsWithLocalTime = <String, String>{
-      ...?parameters,
+      ...parameters,
       cdKey(CustomDimensions.localTime): formatDateTime(globals.systemClock.now()),
     };
     _analytics.sendScreenView(command, parameters: paramsWithLocalTime);
@@ -325,7 +324,7 @@ class _DefaultUsage implements Usage {
     }
 
     final Map<String, String> paramsWithLocalTime = <String, String>{
-      ...?parameters,
+      ...parameters,
       cdKey(CustomDimensions.localTime): formatDateTime(globals.systemClock.now()),
     };
 
@@ -481,8 +480,8 @@ class LogToFileAnalytics extends AnalyticsMock {
     final Map<String, String> parameters = <String, String>{
       'variableName': variableName,
       'time': '$time',
-      if (category != null) 'category': category,
-      if (label != null) 'label': label,
+      'category': category,
+      'label': label,
     };
     _sendController.add(parameters);
     logFile.writeAsStringSync('timing $parameters\n', mode: FileMode.append);

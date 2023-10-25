@@ -10,14 +10,12 @@ import '../artifacts.dart';
 import '../build_info.dart';
 import '../macos/xcode.dart';
 
-import 'file_system.dart';
 import 'logger.dart';
 import 'process.dart';
 
 /// A snapshot build configuration.
 class SnapshotType {
-  SnapshotType(this.platform, this.mode)
-    : assert(mode != null);
+  SnapshotType(this.platform, this.mode);
 
   final TargetPlatform platform;
   final BuildMode mode;
@@ -137,7 +135,7 @@ class AOTSnapshotter {
     final List<String> genSnapshotArgs = <String>[
       '--deterministic',
     ];
-    if (extraGenSnapshotOptions != null && extraGenSnapshotOptions.isNotEmpty) {
+    if (extraGenSnapshotOptions.isNotEmpty) {
       _logger.printTrace('Extra gen_snapshot options: $extraGenSnapshotOptions');
       genSnapshotArgs.addAll(extraGenSnapshotOptions);
     }
@@ -173,7 +171,7 @@ class AOTSnapshotter {
     // multiple debug files.
     final String archName = getNameForTargetPlatform(platform, darwinArch: darwinArch);
     final String debugFilename = 'app.$archName.symbols';
-    final bool shouldSplitDebugInfo = splitDebugInfo?.isNotEmpty ?? false;
+    final bool shouldSplitDebugInfo = splitDebugInfo.isNotEmpty ?? false;
     if (shouldSplitDebugInfo) {
       _fileSystem.directory(splitDebugInfo)
         .createSync(recursive: true);
@@ -252,13 +250,11 @@ class AOTSnapshotter {
     List<String> isysrootArgs;
     if (isIOS) {
       final String iPhoneSDKLocation = await _xcode.sdkLocation(SdkType.iPhone);
-      if (iPhoneSDKLocation != null) {
-        isysrootArgs = <String>['-isysroot', iPhoneSDKLocation];
-      }
-    }
+      isysrootArgs = <String>['-isysroot', iPhoneSDKLocation];
+        }
     final RunResult compileResult = await _xcode.cc(<String>[
       '-arch', targetArch,
-      if (isysrootArgs != null) ...isysrootArgs,
+      ...isysrootArgs,
       if (bitcode) embedBitcodeArg,
       '-c',
       assemblyPath,
@@ -280,7 +276,7 @@ class AOTSnapshotter {
       '-Xlinker', '-rpath', '-Xlinker', '@loader_path/Frameworks',
       '-install_name', '@rpath/App.framework/App',
       if (bitcode) embedBitcodeArg,
-      if (isysrootArgs != null) ...isysrootArgs,
+      ...isysrootArgs,
       '-o', appLib,
       assemblyO,
     ];

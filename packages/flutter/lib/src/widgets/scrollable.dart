@@ -9,9 +9,9 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 
 import 'actions.dart';

@@ -14,7 +14,6 @@ import 'package:flutter_tools/src/windows/application_package.dart';
 import 'package:flutter_tools/src/windows/windows_device.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../src/common.dart';
 import '../../src/context.dart';
 import '../../src/testbed.dart';
 

@@ -8,7 +8,6 @@ import 'dart:io' hide Platform;
 import 'package:mockito/mockito.dart';
 
 import '../test.dart';
-import 'common.dart';
 
 class MockFile extends Mock implements File {}
 

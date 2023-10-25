@@ -7,10 +7,9 @@ import 'dart:convert' show json;
 import 'dart:html' as html;
 import 'dart:math' as math;
 
+import 'package:gallery/benchmarks/gallery_automator.dart' show DemoType, typeOfDemo;
 import 'package:macrobenchmarks/src/web/bench_text_layout.dart';
 import 'package:macrobenchmarks/src/web/bench_text_out_of_picture_bounds.dart';
-
-import 'package:gallery/benchmarks/gallery_automator.dart' show DemoType, typeOfDemo;
 
 import 'src/web/bench_build_material_checkbox.dart';
 import 'src/web/bench_card_infinite_scroll.dart';
@@ -176,7 +175,7 @@ void _fallbackToManual(String error) {
     final html.Element button = html.document.querySelector('#$benchmarkName');
     button.addEventListener('click', (_) {
       final html.Element manualPanel = html.document.querySelector('#manual-panel');
-      manualPanel?.remove();
+      manualPanel.remove();
       _runBenchmark(benchmarkName);
     });
   }
@@ -428,24 +427,16 @@ class LocalBenchmarkServerClient {
     method ??= 'GET';
     xhr.open(method, url, async: true);
 
-    if (withCredentials != null) {
-      xhr.withCredentials = withCredentials;
-    }
-
-    if (responseType != null) {
-      xhr.responseType = responseType;
-    }
-
-    if (mimeType != null) {
-      xhr.overrideMimeType(mimeType);
-    }
-
-    if (requestHeaders != null) {
-      requestHeaders.forEach((String header, String value) {
-        xhr.setRequestHeader(header, value);
-      });
-    }
-
+    xhr.withCredentials = withCredentials;
+  
+    xhr.responseType = responseType;
+  
+    xhr.overrideMimeType(mimeType);
+  
+    requestHeaders.forEach((String header, String value) {
+      xhr.setRequestHeader(header, value);
+    });
+  
     xhr.onLoad.listen((html.ProgressEvent e) {
       completer.complete(xhr);
     });

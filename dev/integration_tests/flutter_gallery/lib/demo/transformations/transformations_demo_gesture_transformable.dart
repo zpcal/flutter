@@ -73,12 +73,7 @@ class GestureTransformable extends StatefulWidget {
     this.onScaleEnd,
   }) : assert(child != null),
        assert(size != null),
-       assert(minScale != null),
        assert(minScale > 0),
-       assert(disableTranslation != null),
-       assert(disableScale != null),
-       assert(disableRotation != null),
-       assert(reset != null),
        assert(
          !reset || onResetEnd != null,
          'Must implement onResetEnd to use reset.',
@@ -378,7 +373,7 @@ class _GestureTransformableState extends State<GestureTransformable> with Ticker
     final double clampedTotalScale = totalScale.clamp(
       widget.minScale,
       widget.maxScale,
-    ) as double;
+    );
     final double clampedScale = clampedTotalScale / currentScale;
     return matrix..scale(clampedScale);
   }
@@ -449,7 +444,7 @@ class _GestureTransformableState extends State<GestureTransformable> with Ticker
       }
     }
     setState(() {
-      if (gestureType == _GestureType.scale && _scaleStart != null) {
+      if (gestureType == _GestureType.scale) {
         // details.scale gives us the amount to change the scale as of the
         // start of this gesture, so calculate the amount to scale as of the
         // previous call to _onScaleUpdate.

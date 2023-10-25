@@ -8,7 +8,6 @@ import 'package:args/command_runner.dart';
 
 import '../android/android_device.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/utils.dart';
 import '../build_info.dart';
@@ -260,7 +259,7 @@ class RunCommand extends RunCommandBase {
     bool anyAndroidDevices = false;
     bool anyIOSDevices = false;
 
-    if (devices == null || devices.isEmpty) {
+    if (devices.isEmpty) {
       deviceType = 'none';
       deviceOsVersion = 'none';
       isEmulator = false;
@@ -289,14 +288,14 @@ class RunCommand extends RunCommandBase {
     final List<String> hostLanguage = <String>[];
     if (anyAndroidDevices) {
       final AndroidProject androidProject = FlutterProject.current().android;
-      if (androidProject != null && androidProject.existsSync()) {
+      if (androidProject.existsSync()) {
         hostLanguage.add(androidProject.isKotlin ? 'kotlin' : 'java');
         androidEmbeddingVersion = androidProject.getEmbeddingVersion().toString().split('.').last;
       }
     }
     if (anyIOSDevices) {
       final IosProject iosProject = FlutterProject.current().ios;
-      if (iosProject != null && iosProject.exists) {
+      if (iosProject.exists) {
         final Iterable<File> swiftFiles = iosProject.hostAppRoot
             .listSync(recursive: true, followLinks: false)
             .whereType<File>()
@@ -313,8 +312,7 @@ class RunCommand extends RunCommandBase {
       CustomDimensions.commandRunModeName: modeName,
       CustomDimensions.commandRunProjectModule: '${FlutterProject.current().isModule}',
       CustomDimensions.commandRunProjectHostLanguage: hostLanguage.join(','),
-      if (androidEmbeddingVersion != null)
-        CustomDimensions.commandRunAndroidEmbeddingVersion: androidEmbeddingVersion,
+      CustomDimensions.commandRunAndroidEmbeddingVersion: androidEmbeddingVersion,
     };
   }
 
@@ -356,8 +354,7 @@ class RunCommand extends RunCommandBase {
       throwToolExit('Using -d all with --use-application-binary is not supported');
     }
 
-    if (userIdentifier != null
-      && devices.every((Device device) => device is! AndroidDevice)) {
+    if (devices.every((Device device) => device is! AndroidDevice)) {
       throwToolExit(
         '--${FlutterOptions.kDeviceUser} is only supported for Android. At least one Android device is required.'
       );
@@ -366,10 +363,8 @@ class RunCommand extends RunCommandBase {
 
   String get _traceAllowlist {
     final String deprecatedValue = stringArg('trace-whitelist');
-    if (deprecatedValue != null) {
-      globals.printError('--trace-whitelist has been deprecated, use --trace-allowlist instead');
-    }
-    return stringArg('trace-allowlist') ?? deprecatedValue;
+    globals.printError('--trace-whitelist has been deprecated, use --trace-allowlist instead');
+      return stringArg('trace-allowlist') ?? deprecatedValue;
   }
 
   DebuggingOptions _createDebuggingOptions() {

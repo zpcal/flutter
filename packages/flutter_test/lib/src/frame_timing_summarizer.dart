@@ -19,7 +19,6 @@ class FrameTimingSummarizer {
   ///
   /// See [TimelineSummary.summaryJson] for detail.
   factory FrameTimingSummarizer(List<FrameTiming> data) {
-    assert(data != null);
     assert(data.isNotEmpty);
     final List<Duration> frameBuildTime = List<Duration>.unmodifiable(
       data.map<Duration>((FrameTiming datum) => datum.buildDuration),

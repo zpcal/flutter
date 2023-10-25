@@ -4,7 +4,6 @@
 
 import '../../artifacts.dart';
 import '../../base/build.dart';
-import '../../base/file_system.dart';
 import '../../base/io.dart';
 import '../../base/process.dart';
 import '../../build_info.dart';
@@ -200,18 +199,16 @@ class CompileMacOSFramework extends Target {
     final bool dartObfuscation = environment.defines[kDartObfuscation] == 'true';
     final List<String> extraGenSnapshotOptions = decodeDartDefines(environment.defines, kExtraGenSnapshotOptions);
 
-    if (codeSizeDirectory != null) {
-      final File codeSizeFile = environment.fileSystem
-        .directory(codeSizeDirectory)
-        .childFile('snapshot.${getNameForDarwinArch(DarwinArch.x86_64)}.json');
-      extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
-      final File precompilerTraceFile = environment.fileSystem
-        .directory(codeSizeDirectory)
-        .childFile('trace.${getNameForDarwinArch(DarwinArch.x86_64)}.json');
-      extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
-      extraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
-    }
-
+    final File codeSizeFile = environment.fileSystem
+      .directory(codeSizeDirectory)
+      .childFile('snapshot.${getNameForDarwinArch(DarwinArch.x86_64)}.json');
+    extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
+    final File precompilerTraceFile = environment.fileSystem
+      .directory(codeSizeDirectory)
+      .childFile('trace.${getNameForDarwinArch(DarwinArch.x86_64)}.json');
+    extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
+    extraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
+  
     final AOTSnapshotter snapshotter = AOTSnapshotter(
       reportTimings: false,
       fileSystem: environment.fileSystem,

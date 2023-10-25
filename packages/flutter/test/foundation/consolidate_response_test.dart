@@ -12,7 +12,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 
-import '../flutter_test_alternative.dart';
 
 final Uint8List chunkOne = Uint8List.fromList(<int>[0, 1, 2, 3, 4, 5]);
 final Uint8List chunkTwo = Uint8List.fromList(<int>[6, 7, 8, 9, 10]);

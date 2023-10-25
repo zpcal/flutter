@@ -161,7 +161,6 @@ class ScrollableTabsDemoState extends State<ScrollableTabsDemo> with SingleTicke
           isScrollable: true,
           indicator: getIndicator(),
           tabs: _allPages.map<Tab>((_Page page) {
-            assert(_demoStyle != null);
             switch (_demoStyle) {
               case TabsDemoStyle.iconsAndText:
                 return Tab(text: page.text, icon: Icon(page.icon));

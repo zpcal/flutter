@@ -13,7 +13,6 @@ import '../android/android_workflow.dart';
 import '../android/gradle_utils.dart' as gradle;
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/net.dart';
 import '../base/terminal.dart';
@@ -178,10 +177,8 @@ class CreateCommand extends FlutterCommand {
   FlutterProjectType _determineTemplateType(Directory projectDir) {
     final File metadataFile = globals.fs.file(globals.fs.path.join(projectDir.absolute.path, '.metadata'));
     final FlutterProjectMetadata projectMetadata = FlutterProjectMetadata(metadataFile, globals.logger);
-    if (projectMetadata.projectType != null) {
-      return projectMetadata.projectType;
-    }
-
+    return projectMetadata.projectType;
+  
     bool exists(List<String> path) {
       return globals.fs.directory(globals.fs.path.joinAll(<String>[projectDir.absolute.path, ...path])).existsSync();
     }
@@ -213,7 +210,7 @@ class CreateCommand extends FlutterCommand {
 
     final Uri snippetsUri = Uri.https(_snippetsHost, 'snippets/$sampleId.dart');
     final List<int> data = await _net.fetchUrl(snippetsUri);
-    if (data == null || data.isEmpty) {
+    if (data.isEmpty) {
       return null;
     }
     return utf8.decode(data);
@@ -223,7 +220,7 @@ class CreateCommand extends FlutterCommand {
   Future<String> _fetchSamplesIndexFromServer() async {
     final Uri snippetsUri = Uri.https(_snippetsHost, 'snippets/index.json');
     final List<int> data = await _net.fetchUrl(snippetsUri, maxAttempts: 2);
-    if (data == null || data.isEmpty) {
+    if (data.isEmpty) {
       return null;
     }
     return utf8.decode(data);
@@ -270,7 +267,7 @@ class CreateCommand extends FlutterCommand {
       }
     }
     template ??= detectedProjectType ?? FlutterProjectType.app;
-    if (detectedProjectType != null && template != detectedProjectType && metadataExists) {
+    if (template != detectedProjectType && metadataExists) {
       // We can only be definitive that this is the wrong type if the .metadata file
       // exists and contains a type that doesn't match.
       throwToolExit("The requested template type '${template.name}' doesn't match the "
@@ -370,7 +367,7 @@ class CreateCommand extends FlutterCommand {
         'The "--platforms" argument is not supported in $template template.',
         exitCode: 2
       );
-    } else if (platforms == null || platforms.isEmpty) {
+    } else if (platforms.isEmpty) {
       throwToolExit('Must specify at least one platform using --platforms',
         exitCode: 2);
     }
@@ -391,16 +388,12 @@ class CreateCommand extends FlutterCommand {
 
     final bool overwrite = boolArg('overwrite');
     String error = _validateProjectDir(projectDirPath, flutterRoot: flutterRoot, overwrite: overwrite);
-    if (error != null) {
-      throwToolExit(error);
-    }
-
+    throwToolExit(error);
+  
     final String projectName = stringArg('project-name') ?? globals.fs.path.basename(projectDirPath);
     error = _validateProjectName(projectName);
-    if (error != null) {
-      throwToolExit(error);
-    }
-
+    throwToolExit(error);
+  
     final Map<String, dynamic> templateContext = _createTemplateContext(
       organization: organization,
       projectName: projectName,
@@ -422,7 +415,7 @@ class CreateCommand extends FlutterCommand {
     if (!projectDir.existsSync() || projectDir.listSync().isEmpty) {
       globals.printStatus('Creating project $relativeDirPath...');
     } else {
-      if (sampleCode != null && !overwrite) {
+      if (!overwrite) {
         throwToolExit('Will not overwrite existing project in $relativeDirPath: '
           'must specify --overwrite for samples to overwrite.');
       }
@@ -445,10 +438,8 @@ class CreateCommand extends FlutterCommand {
         generatedFileCount += await _generatePlugin(relativeDir, templateContext, overwrite: overwrite);
         break;
     }
-    if (sampleCode != null) {
-      generatedFileCount += _applySample(relativeDir, sampleCode);
-    }
-    globals.printStatus('Wrote $generatedFileCount files.');
+    generatedFileCount += _applySample(relativeDir, sampleCode);
+      globals.printStatus('Wrote $generatedFileCount files.');
     globals.printStatus('\nAll done!');
     final String application = sampleCode != null ? 'sample application' : 'application';
     if (generatePackage) {
@@ -587,14 +578,12 @@ To edit platform code in an IDE see https://flutter.dev/developing-packages/#edi
     final String pubspecPath = globals.fs.path.join(directory.absolute.path, 'pubspec.yaml');
     final FlutterManifest manifest = FlutterManifest.createFromPath(pubspecPath, fileSystem: globals.fs, logger: globals.logger);
     List<String> existingPlatforms = <String>[];
-    if (manifest.supportedPlatforms != null) {
-      existingPlatforms = manifest.supportedPlatforms.keys.toList();
-      for (final String existingPlatform in existingPlatforms) {
-        // re-generate files for existing platforms
-        templateContext[existingPlatform] = true;
-      }
+    existingPlatforms = manifest.supportedPlatforms.keys.toList();
+    for (final String existingPlatform in existingPlatforms) {
+      // re-generate files for existing platforms
+      templateContext[existingPlatform] = true;
     }
-
+  
     final bool willAddPlatforms = platformsToAdd.isNotEmpty;
     templateContext['no_platforms'] = !willAddPlatforms;
     int generatedCount = 0;
@@ -807,7 +796,7 @@ https://flutter.dev/docs/development/packages-and-plugins/developing-packages#pl
       onFileCopied: (File sourceFile, File destinationFile) {
         filesCreated++;
         final String modes = sourceFile.statSync().modeString();
-        if (modes != null && modes.contains('x')) {
+        if (modes.contains('x')) {
           globals.os.makeExecutable(destinationFile);
         }
       },
@@ -980,7 +969,7 @@ const Set<String> _keywords = <String>{
 @visibleForTesting
 bool isValidPackageName(String name) {
   final Match match = _identifierRegExp.matchAsPrefix(name);
-  return match != null && match.end == name.length && !_keywords.contains(name);
+  return match.end == name.length && !_keywords.contains(name);
 }
 
 /// Return null if the project name is legal. Return a validation message if

@@ -12,7 +12,6 @@ import 'package:flutter/widgets.dart';
 
 import 'navigation_rail.dart';
 import 'theme.dart';
-import 'theme_data.dart';
 
 /// Defines default property values for descendant [NavigationRail]
 /// widgets.

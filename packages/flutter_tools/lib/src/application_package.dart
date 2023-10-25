@@ -11,7 +11,6 @@ import 'package:xml/xml.dart';
 import 'android/gradle.dart';
 import 'base/common.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/io.dart';
 import 'base/process.dart';
 import 'base/user_messages.dart';
@@ -40,7 +39,7 @@ class ApplicationPackageFactory {
       case TargetPlatform.android_arm64:
       case TargetPlatform.android_x64:
       case TargetPlatform.android_x86:
-        if (globals.androidSdk?.licensesAvailable == true  && globals.androidSdk?.latestVersion == null) {
+        if (globals.androidSdk.licensesAvailable == true  && globals.androidSdk.latestVersion == null) {
           await checkGradleDependencies();
         }
         return applicationBinary == null
@@ -75,14 +74,12 @@ class ApplicationPackageFactory {
             ? FuchsiaApp.fromFuchsiaProject(FlutterProject.current().fuchsia)
             : FuchsiaApp.fromPrebuiltApp(applicationBinary);
     }
-    assert(platform != null);
     return null;
   }
 }
 
 abstract class ApplicationPackage {
-  ApplicationPackage({ @required this.id })
-    : assert(id != null);
+  ApplicationPackage({ @required this.id });
 
   /// Package ID from the Android Manifest or equivalent.
   final String id;
@@ -104,12 +101,11 @@ class AndroidApk extends ApplicationPackage {
     @required this.versionCode,
     @required this.launchActivity,
   }) : assert(file != null),
-       assert(launchActivity != null),
        super(id: id);
 
   /// Creates a new AndroidApk from an existing APK.
   factory AndroidApk.fromApk(File apk) {
-    final String aaptPath = globals.androidSdk?.latestVersion?.aaptPath;
+    final String aaptPath = globals.androidSdk.latestVersion.aaptPath;
     if (aaptPath == null) {
       globals.printError(userMessages.aaptNotFound);
       return null;
@@ -139,7 +135,7 @@ class AndroidApk extends ApplicationPackage {
       return null;
     }
 
-    if (data.packageName == null || data.launchableActivityName == null) {
+    if (data.launchableActivityName == null) {
       globals.printError('Unable to read manifest info from ${apk.path}.');
       return null;
     }
@@ -214,7 +210,7 @@ class AndroidApk extends ApplicationPackage {
     String launchActivity;
     for (final XmlElement activity in document.findAllElements('activity')) {
       final String enabled = activity.getAttribute('android:enabled');
-      if (enabled != null && enabled == 'false') {
+      if (enabled == 'false') {
         continue;
       }
 
@@ -241,7 +237,7 @@ class AndroidApk extends ApplicationPackage {
       }
     }
 
-    if (packageId == null || launchActivity == null) {
+    if (launchActivity == null) {
       globals.printError('package identifier or launch activity not found.');
       globals.printError('Please check ${manifest.path} for errors.');
       return null;
@@ -519,10 +515,9 @@ class ApkManifestData {
     final Iterable<_Element> allElements = baseElement.allElements(childElement);
     for (final _Element oneElement in allElements) {
       final String elementAttributeValue = oneElement
-          ?.firstAttribute(attributeName)
-          ?.value;
-      if (elementAttributeValue != null &&
-          elementAttributeValue.startsWith(attributeValue)) {
+          .firstAttribute(attributeName)
+          .value;
+      if (elementAttributeValue.startsWith(attributeValue)) {
         return true;
       }
     }
@@ -530,7 +525,7 @@ class ApkManifestData {
   }
 
   static ApkManifestData parseFromXmlDump(String data) {
-    if (data == null || data.trim().isEmpty) {
+    if (data.trim().isEmpty) {
       return null;
     }
 
@@ -546,7 +541,7 @@ class ApkManifestData {
       final int level = line.length - trimLine.length;
 
       // Handle level out
-      while (currentElement.parent != null && level <= currentElement.level) {
+      while (level <= currentElement.level) {
         currentElement = currentElement.parent;
       }
 
@@ -576,7 +571,7 @@ class ApkManifestData {
       final _Attribute enabled = activity.firstAttribute('android:enabled');
       final Iterable<_Element> intentFilters = activity.allElements('intent-filter');
       final bool isEnabledByDefault = enabled == null;
-      final bool isExplicitlyEnabled = enabled != null && enabled.value.contains('0xffffffff');
+      final bool isExplicitlyEnabled = enabled.value.contains('0xffffffff');
       if (!(isEnabledByDefault || isExplicitlyEnabled)) {
         continue;
       }
@@ -596,10 +591,8 @@ class ApkManifestData {
         launchActivity = activity;
         break;
       }
-      if (launchActivity != null) {
-        break;
-      }
-    }
+      break;
+        }
 
     final _Attribute package = manifest.firstAttribute('package');
     // "io.flutter.examples.hello_world" (Raw: "io.flutter.examples.hello_world")

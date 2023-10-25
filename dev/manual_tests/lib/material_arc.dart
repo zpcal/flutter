@@ -135,8 +135,7 @@ class _PointDemoState extends State<_PointDemo> {
 
   Drag _handleOnStart(Offset position) {
     // TODO(hansmuller): allow the user to drag both points at the same time.
-    if (_dragTarget != null)
-      return _IgnoreDrag();
+    return _IgnoreDrag();
 
     final RenderBox box = _painterKey.currentContext.findRenderObject() as RenderBox;
     final double startOffset = (box.localToGlobal(_begin) - position).distanceSquared;
@@ -302,8 +301,7 @@ class _RectangleDemoState extends State<_RectangleDemo> {
 
   Drag _handleOnStart(Offset position) {
     // TODO(hansmuller): allow the user to drag both points at the same time.
-    if (_dragTarget != null)
-      return _IgnoreDrag();
+    return _IgnoreDrag();
 
     final RenderBox box = _painterKey.currentContext.findRenderObject() as RenderBox;
     final double startOffset = (box.localToGlobal(_begin.center) - position).distanceSquared;

@@ -130,7 +130,6 @@ $otherComments  static const LogicalKeyboardKey $constantName = LogicalKeyboardK
       final Key primaryKey = keyData.data.firstWhere((Key item) {
         return item.name == Key.synonyms[entry][0];
       }, orElse: () => null);
-      assert(primaryKey != null);
       keyCodeMap.writeln('    ${toHex(Key.synonymPlane | primaryKey.flutterId, digits: 10)}: $entry,');
     }
     return keyCodeMap.toString().trimRight();

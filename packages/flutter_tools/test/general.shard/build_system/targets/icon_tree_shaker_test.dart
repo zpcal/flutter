@@ -74,7 +74,6 @@ void main() {
     String stderr = '',
     @required mocks.CompleterIOSink stdinSink,
   }) {
-    assert(stdinSink != null);
     stdinSink.writes.clear();
     when(fontSubsetProcess.exitCode).thenAnswer((_) async => exitCode);
     when(fontSubsetProcess.stdout).thenAnswer((_) => Stream<List<int>>.fromIterable(<List<int>>[utf8.encode(stdout)]));

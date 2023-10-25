@@ -11,7 +11,6 @@ import 'package:yaml/yaml.dart' as yaml;
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
 import '../base/terminal.dart';
@@ -128,19 +127,15 @@ abstract class AnalyzeBase {
       : 'No issues found!');
 
     // Only [AnalyzeContinuously] has issueDiff message.
-    if (issueDiff != null) {
-      if (issueDiff > 0) {
-        errorsMessage.write(' ($issueDiff new)');
-      } else if (issueDiff < 0) {
-        errorsMessage.write(' (${-issueDiff} fixed)');
-      }
+    if (issueDiff > 0) {
+      errorsMessage.write(' ($issueDiff new)');
+    } else if (issueDiff < 0) {
+      errorsMessage.write(' (${-issueDiff} fixed)');
     }
-
+  
     // Only [AnalyzeContinuously] has files message.
-    if (files != null) {
-      errorsMessage.write(' • analyzed $files ${pluralize('file', files)}');
-    }
-
+    errorsMessage.write(' • analyzed $files ${pluralize('file', files)}');
+  
     if (undocumentedMembers > 0) {
       errorsMessage.write(' (ran in ${seconds}s; $dartDocMessage)');
     } else {

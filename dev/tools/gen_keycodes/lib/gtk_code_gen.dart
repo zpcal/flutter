@@ -18,10 +18,8 @@ class GtkCodeGenerator extends PlatformCodeGenerator {
   String get xkbScanCodeMap {
     final StringBuffer xkbScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.xKbScanCode != null) {
-        xkbScanCodeMap.writeln('  { ${toHex(entry.xKbScanCode)}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
-      }
-    }
+      xkbScanCodeMap.writeln('  { ${toHex(entry.xKbScanCode)}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
+        }
     return xkbScanCodeMap.toString().trimRight();
   }
 

@@ -10,7 +10,6 @@ import 'package:crypto/crypto.dart';
 import 'package:meta/meta.dart';
 import 'package:pool/pool.dart';
 
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/utils.dart';
 import '../convert.dart';

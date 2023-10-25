@@ -18,8 +18,7 @@ class AndroidPlatformView extends StatelessWidget {
     Key key,
     this.onPlatformViewCreated,
     @required this.viewType,
-  })  : assert(viewType != null),
-        super(key: key);
+  })  : super(key: key);
 
   /// The unique identifier for the view type to be embedded by this widget.
   ///

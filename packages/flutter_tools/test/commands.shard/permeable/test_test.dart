@@ -11,7 +11,6 @@ import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/globals.dart' as globals;
 
-import '../../src/common.dart';
 import '../../src/context.dart';
 
 // This test depends on some files in ///dev/automated_tests/flutter_test/*

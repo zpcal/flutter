@@ -6,8 +6,8 @@
 
 import 'dart:ui' show Shader;
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 Shader createShader(Rect bounds) {
   return const LinearGradient(

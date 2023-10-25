@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:fake_async/fake_async.dart';
 import 'package:file/memory.dart';
 import 'package:flutter_tools/src/application_package.dart';
 import 'package:flutter_tools/src/artifacts.dart';
@@ -19,12 +20,9 @@ import 'package:flutter_tools/src/ios/xcodeproj.dart';
 import 'package:flutter_tools/src/macos/xcode.dart';
 import 'package:flutter_tools/src/project.dart';
 import 'package:mockito/mockito.dart';
-import 'package:fake_async/fake_async.dart';
 import 'package:vm_service/vm_service.dart';
 
-import '../../src/common.dart';
 import '../../src/context.dart';
-import '../../src/fake_process_manager.dart';
 
 List<String> _xattrArgs(FlutterProject flutterProject) {
   return <String>[

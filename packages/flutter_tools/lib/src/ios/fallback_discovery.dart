@@ -77,10 +77,8 @@ class FallbackDiscovery {
       hostVmservicePort: hostVmservicePort,
       packageName: packageName,
     );
-    if (result != null) {
-      return result;
-    }
-
+    return result;
+  
     try {
       final Uri result = await _mDnsObservatoryDiscovery.getObservatoryUri(
         packageId,
@@ -88,15 +86,13 @@ class FallbackDiscovery {
         usesIpv6: usesIpv6,
         hostVmservicePort: hostVmservicePort,
       );
-      if (result != null) {
-        UsageEvent(
-          _kEventName,
-          'mdns-success',
-          flutterUsage: _flutterUsage,
-        ).send();
-        return result;
-      }
-    } on Exception catch (err) {
+      UsageEvent(
+        _kEventName,
+        'mdns-success',
+        flutterUsage: _flutterUsage,
+      ).send();
+      return result;
+        } on Exception catch (err) {
       _logger.printTrace(err.toString());
     }
     _logger.printTrace('Failed to connect with mDNS, falling back to log scanning');
@@ -108,15 +104,13 @@ class FallbackDiscovery {
 
     try {
       final Uri result = await _protocolDiscovery.uri;
-      if (result != null) {
-        UsageEvent(
-          _kEventName,
-          'fallback-success',
-          flutterUsage: _flutterUsage,
-        ).send();
-        return result;
-      }
-    } on ArgumentError {
+      UsageEvent(
+        _kEventName,
+        'fallback-success',
+        flutterUsage: _flutterUsage,
+      ).send();
+      return result;
+        } on ArgumentError {
     // In the event of an invalid InternetAddress, this code attempts to catch
     // an ArgumentError from protocol_discovery.dart
     } on Exception catch (err) {

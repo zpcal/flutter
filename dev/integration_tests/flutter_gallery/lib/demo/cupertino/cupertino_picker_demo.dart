@@ -55,8 +55,7 @@ class _Menu extends StatelessWidget {
   const _Menu({
     Key key,
     @required this.children,
-  }) : assert(children != null),
-       super(key: key);
+  }) : super(key: key);
 
   final List<Widget> children;
 

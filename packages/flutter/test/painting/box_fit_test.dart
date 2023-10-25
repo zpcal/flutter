@@ -6,7 +6,6 @@
 
 import 'package:flutter/painting.dart';
 
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('applyBoxFit', () {

@@ -717,7 +717,6 @@ Future<void> expectLoggerInterruptEndsTask(Future<void> task, StreamLogger logge
 VMServiceConnector getFakeVmServiceFactory({
   @required Completer<void> vmServiceDoneCompleter,
 }) {
-  assert(vmServiceDoneCompleter != null);
 
   return (
     Uri httpUri, {

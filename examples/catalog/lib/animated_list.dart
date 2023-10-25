@@ -63,13 +63,11 @@ class _AnimatedListSampleState extends State<AnimatedListSample> {
 
   // Remove the selected item from the list model.
   void _remove() {
-    if (_selectedItem != null) {
-      _list.removeAt(_list.indexOf(_selectedItem));
-      setState(() {
-        _selectedItem = null;
-      });
+    _list.removeAt(_list.indexOf(_selectedItem));
+    setState(() {
+      _selectedItem = null;
+    });
     }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +116,7 @@ class ListModel<E> {
     @required this.removedItemBuilder,
     Iterable<E> initialItems,
   }) : assert(listKey != null),
-       assert(removedItemBuilder != null),
-       _items = initialItems?.toList() ?? <E>[];
+       _items = initialItems.toList() ?? <E>[];
 
   final GlobalKey<AnimatedListState> listKey;
   final Widget Function(E item, BuildContext context, Animation<double> animation) removedItemBuilder;
@@ -159,8 +156,7 @@ class CardItem extends StatelessWidget {
     @required this.item,
     this.selected = false,
   }) : assert(animation != null),
-       assert(item != null && item >= 0),
-       assert(selected != null),
+       assert(item >= 0),
        super(key: key);
 
   final Animation<double> animation;

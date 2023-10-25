@@ -6,7 +6,6 @@ import 'package:package_config/package_config.dart';
 
 import '../../artifacts.dart';
 import '../../base/build.dart';
-import '../../base/file_system.dart';
 import '../../build_info.dart';
 import '../../compile.dart';
 import '../../dart/package_map.dart';
@@ -263,7 +262,7 @@ class KernelSnapshot extends Target {
       dartDefines: decodeDartDefines(environment.defines, kDartDefines),
       packageConfig: packageConfig,
     );
-    if (output == null || output.errorCount != 0) {
+    if (output.errorCount != 0) {
       throw Exception();
     }
   }
@@ -300,17 +299,15 @@ abstract class AotElfBase extends Target {
     final bool dartObfuscation = environment.defines[kDartObfuscation] == 'true';
     final String codeSizeDirectory = environment.defines[kCodeSizeDirectory];
 
-    if (codeSizeDirectory != null) {
-      final File codeSizeFile = environment.fileSystem
-        .directory(codeSizeDirectory)
-        .childFile('snapshot.${environment.defines[kTargetPlatform]}.json');
-      final File precompilerTraceFile = environment.fileSystem
-        .directory(codeSizeDirectory)
-        .childFile('trace.${environment.defines[kTargetPlatform]}.json');
-      extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
-      extraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
-    }
-
+    final File codeSizeFile = environment.fileSystem
+      .directory(codeSizeDirectory)
+      .childFile('snapshot.${environment.defines[kTargetPlatform]}.json');
+    final File precompilerTraceFile = environment.fileSystem
+      .directory(codeSizeDirectory)
+      .childFile('trace.${environment.defines[kTargetPlatform]}.json');
+    extraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
+    extraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
+  
     final int snapshotExitCode = await snapshotter.build(
       platform: targetPlatform,
       buildMode: buildMode,

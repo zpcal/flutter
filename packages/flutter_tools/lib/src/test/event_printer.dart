@@ -19,22 +19,22 @@ class EventPrinter extends TestWatcher {
   void handleStartedProcess(ProcessEvent event) {
     _sendEvent('test.startedProcess',
         <String, dynamic>{'observatoryUri': event.observatoryUri.toString()});
-    _parent?.handleStartedProcess(event);
+    _parent.handleStartedProcess(event);
   }
 
   @override
   Future<void> handleTestCrashed(ProcessEvent event) async {
-    return _parent?.handleTestCrashed(event);
+    return _parent.handleTestCrashed(event);
   }
 
   @override
   Future<void> handleTestTimedOut(ProcessEvent event) async {
-    return _parent?.handleTestTimedOut(event);
+    return _parent.handleTestTimedOut(event);
   }
 
   @override
   Future<void> handleFinishedTest(ProcessEvent event) async {
-    return _parent?.handleFinishedTest(event);
+    return _parent.handleFinishedTest(event);
   }
 
   void _sendEvent(String name, [ dynamic params ]) {

@@ -34,7 +34,7 @@ class Photo {
   bool isFavorite;
   String get tag => assetName; // Assuming that all asset names are unique.
 
-  bool get isValid => assetName != null && title != null && caption != null && isFavorite != null;
+  bool get isValid => title != null;
 }
 
 class GridPhotoViewer extends StatefulWidget {
@@ -110,7 +110,7 @@ class _GridPhotoViewerState extends State<GridPhotoViewer> with SingleTickerProv
 
   void _handleOnScaleUpdate(ScaleUpdateDetails details) {
     setState(() {
-      _scale = (_previousScale * details.scale).clamp(1.0, 4.0) as double;
+      _scale = (_previousScale * details.scale).clamp(1.0, 4.0);
       // Ensure that image location under the focal point stays in the same place despite scaling.
       _offset = _clampOffset(details.focalPoint - _normalizedOffset * _scale);
     });
@@ -159,9 +159,7 @@ class GridDemoPhotoItem extends StatelessWidget {
     @required this.photo,
     @required this.tileStyle,
     @required this.onBannerTap,
-  }) : assert(photo != null && photo.isValid),
-       assert(tileStyle != null),
-       assert(onBannerTap != null),
+  }) : assert(photo.isValid),
        super(key: key);
 
   final Photo photo;
@@ -243,7 +241,6 @@ class GridDemoPhotoItem extends StatelessWidget {
           child: image,
         );
     }
-    assert(tileStyle != null);
     return null;
   }
 }

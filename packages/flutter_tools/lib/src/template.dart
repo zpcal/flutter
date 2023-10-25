@@ -7,7 +7,6 @@ import 'package:package_config/package_config.dart';
 import 'package:package_config/package_config_types.dart';
 
 import 'base/common.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/template.dart';
 import 'cache.dart';
@@ -48,7 +47,7 @@ class Template {
 
     final List<FileSystemEntity> templateFiles = templateSource.listSync(recursive: true);
     for (final FileSystemEntity entity in templateFiles.whereType<File>()) {
-      if (_templateManifest != null && !_templateManifest.contains(Uri.file(entity.absolute.path))) {
+      if (!_templateManifest.contains(Uri.file(entity.absolute.path))) {
         _logger.printTrace('Skipping ${entity.absolute.path}, missing from the template manifest.');
         // Skip stale files in the flutter_tools directory.
         continue;
@@ -123,15 +122,13 @@ class Template {
     /// Returns null if the given raw destination path has been filtered.
     String renderPath(String relativeDestinationPath) {
       final Match match = _kTemplateLanguageVariant.matchAsPrefix(relativeDestinationPath);
-      if (match != null) {
-        final String platform = match.group(1);
-        final String language = context['${platform}Language'] as String;
-        if (language != match.group(2)) {
-          return null;
-        }
-        relativeDestinationPath = relativeDestinationPath.replaceAll('$platform-$language.tmpl', platform);
+      final String platform = match.group(1);
+      final String language = context['${platform}Language'] as String;
+      if (language != match.group(2)) {
+        return null;
       }
-
+      relativeDestinationPath = relativeDestinationPath.replaceAll('$platform-$language.tmpl', platform);
+    
       final bool android = context['android'] as bool;
       if (relativeDestinationPath.contains('android') && !android) {
         return null;
@@ -174,17 +171,13 @@ class Template {
         .replaceAll(imageTemplateExtension, '')
         .replaceAll(templateExtension, '');
 
-      if (android != null && android && androidIdentifier != null) {
+      if (android) {
         finalDestinationPath = finalDestinationPath
             .replaceAll('androidIdentifier', androidIdentifier.replaceAll('.', pathSeparator));
       }
-      if (projectName != null) {
-        finalDestinationPath = finalDestinationPath.replaceAll('projectName', projectName);
-      }
-      if (pluginClass != null) {
-        finalDestinationPath = finalDestinationPath.replaceAll('pluginClass', pluginClass);
-      }
-      return finalDestinationPath;
+      finalDestinationPath = finalDestinationPath.replaceAll('projectName', projectName);
+          finalDestinationPath = finalDestinationPath.replaceAll('pluginClass', pluginClass);
+          return finalDestinationPath;
     }
 
     _templateFilePaths.forEach((String relativeDestinationPath, String absoluteSourcePath) {
@@ -301,7 +294,7 @@ Future<Directory> _templateImageDirectory(String name, FileSystem fileSystem, Lo
   );
   Uri imagePackageLibDir = packageConfig['flutter_template_images']?.packageUriRoot;
   // Ensure that the template image package is present.
-  if (imagePackageLibDir == null || !fileSystem.directory(imagePackageLibDir).existsSync()) {
+  if (!fileSystem.directory(imagePackageLibDir).existsSync()) {
     await _ensurePackageDependencies(toolPackagePath, pub);
     packageConfig = await loadPackageConfigWithLogging(
       fileSystem.file(packageFilePath),

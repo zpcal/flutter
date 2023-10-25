@@ -192,8 +192,8 @@ void main() {
     expect(const EdgeInsets.only(top: 1.01, left: 1.01, right: 1.01, bottom: 1.01).toString(), 'EdgeInsets.all(1.0)');
     expect(const EdgeInsetsDirectional.only().toString(), 'EdgeInsets.zero');
     expect(const EdgeInsetsDirectional.only(start: 1.01, end: 1.01, top: 1.01, bottom: 1.01).toString(), 'EdgeInsetsDirectional(1.0, 1.0, 1.0, 1.0)');
-    expect((const EdgeInsetsDirectional.only(start: 4.0).add(const EdgeInsets.only(top: 3.0))).toString(), 'EdgeInsetsDirectional(4.0, 3.0, 0.0, 0.0)');
-    expect((const EdgeInsetsDirectional.only(top: 4.0).add(const EdgeInsets.only(right: 3.0))).toString(), 'EdgeInsets(0.0, 4.0, 3.0, 0.0)');
-    expect((const EdgeInsetsDirectional.only(start: 4.0).add(const EdgeInsets.only(left: 3.0))).toString(), 'EdgeInsets(3.0, 0.0, 0.0, 0.0) + EdgeInsetsDirectional(4.0, 0.0, 0.0, 0.0)');
+    expect(const EdgeInsetsDirectional.only(start: 4.0).add(const EdgeInsets.only(top: 3.0)).toString(), 'EdgeInsetsDirectional(4.0, 3.0, 0.0, 0.0)');
+    expect(const EdgeInsetsDirectional.only(top: 4.0).add(const EdgeInsets.only(right: 3.0)).toString(), 'EdgeInsets(0.0, 4.0, 3.0, 0.0)');
+    expect(const EdgeInsetsDirectional.only(start: 4.0).add(const EdgeInsets.only(left: 3.0)).toString(), 'EdgeInsets(3.0, 0.0, 0.0, 0.0) + EdgeInsetsDirectional(4.0, 0.0, 0.0, 0.0)');
   });
 }

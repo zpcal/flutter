@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../build_info.dart';
 import '../build_system/build_system.dart';
@@ -53,9 +52,8 @@ Future<void> buildWeb(
         kDartDefines: encodeDartDefines(buildInfo.dartDefines),
         kCspMode: csp.toString(),
         kIconTreeShakerFlag: buildInfo.treeShakeIcons.toString(),
-        if (serviceWorkerStrategy != null)
-         kServiceWorkerStrategy: serviceWorkerStrategy,
-        if (buildInfo.extraFrontEndOptions?.isNotEmpty ?? false)
+        kServiceWorkerStrategy: serviceWorkerStrategy,
+        if (buildInfo.extraFrontEndOptions.isNotEmpty ?? false)
           kExtraFrontEndOptions: encodeDartDefines(buildInfo.extraFrontEndOptions),
       },
       artifacts: globals.artifacts,

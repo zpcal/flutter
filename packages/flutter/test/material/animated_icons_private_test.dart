@@ -20,7 +20,6 @@ import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
 
-import '../flutter_test_alternative.dart';
 
 part 'package:flutter/src/material/animated_icons/animated_icons.dart';
 part 'package:flutter/src/material/animated_icons/animated_icons_data.dart';

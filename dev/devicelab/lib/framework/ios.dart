@@ -47,7 +47,7 @@ Future<Map<String, dynamic>> measureIosCpuGpu({
     'gauge',
     'ioscpugpu',
     'new',
-    if (deviceId != null) ...<String>['-w', deviceId],
+    ...<String>['-w', deviceId],
     '-l',
     '${duration.inMilliseconds}',
   ]);
@@ -95,11 +95,9 @@ Future<bool> containsBitcode(String pathToBinary) async {
           (String line) => line.contains(' size 0x0000000000000001'),
           orElse: () => null,
       );
-      if (emptyBitcodeMarker != null) {
-        emptyBitcodeMarkerFound = true;
-        return;
-      }
-    }
+      emptyBitcodeMarkerFound = true;
+      return;
+        }
   });
   return !emptyBitcodeMarkerFound;
 }
@@ -167,11 +165,9 @@ Future<void> testWithNewIOSSimulator(
     // These seem to be in order, so allow matching multiple lines so it grabs
     // the last (hopefully latest) one.
     final RegExpMatch iOSRuntimeMatch = iOSRuntimePattern.firstMatch(runtime);
-    if (iOSRuntimeMatch != null) {
-      iOSSimRuntime = iOSRuntimeMatch.group(1).trim();
-      continue;
+    iOSSimRuntime = iOSRuntimeMatch.group(1).trim();
+    continue;
     }
-  }
   if (iOSSimRuntime == null) {
     throw 'No iOS simulator runtime found. Available runtimes:\n$availableRuntimes';
   }
@@ -202,7 +198,7 @@ Future<void> testWithNewIOSSimulator(
 
 /// Shuts down and deletes simulator with deviceId.
 Future<void> removeIOSimulator(String deviceId) async {
-  if (deviceId != null && deviceId != '') {
+  if (deviceId != '') {
     await eval(
       'xcrun',
       <String>[

@@ -99,8 +99,7 @@ DropdownButton<String>(
     // null indicates the user didn't select a
     // new value.
     setState(() {
-      if (newValue != null)
-        dropdownValue = newValue;
+      dropdownValue = newValue;
     });
   },
   items: <String>['One', 'Two', 'Free', 'Four']

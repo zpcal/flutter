@@ -5,7 +5,6 @@
 // @dart = 2.8
 
 import 'package:flutter/painting.dart';
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('positionDependentBox', () {

@@ -15,7 +15,6 @@ import 'package:test_core/src/runner/suite.dart'; // ignore: implementation_impo
 import 'package:vm_service/vm_service.dart' as vm_service;
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../build_info.dart';
 import '../compile.dart';
@@ -70,7 +69,6 @@ FlutterPlatform installHook({
   List<String> dartExperiments,
   bool nullAssertions = false,
 }) {
-  assert(testWrapper != null);
   assert(enableObservatory || (!startPaused && observatoryPort == null));
 
   // registerPlatformPlugin can be injected for testing since it's not very mock-friendly.
@@ -133,9 +131,6 @@ String generateTestBootstrap({
   String languageVersionHeader = '',
   bool nullSafety = false,
 }) {
-  assert(testUrl != null);
-  assert(host != null);
-  assert(updateGoldens != null);
 
   final String websocketUrl = host.type == InternetAddressType.IPv4
       ? 'ws://${host.address}'
@@ -247,7 +242,7 @@ class FlutterPlatform extends PlatformPlugin {
     this.icudtlPath,
     this.nullAssertions = false,
     @required this.extraFrontEndOptions,
-  }) : assert(shellPath != null);
+  });
 
   final String shellPath;
   final TestWatcher watcher;
@@ -321,14 +316,10 @@ class FlutterPlatform extends PlatformPlugin {
   StreamChannel<dynamic> loadChannel(String path, SuitePlatform platform) {
     if (_testCount > 0) {
       // Fail if there will be a port conflict.
-      if (explicitObservatoryPort != null) {
-        throwToolExit('installHook() was called with an observatory port or debugger mode enabled, but then more than one test suite was run.');
-      }
-      // Fail if we're passing in a precompiled entry-point.
-      if (precompiledDillPath != null) {
-        throwToolExit('installHook() was called with a precompiled test entry-point, but then more than one test suite was run.');
-      }
-    }
+      throwToolExit('installHook() was called with an observatory port or debugger mode enabled, but then more than one test suite was run.');
+          // Fail if we're passing in a precompiled entry-point.
+      throwToolExit('installHook() was called with a precompiled test entry-point, but then more than one test suite was run.');
+        }
     final int ourTestCount = _testCount;
     _testCount += 1;
     final StreamController<dynamic> localController = StreamController<dynamic>();
@@ -359,16 +350,14 @@ class FlutterPlatform extends PlatformPlugin {
     String klass,
     bool isStatic,
   ) async {
-    if (compiler == null || compiler.compiler == null) {
+    if (compiler.compiler == null) {
       throw 'Compiler is not set up properly to compile $expression';
     }
     final CompilerOutput compilerOutput =
       await compiler.compiler.compileExpression(expression, definitions,
         typeDefinitions, libraryUri, klass, isStatic);
-    if (compilerOutput != null && compilerOutput.outputFilename != null) {
-      return base64.encode(globals.fs.file(compilerOutput.outputFilename).readAsBytesSync());
-    }
-    throw 'Failed to compile $expression';
+    return base64.encode(globals.fs.file(compilerOutput.outputFilename).readAsBytesSync());
+      throw 'Failed to compile $expression';
   }
 
   /// Binds an [HttpServer] serving from `host` on `port`.
@@ -436,9 +425,10 @@ class FlutterPlatform extends PlatformPlugin {
       String mainDart;
       if (precompiledDillPath != null) {
         mainDart = precompiledDillPath;
-      } else if (precompiledDillFiles != null) {
+      } else {
         mainDart = precompiledDillFiles[testPath];
       }
+    
       mainDart ??= _createListenerDart(finalizers, ourTestCount, testPath, server);
 
       if (precompiledDillPath == null && precompiledDillFiles == null) {
@@ -494,8 +484,7 @@ class FlutterPlatform extends PlatformPlugin {
         process,
         reportObservatoryUri: (Uri detectedUri) async {
           assert(processObservatoryUri == null);
-          assert(explicitObservatoryPort == null ||
-              explicitObservatoryPort == detectedUri.port);
+          assert(explicitObservatoryPort == detectedUri.port);
           if (startPaused && !machine) {
             globals.printStatus('The test process has been started.');
             globals.printStatus('You can now connect to it using observatory. To connect, load the following Web site in your browser:');
@@ -514,7 +503,7 @@ class FlutterPlatform extends PlatformPlugin {
             }));
           }
           gotProcessObservatoryUri.complete();
-          watcher?.handleStartedProcess(
+          watcher.handleStartedProcess(
               ProcessEvent(ourTestCount, process, processObservatoryUri));
         },
       );
@@ -548,7 +537,7 @@ class FlutterPlatform extends PlatformPlugin {
           unawaited(controller.sink.close());
           globals.printTrace('test $ourTestCount: waiting for controller sink to close');
           await controller.sink.done;
-          await watcher?.handleTestCrashed(ProcessEvent(ourTestCount, process));
+          await watcher.handleTestCrashed(ProcessEvent(ourTestCount, process));
           break;
         case InitialResult.connected:
           globals.printTrace('test $ourTestCount: process with pid ${process.pid} connected to test harness');
@@ -636,7 +625,7 @@ class FlutterPlatform extends PlatformPlugin {
                 assert(testResult == TestResult.testBailed);
                 globals.printTrace('test $ourTestCount: process with pid ${process.pid} no longer needs test harness');
               }
-              await watcher?.handleFinishedTest(
+              await watcher.handleFinishedTest(
                   ProcessEvent(ourTestCount, process, processObservatoryUri));
               break;
           }
@@ -717,7 +706,7 @@ class FlutterPlatform extends PlatformPlugin {
       updateGoldens: updateGoldens,
       languageVersionHeader: determineLanguageVersion(
         file,
-        _packageConfig[flutterProject?.manifest?.appName],
+        _packageConfig[flutterProject.manifest.appName],
       ),
     );
   }
@@ -727,11 +716,9 @@ class FlutterPlatform extends PlatformPlugin {
 
   @override
   Future<dynamic> close() async {
-    if (compiler != null) {
-      await compiler.dispose();
-      compiler = null;
-    }
-    if (fontsDirectory != null) {
+    await compiler.dispose();
+    compiler = null;
+      if (fontsDirectory != null) {
       globals.printTrace('Deleting ${fontsDirectory.path}...');
       fontsDirectory.deleteSync(recursive: true);
       fontsDirectory = null;
@@ -772,7 +759,7 @@ class FlutterPlatform extends PlatformPlugin {
     int observatoryPort,
     int serverPort,
   }) {
-    assert(executable != null); // Please provide the path to the shell in the SKY_SHELL environment variable.
+// Please provide the path to the shell in the SKY_SHELL environment variable.
     assert(!startPaused || enableObservatory);
     final List<String> command = <String>[
       executable,
@@ -786,14 +773,14 @@ class FlutterPlatform extends PlatformPlugin {
         //
         // I mention this only so that you won't be tempted, as I was, to apply
         // the obvious simplification to this code and remove this entire feature.
-        if (observatoryPort != null) '--observatory-port=$observatoryPort',
+        '--observatory-port=$observatoryPort',
         if (startPaused) '--start-paused',
         if (disableServiceAuthCodes) '--disable-service-auth-codes',
       ]
       else
         '--disable-observatory',
       if (host.type == InternetAddressType.IPv6) '--ipv6',
-      if (icudtlPath != null) '--icu-data-file-path=$icudtlPath',
+      '--icu-data-file-path=$icudtlPath',
       '--enable-checked-mode',
       '--verify-entry-points',
       '--enable-software-rendering',
@@ -820,9 +807,9 @@ class FlutterPlatform extends PlatformPlugin {
       'FLUTTER_TEST': flutterTest,
       'FONTCONFIG_FILE': _fontConfigFile.path,
       'SERVER_PORT': serverPort.toString(),
-      'APP_NAME': flutterProject?.manifest?.appName ?? '',
+      'APP_NAME': flutterProject.manifest.appName ?? '',
       if (buildTestAssets)
-        'UNIT_TEST_ASSETS': globals.fs.path.join(flutterProject?.directory?.path ?? '', 'build', 'unit_test_assets'),
+        'UNIT_TEST_ASSETS': globals.fs.path.join(flutterProject.directory?.path ?? '', 'build', 'unit_test_assets'),
     };
     return globals.processManager.start(command, environment: environment);
   }
@@ -849,15 +836,12 @@ class FlutterPlatform extends PlatformPlugin {
             globals.printTrace('Shell: $line');
             try {
               final Uri uri = Uri.parse(line.substring(observatoryString.length));
-              if (reportObservatoryUri != null) {
-                await reportObservatoryUri(uri);
-              }
-            } on Exception catch (error) {
+              await reportObservatoryUri(uri);
+                        } on Exception catch (error) {
               globals.printError('Could not parse shell observatory port message: $error');
             }
-          } else if (line != null) {
-            globals.printStatus('Shell: $line');
-          }
+          } else          globals.printStatus('Shell: $line');
+        
         },
         onError: (dynamic error) {
           globals. printError('shell console stream for process pid ${process.pid} experienced an unexpected error: $error');

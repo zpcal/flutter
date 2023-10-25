@@ -64,8 +64,7 @@ class UndoableActionDispatcher extends ActionDispatcher implements Listenable {
   /// The [maxUndoLevels] argument must not be null.
   UndoableActionDispatcher({
     int maxUndoLevels = _defaultMaxUndoLevels,
-  })  : assert(maxUndoLevels != null),
-        _maxUndoLevels = maxUndoLevels;
+  })  : _maxUndoLevels = maxUndoLevels;
 
   // A stack of actions that have been performed. The most recent action
   // performed is at the end of the list.
@@ -201,7 +200,7 @@ class UndoAction extends Action<UndoIntent> {
   @override
   void invoke(UndoIntent intent) {
     final UndoableActionDispatcher manager = Actions.of(primaryFocus?.context ?? FocusDemo.appKey.currentContext, nullOk: true) as UndoableActionDispatcher;
-    manager?.undo();
+    manager.undo();
   }
 }
 
@@ -219,7 +218,7 @@ class RedoAction extends Action<RedoIntent> {
   @override
   RedoAction invoke(RedoIntent intent) {
     final UndoableActionDispatcher manager = Actions.of(primaryFocus.context, nullOk: true) as UndoableActionDispatcher;
-    manager?.redo();
+    manager.redo();
     return this;
   }
 }

@@ -4,7 +4,6 @@
 
 import 'package:flutter_devicelab/framework/ab.dart';
 
-import 'common.dart';
 
 void main() {
   test('ABTest', () {

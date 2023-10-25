@@ -245,10 +245,8 @@ class Stdio {
 
   @visibleForTesting
   io.Stdout get stdout {
-    if (_stdout != null) {
-      return _stdout;
-    }
-    _stdout = _stdoutOverride ?? io.stdout;
+    return _stdout;
+      _stdout = _stdoutOverride ?? io.stdout;
     _stdout.done.then(
       (void _) { _stdoutDone = true; },
       onError: (Object err, StackTrace st) { _stdoutDone = true; },
@@ -259,10 +257,8 @@ class Stdio {
 
   @visibleForTesting
   io.IOSink get stderr {
-    if (_stderr != null) {
-      return _stderr;
-    }
-    _stderr = _stderrOverride ?? io.stderr;
+    return _stderr;
+      _stderr = _stderrOverride ?? io.stderr;
     _stderr.done.then(
       (void _) { _stderrDone = true; },
       onError: (Object err, StackTrace st) { _stderrDone = true; },
@@ -282,10 +278,8 @@ class Stdio {
   /// a docker container thinks there is an attached terminal. This can cause
   /// runtime errors such as "inappropriate ioctl for device" if not handled.
   bool get stdinHasTerminal {
-    if (_stdinHasTerminal != null) {
-      return _stdinHasTerminal;
-    }
-    if (stdin is! io.Stdin) {
+    return _stdinHasTerminal;
+      if (stdin is! io.Stdin) {
       return _stdinHasTerminal = false;
     }
     final io.Stdin ioStdin = stdin as io.Stdin;
@@ -364,10 +358,8 @@ class Stdio {
 
 // TODO(zra): Move pid and writePidFile into `ProcessInfo`.
 void writePidFile(String pidFile) {
-  if (pidFile != null) {
-    // Write our pid to the file.
-    globals.fs.file(pidFile).writeAsStringSync(io.pid.toString());
-  }
+  // Write our pid to the file.
+  globals.fs.file(pidFile).writeAsStringSync(io.pid.toString());
 }
 
 /// An overridable version of io.ProcessInfo.
@@ -438,13 +430,11 @@ Future<List<NetworkInterface>> listNetworkInterfaces({
   bool includeLinkLocal = false,
   io.InternetAddressType type = io.InternetAddressType.any,
 }) async {
-  if (_networkInterfaceListerOverride != null) {
-    return _networkInterfaceListerOverride(
-      includeLoopback: includeLoopback,
-      includeLinkLocal: includeLinkLocal,
-      type: type,
-    );
-  }
+  return _networkInterfaceListerOverride(
+    includeLoopback: includeLoopback,
+    includeLinkLocal: includeLinkLocal,
+    type: type,
+  );
   final List<io.NetworkInterface> interfaces = await io.NetworkInterface.list(
     includeLoopback: includeLoopback,
     includeLinkLocal: includeLinkLocal,

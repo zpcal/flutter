@@ -8,7 +8,6 @@ import 'package:meta/meta.dart';
 import 'package:package_config/package_config.dart';
 
 import '../artifacts.dart';
-import '../base/file_system.dart';
 import '../build_info.dart';
 import '../bundle.dart';
 import '../compile.dart';
@@ -82,11 +81,9 @@ class TestCompiler {
   Future<void> _shutdown() async {
     // Check for null in case this instance is shut down before the
     // lazily-created compiler has been created.
-    if (compiler != null) {
-      await compiler.shutdown();
-      compiler = null;
+    await compiler.shutdown();
+    compiler = null;
     }
-  }
 
   Future<void> dispose() async {
     await compilerController.close();
@@ -161,14 +158,14 @@ class TestCompiler {
         outputPath: outputDill.path,
         packageConfig: _packageConfig,
       );
-      final String outputPath = compilerOutput?.outputFilename;
+      final String outputPath = compilerOutput.outputFilename;
 
       // In case compiler didn't produce output or reported compilation
       // errors, pass [null] upwards to the consumer and shutdown the
       // compiler to avoid reusing compiler that might have gotten into
       // a weird state.
       final String path = request.mainUri.toFilePath(windows: globals.platform.isWindows);
-      if (outputPath == null || compilerOutput.errorCount > 0) {
+      if (compilerOutput.errorCount > 0) {
         request.result.complete(null);
         await _shutdown();
       } else {

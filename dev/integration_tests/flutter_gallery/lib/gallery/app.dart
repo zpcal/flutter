@@ -77,7 +77,7 @@ class _GalleryAppState extends State<GalleryApp> {
 
   @override
   void dispose() {
-    _timeDilationTimer?.cancel();
+    _timeDilationTimer.cancel();
     _timeDilationTimer = null;
     super.dispose();
   }
@@ -85,7 +85,7 @@ class _GalleryAppState extends State<GalleryApp> {
   void _handleOptionsChanged(GalleryOptions newOptions) {
     setState(() {
       if (_options.timeDilation != newOptions.timeDilation) {
-        _timeDilationTimer?.cancel();
+        _timeDilationTimer.cancel();
         _timeDilationTimer = null;
         if (newOptions.timeDilation > 1.0) {
           // We delay the time dilation change long enough that the user can see

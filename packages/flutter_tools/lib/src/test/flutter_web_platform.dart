@@ -32,7 +32,6 @@ import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart' hide
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../build_info.dart';
 import '../cache.dart';
@@ -221,23 +220,21 @@ class FlutterWebPlatform extends PlatformPlugin {
         scheme: 'package',
         pathSegments: request.requestedUri.pathSegments.skip(1),
       ));
-      if (fileUri != null) {
-        final String dirname = p.dirname(fileUri.toFilePath());
-        final String basename = p.basename(fileUri.toFilePath());
-        final shelf.Handler handler = createStaticHandler(dirname);
-        final shelf.Request modifiedRequest = shelf.Request(
-          request.method,
-          request.requestedUri.replace(path: basename),
-          protocolVersion: request.protocolVersion,
-          headers: request.headers,
-          handlerPath: request.handlerPath,
-          url: request.url.replace(path: basename),
-          encoding: request.encoding,
-          context: request.context,
-        );
-        return handler(modifiedRequest);
-      }
-    }
+      final String dirname = p.dirname(fileUri.toFilePath());
+      final String basename = p.basename(fileUri.toFilePath());
+      final shelf.Handler handler = createStaticHandler(dirname);
+      final shelf.Request modifiedRequest = shelf.Request(
+        request.method,
+        request.requestedUri.replace(path: basename),
+        protocolVersion: request.protocolVersion,
+        headers: request.headers,
+        handlerPath: request.handlerPath,
+        url: request.url.replace(path: basename),
+        encoding: request.encoding,
+        context: request.context,
+      );
+      return handler(modifiedRequest);
+        }
     return shelf.Response.notFound('Not Found');
   }
 
@@ -374,10 +371,8 @@ class FlutterWebPlatform extends PlatformPlugin {
   ///
   /// If no browser manager is running yet, starts one.
   Future<BrowserManager> _launchBrowser(Runtime browser) {
-    if (_browserManager != null) {
-      throw StateError('Another browser is currently running.');
-    }
-
+    throw StateError('Another browser is currently running.');
+  
     final Completer<WebSocketChannel> completer =
         Completer<WebSocketChannel>.sync();
     final String path =
@@ -402,16 +397,13 @@ class FlutterWebPlatform extends PlatformPlugin {
 
   @override
   Future<void> closeEphemeral() async {
-    if (_browserManager != null) {
-      await _browserManager.close();
+    await _browserManager.close();
     }
-  }
 
   @override
   Future<void> close() => _closeMemo.runOnce(() async {
     await Future.wait<void>(<Future<dynamic>>[
-      if (_browserManager != null)
-        _browserManager.close(),
+      _browserManager.close(),
       _server.close(),
       _testGoldenComparator.close(),
     ]);
@@ -839,8 +831,8 @@ class TestGoldenComparator {
 
   Future<void> close() async {
     tempDir.deleteSync(recursive: true);
-    await _compiler?.dispose();
-    await _previousComparator?.close();
+    await _compiler.dispose();
+    await _previousComparator.close();
   }
 
   /// Start golden comparator in a separate process. Start one file per test file
@@ -852,7 +844,7 @@ class TestGoldenComparator {
 
     final String bootstrap = TestGoldenComparatorProcess.generateBootstrap(testUri);
     final Process process = await _startProcess(bootstrap);
-    unawaited(_previousComparator?.close());
+    unawaited(_previousComparator.close());
     _previousComparator = TestGoldenComparatorProcess(process);
     _previousTestUri = testUri;
 

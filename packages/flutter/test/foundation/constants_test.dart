@@ -6,7 +6,6 @@
 
 @TestOn('!chrome') // This test is not intended to run on the web.
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('isWeb is false for flutter tester', () {

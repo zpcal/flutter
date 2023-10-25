@@ -5,11 +5,10 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:e2e/e2e.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 bool _firstRun = true;
 

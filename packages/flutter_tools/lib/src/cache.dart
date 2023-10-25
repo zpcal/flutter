@@ -349,13 +349,11 @@ class Cache {
   }
 
   MapEntry<String, String> get dyLdLibEntry {
-    if (_dyLdLibEntry != null) {
-      return _dyLdLibEntry;
-    }
-    final List<String> paths = <String>[];
+    return _dyLdLibEntry;
+      final List<String> paths = <String>[];
     for (final ArtifactSet artifact in _artifacts) {
       final Map<String, String> env = artifact.environment;
-      if (env == null || !env.containsKey('DYLD_LIBRARY_PATH')) {
+      if (!env.containsKey('DYLD_LIBRARY_PATH')) {
         continue;
       }
       final String path = env['DYLD_LIBRARY_PATH'];
@@ -497,7 +495,7 @@ class Cache {
 
 /// Representation of a set of artifacts used by the tool.
 abstract class ArtifactSet {
-  ArtifactSet(this.developmentArtifact) : assert(developmentArtifact != null);
+  ArtifactSet(this.developmentArtifact);
 
   /// The development artifact.
   final DevelopmentArtifact developmentArtifact;
@@ -543,7 +541,7 @@ abstract class CachedArtifact extends ArtifactSet {
   // Whether or not to bypass normal platform filtering for this artifact.
   bool get ignorePlatformFiltering {
     return cache.includeAllPlatforms ||
-      (cache.platformOverrideArtifacts != null && cache.platformOverrideArtifacts.contains(developmentArtifact.name));
+      (cache.platformOverrideArtifacts.contains(developmentArtifact.name));
   }
 
   @override
@@ -1316,7 +1314,7 @@ final Map<int, List<int>> _flattenNameSubstitutions = <int, List<int>>{
 /// something that doesn't.
 String _flattenNameNoSubdirs(String fileName) {
   final List<int> replacedCodeUnits = <int>[
-    for (int codeUnit in fileName.codeUnits)
+    for (final int codeUnit in fileName.codeUnits)
       ..._flattenNameSubstitutions[codeUnit] ?? <int>[codeUnit],
   ];
   return String.fromCharCodes(replacedCodeUnits);
@@ -1490,7 +1488,7 @@ class ArtifactUpdater {
         continue;
       } on ArgumentError catch (error) {
         final String overrideUrl = _platform.environment['FLUTTER_STORAGE_BASE_URL'];
-        if (overrideUrl != null && url.toString().contains(overrideUrl)) {
+        if (url.toString().contains(overrideUrl)) {
           _logger.printError(error.toString());
           throwToolExit(
             'The value of FLUTTER_STORAGE_BASE_URL ($overrideUrl) could not be '

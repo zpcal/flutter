@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 
 import 'base/config.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/utils.dart';
 import 'build_system/targets/icon_tree_shaker.dart';
@@ -158,28 +157,20 @@ class BuildInfo {
   /// Fields that are `null` are excluded from this configration.
   Map<String, String> toEnvironmentConfig() {
     return <String, String>{
-      if (dartDefines?.isNotEmpty ?? false)
+      if (dartDefines.isNotEmpty ?? false)
         'DART_DEFINES': encodeDartDefines(dartDefines),
-      if (dartObfuscation != null)
-        'DART_OBFUSCATION': dartObfuscation.toString(),
-      if (extraFrontEndOptions?.isNotEmpty ?? false)
+      'DART_OBFUSCATION': dartObfuscation.toString(),
+      if (extraFrontEndOptions.isNotEmpty ?? false)
         'EXTRA_FRONT_END_OPTIONS': encodeDartDefines(extraFrontEndOptions),
-      if (extraGenSnapshotOptions?.isNotEmpty ?? false)
+      if (extraGenSnapshotOptions.isNotEmpty ?? false)
         'EXTRA_GEN_SNAPSHOT_OPTIONS': encodeDartDefines(extraGenSnapshotOptions),
-      if (splitDebugInfoPath != null)
-        'SPLIT_DEBUG_INFO': splitDebugInfoPath,
-      if (trackWidgetCreation != null)
-        'TRACK_WIDGET_CREATION': trackWidgetCreation.toString(),
-      if (treeShakeIcons != null)
-        'TREE_SHAKE_ICONS': treeShakeIcons.toString(),
-      if (performanceMeasurementFile != null)
-        'PERFORMANCE_MEASUREMENT_FILE': performanceMeasurementFile,
-      if (bundleSkSLPath != null)
-        'BUNDLE_SKSL_PATH': bundleSkSLPath,
-      if (packagesPath != null)
-        'PACKAGE_CONFIG': packagesPath,
-      if (codeSizeDirectory != null)
-        'CODE_SIZE_DIRECTORY': codeSizeDirectory,
+      'SPLIT_DEBUG_INFO': splitDebugInfoPath,
+      'TRACK_WIDGET_CREATION': trackWidgetCreation.toString(),
+      'TREE_SHAKE_ICONS': treeShakeIcons.toString(),
+      'PERFORMANCE_MEASUREMENT_FILE': performanceMeasurementFile,
+      'BUNDLE_SKSL_PATH': bundleSkSLPath,
+      'PACKAGE_CONFIG': packagesPath,
+      'CODE_SIZE_DIRECTORY': codeSizeDirectory,
     };
   }
 }
@@ -496,10 +487,8 @@ String getNameForTargetPlatform(TargetPlatform platform, {DarwinArch darwinArch}
     case TargetPlatform.android_x86:
       return 'android-x86';
     case TargetPlatform.ios:
-      if (darwinArch != null) {
-        return 'ios-${getNameForDarwinArch(darwinArch)}';
-      }
-      return 'ios';
+      return 'ios-${getNameForDarwinArch(darwinArch)}';
+          return 'ios';
     case TargetPlatform.darwin_x64:
       return 'darwin-x64';
     case TargetPlatform.linux_x64:
@@ -548,7 +537,6 @@ TargetPlatform getTargetPlatformForName(String platform) {
     case 'web-javascript':
       return TargetPlatform.web_javascript;
   }
-  assert(platform != null);
   return null;
 }
 

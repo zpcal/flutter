@@ -124,8 +124,8 @@ void setMockVswhereResponse(
       '*',
       '-utf8',
       '-latest',
-      ...?additionalArguments,
-      ...?requirementArguments,
+      ...additionalArguments,
+      ...requirementArguments,
     ],
     stdout: finalResponse,
   ));

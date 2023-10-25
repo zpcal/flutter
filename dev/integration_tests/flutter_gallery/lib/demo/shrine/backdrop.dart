@@ -3,9 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
-
 import 'package:flutter_gallery/demo/shrine/login.dart';
+import 'package:meta/meta.dart';
 
 const Cubic _kAccelerateCurve = Cubic(0.548, 0.0, 0.757, 0.464);
 const Cubic _kDecelerateCurve = Cubic(0.23, 0.94, 0.41, 1.0);

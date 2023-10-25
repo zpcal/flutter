@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 import 'button_bar_theme.dart';
 import 'button_theme.dart';

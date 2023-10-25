@@ -13,7 +13,6 @@ import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
 
 import '../../src/common.dart';
-import '../../src/fake_process_manager.dart';
 
 void main() {
   Platform platform;

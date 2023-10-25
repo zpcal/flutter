@@ -171,7 +171,7 @@ class AnsiTerminal implements Terminal {
   static String colorCode(TerminalColor color) => _colorMap[color];
 
   @override
-  bool get supportsColor => _platform?.stdoutSupportsAnsi ?? false;
+  bool get supportsColor => _platform.stdoutSupportsAnsi ?? false;
 
   // Assume unicode emojis are supported when not on Windows.
   // If we are on Windows, unicode emojis are supported in Windows Terminal,
@@ -190,7 +190,6 @@ class AnsiTerminal implements Terminal {
 
   @override
   String bolden(String message) {
-    assert(message != null);
     if (!supportsColor || message.isEmpty) {
       return message;
     }
@@ -211,8 +210,7 @@ class AnsiTerminal implements Terminal {
 
   @override
   String color(String message, TerminalColor color) {
-    assert(message != null);
-    if (!supportsColor || color == null || message.isEmpty) {
+    if (!supportsColor || message.isEmpty) {
       return message;
     }
     final StringBuffer buffer = StringBuffer();
@@ -266,36 +264,30 @@ class AnsiTerminal implements Terminal {
     int defaultChoiceIndex,
     bool displayAcceptedCharacters = true,
   }) async {
-    assert(acceptedCharacters != null);
     assert(acceptedCharacters.isNotEmpty);
-    assert(prompt == null || prompt.isNotEmpty);
-    assert(displayAcceptedCharacters != null);
+    assert(prompt.isNotEmpty);
     if (!usesTerminalUi) {
       throw StateError('cannot prompt without a terminal ui');
     }
     List<String> charactersToDisplay = acceptedCharacters;
-    if (defaultChoiceIndex != null) {
-      assert(defaultChoiceIndex >= 0 && defaultChoiceIndex < acceptedCharacters.length);
-      charactersToDisplay = List<String>.of(charactersToDisplay);
-      charactersToDisplay[defaultChoiceIndex] = bolden(charactersToDisplay[defaultChoiceIndex]);
-      acceptedCharacters.add('\n');
-    }
-    String choice;
+    assert(defaultChoiceIndex >= 0 && defaultChoiceIndex < acceptedCharacters.length);
+    charactersToDisplay = List<String>.of(charactersToDisplay);
+    charactersToDisplay[defaultChoiceIndex] = bolden(charactersToDisplay[defaultChoiceIndex]);
+    acceptedCharacters.add('\n');
+      String choice;
     singleCharMode = true;
-    while (choice == null || choice.length > 1 || !acceptedCharacters.contains(choice)) {
-      if (prompt != null) {
-        logger.printStatus(prompt, emphasis: true, newline: false);
-        if (displayAcceptedCharacters) {
-          logger.printStatus(' [${charactersToDisplay.join("|")}]', newline: false);
-        }
-        // prompt ends with ': '
-        logger.printStatus(': ', emphasis: true, newline: false);
+    while (choice.length > 1 || !acceptedCharacters.contains(choice)) {
+      logger.printStatus(prompt, emphasis: true, newline: false);
+      if (displayAcceptedCharacters) {
+        logger.printStatus(' [${charactersToDisplay.join("|")}]', newline: false);
       }
-      choice = await keystrokes.first;
+      // prompt ends with ': '
+      logger.printStatus(': ', emphasis: true, newline: false);
+          choice = await keystrokes.first;
       logger.printStatus(choice);
     }
     singleCharMode = false;
-    if (defaultChoiceIndex != null && choice == '\n') {
+    if (choice == '\n') {
       choice = acceptedCharacters[defaultChoiceIndex];
     }
     return choice;

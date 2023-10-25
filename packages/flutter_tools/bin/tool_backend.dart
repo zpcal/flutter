@@ -30,7 +30,7 @@ Future<void> main(List<String> arguments) async {
 
   Directory.current = projectDirectory;
 
-  if (localEngine != null && !localEngine.contains(buildMode)) {
+  if (!localEngine.contains(buildMode)) {
     stderr.write('''
 ERROR: Requested build with Flutter local engine at '$localEngine'
 This engine is not compatible with FLUTTER_BUILD_MODE: '$buildMode'.
@@ -59,8 +59,8 @@ or
     <String>[
       if (verbose)
         '--verbose',
-      if (flutterEngine != null) '--local-engine-src-path=$flutterEngine',
-      if (localEngine != null) '--local-engine=$localEngine',
+      '--local-engine-src-path=$flutterEngine',
+      '--local-engine=$localEngine',
       'assemble',
       '--output=build',
       '-dTargetPlatform=$targetPlatform',
@@ -69,18 +69,12 @@ or
       '-dTargetFile=$flutterTarget',
       '-dTreeShakeIcons="$treeShakeIcons"',
       '-dDartObfuscation=$dartObfuscation',
-      if (bundleSkSLPath != null)
-        '-iBundleSkSLPath=$bundleSkSLPath',
-      if (codeSizeDirectory != null)
-        '-dCodeSizeDirectory=$codeSizeDirectory',
-      if (splitDebugInfo != null)
-        '-dSplitDebugInfo=$splitDebugInfo',
-      if (dartDefines != null)
-        '--DartDefines=$dartDefines',
-      if (extraGenSnapshotOptions != null)
-        '--ExtraGenSnapshotOptions=$extraGenSnapshotOptions',
-      if (extraFrontEndOptions != null)
-        '--ExtraFrontEndOptions=$extraFrontEndOptions',
+      '-iBundleSkSLPath=$bundleSkSLPath',
+      '-dCodeSizeDirectory=$codeSizeDirectory',
+      '-dSplitDebugInfo=$splitDebugInfo',
+      '--DartDefines=$dartDefines',
+      '--ExtraGenSnapshotOptions=$extraGenSnapshotOptions',
+      '--ExtraFrontEndOptions=$extraFrontEndOptions',
       target,
     ],
   );

@@ -33,15 +33,13 @@ class UnpublishException implements Exception {
 
   final String message;
   final ProcessResult result;
-  int get exitCode => result?.exitCode ?? -1;
+  int get exitCode => result.exitCode ?? -1;
 
   @override
   String toString() {
     String output = runtimeType.toString();
-    if (message != null) {
-      output += ': $message';
-    }
-    final String stderr = result?.stderr as String ?? '';
+    output += ': $message';
+      final String stderr = result.stderr as String ?? '';
     if (stderr.isNotEmpty) {
       output += ':\n$stderr';
     }
@@ -116,8 +114,7 @@ class ProcessRunner {
     this.subprocessOutput = true,
     this.defaultWorkingDirectory,
     this.platform = const LocalPlatform(),
-  }) : assert(subprocessOutput != null),
-       assert(processManager != null),
+  }) : assert(processManager != null),
        assert(platform != null) {
     environment = Map<String, String>.from(platform.environment);
   }
@@ -380,7 +377,7 @@ class ArchiveUnpublisher {
     final List<String> args = <String>[
       // Use our preferred MIME type for the files we care about
       // and let gsutil figure it out for anything else.
-      if (mimeType != null) ...<String>['-h', 'Content-Type:$mimeType'],
+      ...<String>['-h', 'Content-Type:$mimeType'],
       ...<String>['cp', src, dest],
     ];
     return await _runGsUtil(args, confirm: confirmed);
@@ -476,7 +473,7 @@ Future<void> main(List<String> rawArguments) async {
   final String tempDirArg = parsedArguments['temp_dir'] as String;
   Directory tempDir;
   bool removeTempDir = false;
-  if (tempDirArg == null || tempDirArg.isEmpty) {
+  if (tempDirArg.isEmpty) {
     tempDir = Directory.systemTemp.createTempSync('flutter_package.');
     removeTempDir = true;
   } else {

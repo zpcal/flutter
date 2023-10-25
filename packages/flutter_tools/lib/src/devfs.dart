@@ -10,7 +10,6 @@ import 'package:vm_service/vm_service.dart' as vm_service;
 
 import 'asset.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/io.dart';
 import 'base/logger.dart';
 import 'base/net.dart';
@@ -19,7 +18,6 @@ import 'build_info.dart';
 import 'bundle.dart';
 import 'compile.dart';
 import 'convert.dart' show base64, utf8;
-import 'vmservice.dart';
 
 class DevFSConfig {
   /// Should DevFS assume that symlink targets are stable?
@@ -118,8 +116,7 @@ class DevFSFileContent extends DevFSContent {
     if (_oldFileStat == null && _fileStat == null) {
       return false;
     }
-    return time == null
-        || _oldFileStat == null
+    return _oldFileStat == null
         || _fileStat == null
         || _fileStat.modified.isAfter(time);
   }
@@ -167,7 +164,7 @@ class DevFSByteContent extends DevFSContent {
 
   @override
   bool isModifiedAfter(DateTime time) {
-    return time == null || _modificationTime.isAfter(time);
+    return _modificationTime.isAfter(time);
   }
 
   @override
@@ -340,11 +337,12 @@ class UpdateFSReport {
     if (!report._success) {
       _success = false;
     }
-    if (report.fastReassemble != null && fastReassemble != null) {
+    if (fastReassemble != null) {
       fastReassemble &= report.fastReassemble;
-    } else if (report.fastReassemble != null) {
+    } else {
       fastReassemble = report.fastReassemble;
     }
+  
     _invalidatedSourcesCount += report._invalidatedSourcesCount;
     _syncedBytes += report._syncedBytes;
   }
@@ -443,8 +441,6 @@ class DevFS {
     String projectRootPath,
     bool skipAssets = false,
   }) async {
-    assert(trackWidgetCreation != null);
-    assert(generator != null);
     final DateTime candidateCompileTime = DateTime.now();
     lastPackageConfig = packageConfig;
 
@@ -452,7 +448,7 @@ class DevFS {
     final Map<Uri, DevFSContent> dirtyEntries = <Uri, DevFSContent>{};
 
     int syncedBytes = 0;
-    if (bundle != null && !skipAssets) {
+    if (!skipAssets) {
       _logger.printTrace('Scanning asset files');
       final String assetBuildDirPrefix = _asUriPath(getAssetBuildDirectory());
       // We write the assets into the AssetBundle working dir so that they
@@ -465,10 +461,10 @@ class DevFS {
         }
         // Only update assets if they have been modified, or if this is the
         // first upload of the asset bundle.
-        if (content.isModified || (bundleFirstUpload && archivePath != null)) {
+        if (content.isModified || bundleFirstUpload) {
           dirtyEntries[deviceUri] = content;
           syncedBytes += content.size;
-          if (archivePath != null && !bundleFirstUpload) {
+          if (!bundleFirstUpload) {
             assetPathsToEvict.add(archivePath);
           }
         }
@@ -487,7 +483,7 @@ class DevFS {
       outputPath: dillOutputPath ?? getDefaultApplicationKernelPath(trackWidgetCreation: trackWidgetCreation),
       packageConfig: packageConfig,
     );
-    if (compilerOutput == null || compilerOutput.errorCount > 0) {
+    if (compilerOutput.errorCount > 0) {
       return UpdateFSReport(success: false);
     }
     // Only update the last compiled time if we successfully compiled.
@@ -498,8 +494,8 @@ class DevFS {
     // Don't send full kernel file that would overwrite what VM already
     // started loading from.
     if (!bundleFirstUpload) {
-      final String compiledBinary = compilerOutput?.outputFilename;
-      if (compiledBinary != null && compiledBinary.isNotEmpty) {
+      final String compiledBinary = compilerOutput.outputFilename;
+      if (compiledBinary.isNotEmpty) {
         final Uri entryUri = _fileSystem.path.toUri(projectRootPath != null
           ? _fileSystem.path.relative(pathToReload, from: projectRootPath)
           : pathToReload,

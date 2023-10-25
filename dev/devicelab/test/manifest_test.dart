@@ -6,7 +6,6 @@ import 'dart:io';
 
 import 'package:flutter_devicelab/framework/manifest.dart';
 
-import 'common.dart';
 
 void main() {
   group('production manifest', () {

@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 // This is a regression test for https://github.com/flutter/flutter/issues/10549
 // which was failing because _SliverPersistentHeaderElement.visitChildren()

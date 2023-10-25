@@ -9,7 +9,6 @@ import 'package:process/process.dart';
 
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/os.dart';
@@ -58,18 +57,13 @@ class AndroidWorkflow implements Workflow {
   bool get appliesToHostPlatform => _featureFlags.isAndroidEnabled;
 
   @override
-  bool get canListDevices => _androidSdk != null
-    && _androidSdk.adbPath != null;
+  bool get canListDevices => _androidSdk.adbPath != null;
 
   @override
-  bool get canLaunchDevices => _androidSdk != null
-    && _androidSdk.adbPath != null
-    && _androidSdk.validateSdkWellFormed().isEmpty;
+  bool get canLaunchDevices => _androidSdk.validateSdkWellFormed().isEmpty;
 
   @override
-  bool get canListEmulators => _androidSdk != null
-    && _androidSdk.adbPath != null
-    && _androidSdk.emulatorPath != null;
+  bool get canListEmulators => _androidSdk.adbPath != null;
 }
 
 class AndroidValidator extends DoctorValidator {
@@ -117,7 +111,7 @@ class AndroidValidator extends DoctorValidator {
   /// This method extracts only the semantic version from from that response.
   static String _extractJavaVersion(String text) {
     final Match match = _javaVersionPattern.firstMatch(text ?? '');
-    return text?.substring(match.start, match.end);
+    return text.substring(match.start, match.end);
   }
 
   /// Returns false if we cannot determine the Java version or if the version
@@ -140,7 +134,7 @@ class AndroidValidator extends DoctorValidator {
       } on Exception catch (error) {
         _logger.printTrace(error.toString());
       }
-      if (javaVersionText == null || javaVersionText.isEmpty) {
+      if (javaVersionText.isEmpty) {
         // Could not determine the java version.
         messages.add(ValidationMessage.error(_userMessages.androidUnknownJavaVersion));
         return false;
@@ -257,8 +251,7 @@ class AndroidLicenseValidator extends DoctorValidator {
     final List<ValidationMessage> messages = <ValidationMessage>[];
 
     // Match pre-existing early termination behavior
-    if (globals.androidSdk == null || globals.androidSdk.latestVersion == null ||
-        globals.androidSdk.validateSdkWellFormed().isNotEmpty ||
+    if (globals.androidSdk.validateSdkWellFormed().isNotEmpty ||
         ! await _checkJavaVersionNoOutput()) {
       return ValidationResult(ValidationType.missing, messages);
     }
@@ -417,7 +410,6 @@ class AndroidLicenseValidator extends DoctorValidator {
   }
 
   static bool _canRunSdkManager() {
-    assert(globals.androidSdk != null);
     final String sdkManagerPath = globals.androidSdk.sdkManagerPath;
     return globals.processManager.canRun(sdkManagerPath);
   }

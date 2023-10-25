@@ -8,17 +8,16 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
-import 'package:meta/meta.dart';
-// ignore: deprecated_member_use
-import 'package:test_api/test_api.dart' hide TypeMatcher, isInstanceOf;
-// ignore: deprecated_member_use
-import 'package:test_api/test_api.dart' as test_package show TypeMatcher;
-import 'package:test_api/src/frontend/async_matcher.dart'; // ignore: implementation_imports
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
+import 'package:test_api/src/frontend/async_matcher.dart'; // ignore: implementation_imports
+// ignore: deprecated_member_use
+import 'package:test_api/test_api.dart' hide TypeMatcher, isInstanceOf;
+// ignore: deprecated_member_use
+import 'package:test_api/test_api.dart' as test_package show TypeMatcher;
 
 import '_matchers_io.dart' if (dart.library.html) '_matchers_web.dart' show MatchesGoldenFile, captureImage;
 import 'accessibility.dart';
@@ -540,7 +539,7 @@ Matcher matchesSemantics({
     if (hasPasteAction) SemanticsAction.paste,
     if (hasDidGainAccessibilityFocusAction) SemanticsAction.didGainAccessibilityFocus,
     if (hasDidLoseAccessibilityFocusAction) SemanticsAction.didLoseAccessibilityFocus,
-    if (customActions != null && customActions.isNotEmpty) SemanticsAction.customAction,
+    if (customActions.isNotEmpty) SemanticsAction.customAction,
     if (hasDismissAction) SemanticsAction.dismiss,
     if (hasMoveCursorForwardByWordAction) SemanticsAction.moveCursorForwardByWord,
     if (hasMoveCursorBackwardByWordAction) SemanticsAction.moveCursorBackwardByWord,
@@ -614,23 +613,19 @@ class _FindsWidgetMatcher extends Matcher {
   @override
   bool matches(covariant Finder finder, Map<dynamic, dynamic> matchState) {
     assert(min != null || max != null);
-    assert(min == null || max == null || min <= max);
+    assert(min <= max);
     matchState[Finder] = finder;
     int count = 0;
     final Iterator<Element> iterator = finder.evaluate().iterator;
-    if (min != null) {
-      while (count < min && iterator.moveNext())
-        count += 1;
-      if (count < min)
-        return false;
-    }
-    if (max != null) {
+    while (count < min && iterator.moveNext())
+      count += 1;
+    if (count < min)
+      return false;
       while (count <= max && iterator.moveNext())
-        count += 1;
-      if (count > max)
-        return false;
-    }
-    return true;
+      count += 1;
+    if (count > max)
+      return false;
+      return true;
   }
 
   @override
@@ -666,7 +661,7 @@ class _FindsWidgetMatcher extends Matcher {
     final Finder finder = matchState[Finder] as Finder;
     final int count = finder.evaluate().length;
     if (count == 0) {
-      assert(min != null && min > 0);
+      assert(min > 0);
       if (min == 1 && max == 1)
         return mismatchDescription.add('means none were found but one was expected');
       return mismatchDescription.add('means none were found but some were expected');
@@ -676,9 +671,9 @@ class _FindsWidgetMatcher extends Matcher {
         return mismatchDescription.add('means one was found but none were expected');
       return mismatchDescription.add('means some were found but none were expected');
     }
-    if (min != null && count < min)
+    if (count < min)
       return mismatchDescription.add('is not enough');
-    assert(max != null && count > min);
+    assert(count > min);
     return mismatchDescription.add('is too many');
   }
 }
@@ -1132,7 +1127,7 @@ class _MoreOrLessEquals extends Matcher {
       return false;
     if (object == value)
       return true;
-    final double test = object as double;
+    final double test = object;
     return (test - value).abs() <= epsilon;
   }
 
@@ -1355,7 +1350,7 @@ class _RendersOnPhysicalModel extends _MatchRenderObject<RenderPhysicalShape, Re
     if (borderRadius != null && renderObject.borderRadius != borderRadius)
       return failWithDescription(matchState, 'had borderRadius: ${renderObject.borderRadius}');
 
-    if (elevation != null && renderObject.elevation != elevation)
+    if (renderObject.elevation != elevation)
       return failWithDescription(matchState, 'had elevation: ${renderObject.elevation}');
 
     return true;
@@ -1386,7 +1381,7 @@ class _RendersOnPhysicalModel extends _MatchRenderObject<RenderPhysicalShape, Re
       return false;
     }
 
-    if (elevation != null && renderObject.elevation != elevation)
+    if (renderObject.elevation != elevation)
       return failWithDescription(matchState, 'had elevation: ${renderObject.elevation}');
 
     return true;
@@ -1414,8 +1409,7 @@ class _RendersOnPhysicalModel extends _MatchRenderObject<RenderPhysicalShape, Re
       description.add(' with shape $shape');
     if (borderRadius != null)
       description.add(' with borderRadius $borderRadius');
-    if (elevation != null)
-      description.add(' with elevation $elevation');
+    description.add(' with elevation $elevation');
     return description;
   }
 }
@@ -1438,7 +1432,7 @@ class _RendersOnPhysicalShape extends _MatchRenderObject<RenderPhysicalShape, Re
     if (shapeClipper.shape != shape)
       return failWithDescription(matchState, 'shape was: ${shapeClipper.shape}');
 
-    if (elevation != null && renderObject.elevation != elevation)
+    if (renderObject.elevation != elevation)
       return failWithDescription(matchState, 'had elevation: ${renderObject.elevation}');
 
     return true;
@@ -1452,8 +1446,7 @@ class _RendersOnPhysicalShape extends _MatchRenderObject<RenderPhysicalShape, Re
   @override
   Description describe(Description description) {
     description.add('renders on a physical model with shape $shape');
-    if (elevation != null)
-      description.add(' with elevation $elevation');
+    description.add(' with elevation $elevation');
     return description;
   }
 }
@@ -1746,46 +1739,31 @@ class _MatchesSemanticsData extends Matcher {
   @override
   Description describe(Description description) {
     description.add('has semantics');
-    if (label != null)
-      description.add(' with label: $label');
-    if (value != null)
-      description.add(' with value: $value');
-    if (hint != null)
-      description.add(' with hint: $hint');
-    if (increasedValue != null)
-      description.add(' with increasedValue: $increasedValue ');
-    if (decreasedValue != null)
-      description.add(' with decreasedValue: $decreasedValue ');
-    if (actions != null)
-      description.add(' with actions: ').addDescriptionOf(actions);
-    if (flags != null)
-      description.add(' with flags: ').addDescriptionOf(flags);
+    description.add(' with label: $label');
+    description.add(' with value: $value');
+    description.add(' with hint: $hint');
+    description.add(' with increasedValue: $increasedValue ');
+    description.add(' with decreasedValue: $decreasedValue ');
+    description.add(' with actions: ').addDescriptionOf(actions);
+    description.add(' with flags: ').addDescriptionOf(flags);
     if (textDirection != null)
       description.add(' with textDirection: $textDirection ');
     if (rect != null)
       description.add(' with rect: $rect');
     if (size != null)
       description.add(' with size: $size');
-    if (elevation != null)
-      description.add(' with elevation: $elevation');
-    if (thickness != null)
-      description.add(' with thickness: $thickness');
-    if (platformViewId != null)
-      description.add(' with platformViewId: $platformViewId');
-    if (maxValueLength != null)
-      description.add(' with maxValueLength: $maxValueLength');
-    if (currentValueLength != null)
-      description.add(' with currentValueLength: $currentValueLength');
-    if (customActions != null)
-      description.add(' with custom actions: $customActions');
+    description.add(' with elevation: $elevation');
+    description.add(' with thickness: $thickness');
+    description.add(' with platformViewId: $platformViewId');
+    description.add(' with maxValueLength: $maxValueLength');
+    description.add(' with currentValueLength: $currentValueLength');
+    description.add(' with custom actions: $customActions');
     if (hintOverrides != null)
       description.add(' with custom hints: $hintOverrides');
-    if (children != null) {
-      description.add(' with children:\n');
-      for (final _MatchesSemanticsData child in children.cast<_MatchesSemanticsData>())
-        child.describe(description);
-    }
-    return description;
+    description.add(' with children:\n');
+    for (final _MatchesSemanticsData child in children.cast<_MatchesSemanticsData>())
+      child.describe(description);
+      return description;
   }
 
 
@@ -1796,15 +1774,15 @@ class _MatchesSemanticsData extends Matcher {
       return failWithDescription(matchState, 'No SemanticsData provided. '
         'Maybe you forgot to enable semantics?');
     final SemanticsData data = node is SemanticsNode ? node.getSemanticsData() : (node as SemanticsData);
-    if (label != null && label != data.label)
+    if (label != data.label)
       return failWithDescription(matchState, 'label was: ${data.label}');
-    if (hint != null && hint != data.hint)
+    if (hint != data.hint)
       return failWithDescription(matchState, 'hint was: ${data.hint}');
-    if (value != null && value != data.value)
+    if (value != data.value)
       return failWithDescription(matchState, 'value was: ${data.value}');
-    if (increasedValue != null && increasedValue != data.increasedValue)
+    if (increasedValue != data.increasedValue)
       return failWithDescription(matchState, 'increasedValue was: ${data.increasedValue}');
-    if (decreasedValue != null && decreasedValue != data.decreasedValue)
+    if (decreasedValue != data.decreasedValue)
       return failWithDescription(matchState, 'decreasedValue was: ${data.decreasedValue}');
     if (textDirection != null && textDirection != data.textDirection)
       return failWithDescription(matchState, 'textDirection was: $textDirection');
@@ -1812,34 +1790,32 @@ class _MatchesSemanticsData extends Matcher {
       return failWithDescription(matchState, 'rect was: ${data.rect}');
     if (size != null && size != data.rect.size)
       return failWithDescription(matchState, 'size was: ${data.rect.size}');
-    if (elevation != null && elevation != data.elevation)
+    if (elevation != data.elevation)
       return failWithDescription(matchState, 'elevation was: ${data.elevation}');
-    if (thickness != null && thickness != data.thickness)
+    if (thickness != data.thickness)
       return failWithDescription(matchState, 'thickness was: ${data.thickness}');
-    if (platformViewId != null && platformViewId != data.platformViewId)
+    if (platformViewId != data.platformViewId)
       return failWithDescription(matchState, 'platformViewId was: ${data.platformViewId}');
-    if (currentValueLength != null && currentValueLength != data.currentValueLength)
+    if (currentValueLength != data.currentValueLength)
       return failWithDescription(matchState, 'currentValueLength was: ${data.currentValueLength}');
-    if (maxValueLength != null && maxValueLength != data.maxValueLength)
+    if (maxValueLength != data.maxValueLength)
       return failWithDescription(matchState, 'maxValueLength was: ${data.maxValueLength}');
-    if (actions != null) {
-      int actionBits = 0;
-      for (final SemanticsAction action in actions)
-        actionBits |= action.index;
-      if (actionBits != data.actions) {
-        final List<String> actionSummary = <String>[
-          for (final SemanticsAction action in SemanticsAction.values.values)
-            if ((data.actions & action.index) != 0)
-              describeEnum(action),
-        ];
-        return failWithDescription(matchState, 'actions were: $actionSummary');
-      }
+    int actionBits = 0;
+    for (final SemanticsAction action in actions)
+      actionBits |= action.index;
+    if (actionBits != data.actions) {
+      final List<String> actionSummary = <String>[
+        for (final SemanticsAction action in SemanticsAction.values.values)
+          if ((data.actions & action.index) != 0)
+            describeEnum(action),
+      ];
+      return failWithDescription(matchState, 'actions were: $actionSummary');
     }
-    if (customActions != null || hintOverrides != null) {
+      if (customActions != null || hintOverrides != null) {
       final List<CustomSemanticsAction> providedCustomActions = data.customSemanticsActionIds.map((int id) {
         return CustomSemanticsAction.getAction(id);
       }).toList();
-      final List<CustomSemanticsAction> expectedCustomActions = customActions?.toList() ?? <CustomSemanticsAction>[];
+      final List<CustomSemanticsAction> expectedCustomActions = customActions.toList() ?? <CustomSemanticsAction>[];
       if (hintOverrides?.onTapHint != null)
         expectedCustomActions.add(CustomSemanticsAction.overridingAction(hint: hintOverrides.onTapHint, action: SemanticsAction.tap));
       if (hintOverrides?.onLongPressHint != null)
@@ -1856,29 +1832,25 @@ class _MatchesSemanticsData extends Matcher {
           return failWithDescription(matchState, 'custom actions where: $providedCustomActions');
       }
     }
-    if (flags != null) {
-      int flagBits = 0;
-      for (final SemanticsFlag flag in flags)
-        flagBits |= flag.index;
-      if (flagBits != data.flags) {
-        final List<String> flagSummary = <String>[
-          for (final SemanticsFlag flag in SemanticsFlag.values.values)
-            if ((data.flags & flag.index) != 0)
-              describeEnum(flag),
-        ];
-        return failWithDescription(matchState, 'flags were: $flagSummary');
-      }
+    int flagBits = 0;
+    for (final SemanticsFlag flag in flags)
+      flagBits |= flag.index;
+    if (flagBits != data.flags) {
+      final List<String> flagSummary = <String>[
+        for (final SemanticsFlag flag in SemanticsFlag.values.values)
+          if ((data.flags & flag.index) != 0)
+            describeEnum(flag),
+      ];
+      return failWithDescription(matchState, 'flags were: $flagSummary');
     }
-    bool allMatched = true;
-    if (children != null) {
-      int i = 0;
-      node.visitChildren((SemanticsNode child) {
-        allMatched = children[i].matches(child, matchState) && allMatched;
-        i += 1;
-        return allMatched;
-      });
-    }
-    return allMatched;
+      bool allMatched = true;
+    int i = 0;
+    node.visitChildren((SemanticsNode child) {
+      allMatched = children[i].matches(child, matchState) && allMatched;
+      i += 1;
+      return allMatched;
+    });
+      return allMatched;
   }
 
   bool failWithDescription(Map<dynamic, dynamic> matchState, String description) {

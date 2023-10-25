@@ -4,10 +4,9 @@
 
 // @dart = 2.8
 
-import 'package:flutter/gestures.dart';
 import 'package:fake_async/fake_async.dart';
+import 'package:flutter/gestures.dart';
 
-import '../flutter_test_alternative.dart';
 import 'gesture_tester.dart';
 
 class TestGestureArenaMember extends GestureArenaMember {

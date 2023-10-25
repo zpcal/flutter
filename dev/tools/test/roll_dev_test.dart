@@ -6,7 +6,6 @@ import 'package:args/args.dart';
 import 'package:dev_tools/roll_dev.dart';
 import 'package:mockito/mockito.dart';
 
-import './common.dart';
 
 void main() {
   group('run()', () {
@@ -114,7 +113,7 @@ void main() {
       const String pattern = r'Your git repository is not clean. Try running '
         '"git clean -fd". Warning, this will delete files! Run with -n to find '
         'out which ones.';
-      expect(exception?.toString(), contains(pattern));
+      expect(exception.toString(), contains(pattern));
     });
 
     test('does not reset or tag if --just-print is specified', () {

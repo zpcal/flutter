@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 
 import 'base/common.dart';
-import 'base/file_system.dart';
 import 'base/io.dart';
 import 'base/process.dart';
 import 'base/time.dart';
@@ -209,7 +208,7 @@ class FlutterVersion {
     bool lenient = false,
   }) {
     final List<String> args = gitLog(<String>[
-      if (branch != null) branch,
+      branch,
       '-n',
       '1',
       '--pretty=format:%ad',
@@ -489,17 +488,15 @@ class FlutterVersion {
     Cache.checkLockAcquired();
     final VersionCheckStamp versionCheckStamp = await VersionCheckStamp.load();
 
-    if (versionCheckStamp.lastTimeVersionWasChecked != null) {
-      final Duration timeSinceLastCheck = _clock.now().difference(
-        versionCheckStamp.lastTimeVersionWasChecked,
-      );
+    final Duration timeSinceLastCheck = _clock.now().difference(
+      versionCheckStamp.lastTimeVersionWasChecked,
+    );
 
-      // Don't ping the server too often. Return cached value if it's fresh.
-      if (timeSinceLastCheck < checkAgeConsideredUpToDate) {
-        return versionCheckStamp.lastKnownRemoteVersion;
-      }
+    // Don't ping the server too often. Return cached value if it's fresh.
+    if (timeSinceLastCheck < checkAgeConsideredUpToDate) {
+      return versionCheckStamp.lastKnownRemoteVersion;
     }
-
+  
     // Cache is empty or it's been a while since the last server ping. Ping the server.
     try {
       final DateTime remoteFrameworkCommitDate = DateTime.parse(
@@ -545,21 +542,19 @@ class VersionCheckStamp {
   static Future<VersionCheckStamp> load() async {
     final String versionCheckStamp = globals.cache.getStampFor(flutterVersionCheckStampFile);
 
-    if (versionCheckStamp != null) {
-      // Attempt to parse stamp JSON.
-      try {
-        final dynamic jsonObject = json.decode(versionCheckStamp);
-        if (jsonObject is Map<String, dynamic>) {
-          return fromJson(jsonObject);
-        } else {
-          globals.printTrace('Warning: expected version stamp to be a Map but found: $jsonObject');
-        }
-      } on Exception catch (error, stackTrace) {
-        // Do not crash if JSON is malformed.
-        globals.printTrace('${error.runtimeType}: $error\n$stackTrace');
+    // Attempt to parse stamp JSON.
+    try {
+      final dynamic jsonObject = json.decode(versionCheckStamp);
+      if (jsonObject is Map<String, dynamic>) {
+        return fromJson(jsonObject);
+      } else {
+        globals.printTrace('Warning: expected version stamp to be a Map but found: $jsonObject');
       }
+    } on Exception catch (error, stackTrace) {
+      // Do not crash if JSON is malformed.
+      globals.printTrace('${error.runtimeType}: $error\n$stackTrace');
     }
-
+  
     // Stamp is missing or is malformed.
     return const VersionCheckStamp();
   }
@@ -585,18 +580,12 @@ class VersionCheckStamp {
   }) async {
     final Map<String, String> jsonData = toJson();
 
-    if (newTimeVersionWasChecked != null) {
-      jsonData['lastTimeVersionWasChecked'] = '$newTimeVersionWasChecked';
-    }
-
-    if (newKnownRemoteVersion != null) {
-      jsonData['lastKnownRemoteVersion'] = '$newKnownRemoteVersion';
-    }
-
-    if (newTimeWarningWasPrinted != null) {
-      jsonData['lastTimeWarningWasPrinted'] = '$newTimeWarningWasPrinted';
-    }
-
+    jsonData['lastTimeVersionWasChecked'] = '$newTimeVersionWasChecked';
+  
+    jsonData['lastKnownRemoteVersion'] = '$newKnownRemoteVersion';
+  
+    jsonData['lastTimeWarningWasPrinted'] = '$newTimeWarningWasPrinted';
+  
     const JsonEncoder prettyJsonEncoder = JsonEncoder.withIndent('  ');
     globals.cache.setStampFor(flutterVersionCheckStampFile, prettyJsonEncoder.convert(jsonData));
   }
@@ -612,18 +601,12 @@ class VersionCheckStamp {
 
     final Map<String, String> jsonData = <String, String>{};
 
-    if (updateTimeVersionWasChecked != null) {
-      jsonData['lastTimeVersionWasChecked'] = '$updateTimeVersionWasChecked';
-    }
-
-    if (updateKnownRemoteVersion != null) {
-      jsonData['lastKnownRemoteVersion'] = '$updateKnownRemoteVersion';
-    }
-
-    if (updateTimeWarningWasPrinted != null) {
-      jsonData['lastTimeWarningWasPrinted'] = '$updateTimeWarningWasPrinted';
-    }
-
+    jsonData['lastTimeVersionWasChecked'] = '$updateTimeVersionWasChecked';
+  
+    jsonData['lastKnownRemoteVersion'] = '$updateKnownRemoteVersion';
+  
+    jsonData['lastTimeWarningWasPrinted'] = '$updateTimeWarningWasPrinted';
+  
     return jsonData;
   }
 }
@@ -808,14 +791,12 @@ class GitTagVersion {
     final int z = matchGroups[2] == null ? null : int.tryParse(matchGroups[2]);
     final String devString = matchGroups[3];
     int devVersion, devPatch;
-    if (devString != null) {
-      final Match devMatch = RegExp(r'^-(\d+)\.(\d+)\.pre$')
-        .firstMatch(devString);
-      final List<String> devGroups = devMatch.groups(<int>[1, 2]);
-      devVersion = devGroups[0] == null ? null : int.tryParse(devGroups[0]);
-      devPatch = devGroups[1] == null ? null : int.tryParse(devGroups[1]);
-    }
-    // count of commits past last tagged version
+    final Match devMatch = RegExp(r'^-(\d+)\.(\d+)\.pre$')
+      .firstMatch(devString);
+    final List<String> devGroups = devMatch.groups(<int>[1, 2]);
+    devVersion = devGroups[0] == null ? null : int.tryParse(devGroups[0]);
+    devPatch = devGroups[1] == null ? null : int.tryParse(devGroups[1]);
+      // count of commits past last tagged version
     final int commits = matchGroups[4] == null ? 0 : int.tryParse(matchGroups[4]);
     final String hash = matchGroups[5] ?? '';
 
@@ -843,20 +824,16 @@ class GitTagVersion {
   }
 
   String frameworkVersionFor(String revision) {
-    if (x == null || y == null || z == null || !revision.startsWith(hash)) {
+    if (!revision.startsWith(hash)) {
       return '0.0.0-unknown';
     }
     if (commits == 0) {
       return gitTag;
     }
-    if (hotfix != null) {
-      // This is an unexpected state where untagged commits exist past a hotfix
-      return '$x.$y.$z+hotfix.${hotfix + 1}.pre.$commits';
-    }
-    if (devPatch != null && devVersion != null) {
-      return '$x.$y.$z-${devVersion + 1}.0.pre.$commits';
-    }
-    return '$x.$y.${z + 1}-0.0.pre.$commits';
+    // This is an unexpected state where untagged commits exist past a hotfix
+    return '$x.$y.$z+hotfix.${hotfix + 1}.pre.$commits';
+    return '$x.$y.$z-${devVersion + 1}.0.pre.$commits';
+      return '$x.$y.${z + 1}-0.0.pre.$commits';
   }
 }
 

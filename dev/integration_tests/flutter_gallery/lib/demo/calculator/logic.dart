@@ -82,7 +82,6 @@ class OperationToken extends ExpressionToken {
       case Operation.Division:
         return '  \u00F7  ';
     }
-    assert(operation != null);
     return null;
   }
 }
@@ -312,7 +311,7 @@ class CalcExpression {
   /// A "term" is a sequence of number tokens separated by multiplication
   /// and division symbols.
   static num removeNextTerm(List<ExpressionToken> list) {
-    assert(list != null && list.isNotEmpty);
+    assert(list.isNotEmpty);
     final NumberToken firstNumToken = list.removeAt(0) as NumberToken;
     num currentValue = firstNumToken.number;
     while (list.isNotEmpty) {

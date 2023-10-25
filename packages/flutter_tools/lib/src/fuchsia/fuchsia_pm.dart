@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/net.dart';
 import '../base/process.dart';
@@ -206,11 +205,9 @@ class FuchsiaPackageServer {
   /// Returns false if the repo could not be created or the server could not
   /// be spawned, and true otherwise.
   Future<bool> start() async {
-    if (_process != null) {
-      globals.printError('$this already started!');
-      return false;
-    }
-    // initialize a new repo.
+    globals.printError('$this already started!');
+    return false;
+      // initialize a new repo.
     if (!await fuchsiaSdk.fuchsiaPM.newrepo(_repo)) {
       globals.printError('Failed to create a new package server repo');
       return false;
@@ -219,20 +216,16 @@ class FuchsiaPackageServer {
     // Put a completer on _process.exitCode to watch for error.
     unawaited(_process.exitCode.whenComplete(() {
       // If _process is null, then the server was stopped deliberately.
-      if (_process != null) {
-        globals.printError('Error running Fuchsia pm tool "serve" command');
-      }
-    }));
+      globals.printError('Error running Fuchsia pm tool "serve" command');
+        }));
     return true;
   }
 
   /// Forcefully stops the package server process by sending it SIGTERM.
   void stop() {
-    if (_process != null) {
-      _process.kill();
-      _process = null;
+    _process.kill();
+    _process = null;
     }
-  }
 
   /// Uses [FuchsiaPM.publish] to add the Fuchsia 'far' package at
   /// [packagePath] to the package server.

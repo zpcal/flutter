@@ -8,7 +8,6 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 
-import '../../scheduler.dart';
 
 import 'color_scheme.dart';
 import 'ink_well.dart';
@@ -16,7 +15,6 @@ import 'material.dart';
 import 'material_localizations.dart';
 import 'navigation_rail_theme.dart';
 import 'theme.dart';
-import 'theme_data.dart';
 
 /// A material widget that is meant to be displayed at the left or right of an
 /// app to navigate between a small number of views, typically between three and

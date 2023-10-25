@@ -24,12 +24,7 @@ class TravelDestination {
     @required this.city,
     @required this.location,
     this.type = CardDemoType.standard,
-  }) : assert(assetName != null),
-       assert(assetPackage != null),
-       assert(title != null),
-       assert(description != null),
-       assert(city != null),
-       assert(location != null);
+  });
 
   final String assetName;
   final String assetPackage;
@@ -71,8 +66,7 @@ const List<TravelDestination> destinations = <TravelDestination>[
 
 class TravelDestinationItem extends StatelessWidget {
   const TravelDestinationItem({ Key key, @required this.destination, this.shape })
-    : assert(destination != null),
-      super(key: key);
+    : super(key: key);
 
   // This height will allow for all the Card's content to fit comfortably within the card.
   static const double height = 338.0;
@@ -107,8 +101,7 @@ class TravelDestinationItem extends StatelessWidget {
 
 class TappableTravelDestinationItem extends StatelessWidget {
   const TappableTravelDestinationItem({ Key key, @required this.destination, this.shape })
-    : assert(destination != null),
-      super(key: key);
+    : super(key: key);
 
   // This height will allow for all the Card's content to fit comfortably within the card.
   static const double height = 298.0;
@@ -152,8 +145,7 @@ class TappableTravelDestinationItem extends StatelessWidget {
 
 class SelectableTravelDestinationItem extends StatefulWidget {
   const SelectableTravelDestinationItem({ Key key, @required this.destination, this.shape })
-    : assert(destination != null),
-      super(key: key);
+    : super(key: key);
 
   final TravelDestination destination;
   final ShapeBorder shape;
@@ -251,8 +243,7 @@ class SectionTitle extends StatelessWidget {
 
 class TravelDestinationContent extends StatelessWidget {
   const TravelDestinationContent({ Key key, @required this.destination })
-    : assert(destination != null),
-      super(key: key);
+    : super(key: key);
 
   final TravelDestination destination;
 

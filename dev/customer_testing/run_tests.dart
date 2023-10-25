@@ -91,7 +91,7 @@ Future<bool> run(List<String> arguments) async {
     .where((File file) => !skipTemplate || path.basename(file.path) != 'template.test')
     .toList();
 
-  if (help || repeat == null || files.isEmpty) {
+  if (help || files.isEmpty) {
     printHelp();
     if (verbose) {
       if (repeat == null)
@@ -181,7 +181,6 @@ Future<bool> run(List<String> arguments) async {
           break;
         }
       }
-      assert(success != null);
       if (success) {
         if (verbose)
           print('Running tests...');

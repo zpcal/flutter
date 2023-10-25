@@ -95,10 +95,8 @@ abstract class FlutterTestDriver {
     if (pidFile != null) {
       arguments.addAll(<String>['--pid-file', pidFile.path]);
     }
-    if (script != null) {
-      arguments.add(script);
-    }
-    _debugPrint('Spawning flutter $arguments in ${_projectFolder.path}');
+    arguments.add(script);
+      _debugPrint('Spawning flutter $arguments in ${_projectFolder.path}');
 
     const ProcessManager _processManager = LocalProcessManager();
     _process = await _processManager.start(
@@ -284,7 +282,6 @@ abstract class FlutterTestDriver {
   }
 
   Future<Isolate> _resume(String step, bool waitForNextPause) async {
-    assert(waitForNextPause != null);
     await _timeoutWithMessages<dynamic>(
       () async => _vmService.resume(await _getFlutterIsolateId(), step: step),
       task: 'Resuming isolate (step=$step)',
@@ -343,9 +340,8 @@ abstract class FlutterTestDriver {
     Duration timeout = defaultTimeout,
     bool ignoreAppStopEvent = false,
   }) async {
-    assert(timeout != null);
     assert(event != null || id != null);
-    assert(event == null || id == null);
+    assert(id == null);
     final String interestingOccurrence = event != null ? '$event event' : 'response to request $id';
     final Completer<Map<String, dynamic>> response = Completer<Map<String, dynamic>>();
     StreamSubscription<String> subscription;
@@ -355,8 +351,8 @@ abstract class FlutterTestDriver {
       if (json == null) {
         return;
       }
-      if ((event != null && json['event'] == event) ||
-          (id != null && json['id'] == id)) {
+      if ((json['event'] == event) ||
+          (json['id'] == id)) {
         await subscription.cancel();
         _debugPrint('OK ($interestingOccurrence)');
         response.complete(json);
@@ -386,8 +382,6 @@ abstract class FlutterTestDriver {
     @required String task,
     Duration timeout = defaultTimeout,
   }) {
-    assert(task != null);
-    assert(timeout != null);
 
     if (_printDebugOutputToStdOut) {
       _debugPrint('$task...');
@@ -612,21 +606,19 @@ class FlutterRunTestDriver extends FlutterTestDriver {
       _debugPrint('Closing VM service...');
       _vmService.dispose();
     }
-    if (_currentRunningAppId != null) {
-      _debugPrint('Detaching from app...');
-      await Future.any<void>(<Future<void>>[
-        _process.exitCode,
-        _sendRequest(
-          'app.detach',
-          <String, dynamic>{'appId': _currentRunningAppId},
-        ),
-      ]).timeout(
-        quitTimeout,
-        onTimeout: () { _debugPrint('app.detach did not return within $quitTimeout'); },
-      );
-      _currentRunningAppId = null;
-    }
-    _debugPrint('Waiting for process to end...');
+    _debugPrint('Detaching from app...');
+    await Future.any<void>(<Future<void>>[
+      _process.exitCode,
+      _sendRequest(
+        'app.detach',
+        <String, dynamic>{'appId': _currentRunningAppId},
+      ),
+    ]).timeout(
+      quitTimeout,
+      onTimeout: () { _debugPrint('app.detach did not return within $quitTimeout'); },
+    );
+    _currentRunningAppId = null;
+      _debugPrint('Waiting for process to end...');
     return _process.exitCode.timeout(quitTimeout, onTimeout: _killGracefully);
   }
 
@@ -635,21 +627,19 @@ class FlutterRunTestDriver extends FlutterTestDriver {
       _debugPrint('Closing VM service...');
       _vmService.dispose();
     }
-    if (_currentRunningAppId != null) {
-      _debugPrint('Stopping application...');
-      await Future.any<void>(<Future<void>>[
-        _process.exitCode,
-        _sendRequest(
-          'app.stop',
-          <String, dynamic>{'appId': _currentRunningAppId},
-        ),
-      ]).timeout(
-        quitTimeout,
-        onTimeout: () { _debugPrint('app.stop did not return within $quitTimeout'); },
-      );
-      _currentRunningAppId = null;
-    }
-    if (_process != null) {
+    _debugPrint('Stopping application...');
+    await Future.any<void>(<Future<void>>[
+      _process.exitCode,
+      _sendRequest(
+        'app.stop',
+        <String, dynamic>{'appId': _currentRunningAppId},
+      ),
+    ]).timeout(
+      quitTimeout,
+      onTimeout: () { _debugPrint('app.stop did not return within $quitTimeout'); },
+    );
+    _currentRunningAppId = null;
+      if (_process != null) {
       _debugPrint('Waiting for process to end...');
       return _process.exitCode.timeout(quitTimeout, onTimeout: _killGracefully);
     }
@@ -740,17 +730,14 @@ class FlutterTestTestDriver extends FlutterTestDriver {
       _vmServiceWsUri = Uri.parse(vmServiceHttpString).replace(scheme: 'ws', path: '/ws');
       await connectToVmService(pauseOnExceptions: pauseOnExceptions);
       // Allow us to run code before we start, eg. to set up breakpoints.
-      if (beforeStart != null) {
-        await beforeStart();
-      }
-      await resume(waitForNextPause: false);
+      await beforeStart();
+          await resume(waitForNextPause: false);
     }
   }
 
   Future<Map<String, dynamic>> _waitForJson({
     Duration timeout = defaultTimeout,
   }) async {
-    assert(timeout != null);
     return _timeoutWithMessages<Map<String, dynamic>>(
       () => _stdout.stream.map<Map<String, dynamic>>(_parseJsonResponse)
           .firstWhere((Map<String, dynamic> output) => output != null),
@@ -775,7 +762,7 @@ class FlutterTestTestDriver extends FlutterTestDriver {
     final StreamSubscription<String> subscription = _stdout.stream.listen(
         (String line) async {
           final Map<String, dynamic> json = _parseJsonResponse(line);
-          if (json != null && json['type'] != null && json['success'] != null) {
+          if (json['type'] != null && json['success'] != null) {
             done.complete(json['type'] == 'done' && json['success'] == true);
           }
         });

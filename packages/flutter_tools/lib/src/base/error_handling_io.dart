@@ -36,7 +36,6 @@ class ErrorHandlingFileSystem extends ForwardingFileSystem {
     @required Platform platform,
   }) :
       assert(delegate != null),
-      assert(platform != null),
       _platform = platform,
       super(delegate);
 
@@ -93,9 +92,7 @@ class ErrorHandlingFile
     @required this.fileSystem,
     @required this.delegate,
   }) :
-    assert(platform != null),
     assert(fileSystem != null),
-    assert(delegate != null),
     _platform = platform;
 
   @override
@@ -218,9 +215,7 @@ class ErrorHandlingDirectory
     @required this.fileSystem,
     @required this.delegate,
   }) :
-    assert(platform != null),
     assert(fileSystem != null),
-    assert(delegate != null),
     _platform = platform;
 
   @override
@@ -309,9 +304,7 @@ class ErrorHandlingLink
     @required this.fileSystem,
     @required this.delegate,
   }) :
-    assert(platform != null),
     assert(fileSystem != null),
-    assert(delegate != null),
     _platform = platform;
 
   @override
@@ -351,7 +344,6 @@ Future<T> _run<T>(Future<T> Function() op, {
   @required Platform platform,
   String failureMessage,
 }) async {
-  assert(platform != null);
   try {
     return await op();
   } on FileSystemException catch (e) {
@@ -375,7 +367,6 @@ T _runSync<T>(T Function() op, {
   @required Platform platform,
   String failureMessage,
 }) {
-  assert(platform != null);
   try {
     return op();
   } on FileSystemException catch (e) {

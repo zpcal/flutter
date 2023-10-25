@@ -8,7 +8,6 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 
-import '../flutter_test_alternative.dart';
 
 void main() {
   PointerEvent _createSimulatedPointerAddedEvent(

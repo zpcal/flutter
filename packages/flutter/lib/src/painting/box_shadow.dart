@@ -8,7 +8,6 @@ import 'dart:ui' as ui show Shadow, lerpDouble;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 import 'debug.dart';
 
 /// A shadow cast by a box.

@@ -5,7 +5,6 @@
 import '../artifacts.dart';
 import '../base/analyze_size.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/process.dart';
 import '../base/utils.dart';
@@ -56,29 +55,27 @@ Future<void> buildLinux(
   } finally {
     status.cancel();
   }
-  if (buildInfo.codeSizeDirectory != null && sizeAnalyzer != null) {
-    final String arch = getNameForTargetPlatform(TargetPlatform.linux_x64);
-    final File codeSizeFile = globals.fs.directory(buildInfo.codeSizeDirectory)
-      .childFile('snapshot.$arch.json');
-    final File precompilerTrace = globals.fs.directory(buildInfo.codeSizeDirectory)
-      .childFile('trace.$arch.json');
-    final Map<String, Object> output = await sizeAnalyzer.analyzeAotSnapshot(
-      aotSnapshot: codeSizeFile,
-      // This analysis is only supported for release builds.
-      outputDirectory: globals.fs.directory(
-        globals.fs.path.join(getLinuxBuildDirectory(), 'release', 'bundle'),
-      ),
-      precompilerTrace: precompilerTrace,
-      type: 'linux',
-    );
-    final File outputFile = globals.fsUtils.getUniqueFile(
-      globals.fs.directory(getBuildDirectory()),'linux-code-size-analysis', 'json',
-    )..writeAsStringSync(jsonEncode(output));
-    // This message is used as a sentinel in analyze_apk_size_test.dart
-    globals.printStatus(
-      'A summary of your Linux bundle analysis can be found at: ${outputFile.path}',
-    );
-  }
+  final String arch = getNameForTargetPlatform(TargetPlatform.linux_x64);
+  final File codeSizeFile = globals.fs.directory(buildInfo.codeSizeDirectory)
+    .childFile('snapshot.$arch.json');
+  final File precompilerTrace = globals.fs.directory(buildInfo.codeSizeDirectory)
+    .childFile('trace.$arch.json');
+  final Map<String, Object> output = await sizeAnalyzer.analyzeAotSnapshot(
+    aotSnapshot: codeSizeFile,
+    // This analysis is only supported for release builds.
+    outputDirectory: globals.fs.directory(
+      globals.fs.path.join(getLinuxBuildDirectory(), 'release', 'bundle'),
+    ),
+    precompilerTrace: precompilerTrace,
+    type: 'linux',
+  );
+  final File outputFile = globals.fsUtils.getUniqueFile(
+    globals.fs.directory(getBuildDirectory()),'linux-code-size-analysis', 'json',
+  )..writeAsStringSync(jsonEncode(output));
+  // This message is used as a sentinel in analyze_apk_size_test.dart
+  globals.printStatus(
+    'A summary of your Linux bundle analysis can be found at: ${outputFile.path}',
+  );
 }
 
 Future<void> _runCmake(String buildModeName, Directory sourceDir, Directory buildDir) async {

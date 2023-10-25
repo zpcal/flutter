@@ -461,7 +461,7 @@ Future<BuildAppBundleCommand> runBuildAppBundleCommand(
   final CommandRunner<void> runner = createTestCommandRunner(command);
   await runner.run(<String>[
     'appbundle',
-    ...?arguments,
+    ...arguments,
     '--no-pub',
     globals.fs.path.join(target, 'lib', 'main.dart'),
   ]);

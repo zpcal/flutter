@@ -14,7 +14,6 @@ import 'material.dart';
 import 'scaffold.dart';
 import 'snack_bar_theme.dart';
 import 'theme.dart';
-import 'theme_data.dart';
 
 const double _singleLineVerticalPadding = 14.0;
 

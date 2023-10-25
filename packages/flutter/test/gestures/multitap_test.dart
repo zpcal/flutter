@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'gesture_tester.dart';
 

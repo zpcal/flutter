@@ -7,8 +7,8 @@
 @TestOn('!chrome') // diagnostics use Platform.operatingSystem.
 import 'dart:io' show Platform;
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class Leaf extends StatefulWidget {
   const Leaf({ Key key, this.child }) : super(key: key);

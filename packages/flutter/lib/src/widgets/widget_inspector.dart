@@ -2761,13 +2761,7 @@ abstract class _HasCreationLocation {
 /// A tuple with file, line, and column number, for displaying human-readable
 /// file locations.
 class _Location {
-  const _Location({
-    this.file,
-    this.line,
-    this.column,
-    this.name,
-    this.parameterLocations,
-  });
+  const _Location();
 
   /// File path of the location.
   final String file;

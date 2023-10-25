@@ -5,12 +5,13 @@
 // @dart = 2.8
 
 import 'dart:math' as math;
+
 import 'package:flutter/gestures.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
-import '../flutter_test_alternative.dart' show Fake;
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 
 void main() {
   group('PhysicalShape', () {

@@ -6,11 +6,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
-
 import 'package:flutter_devicelab/framework/adb.dart';
 import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:flutter_devicelab/framework/utils.dart';
+import 'package:path/path.dart' as path;
 
 void main() {
   task(() async {
@@ -44,13 +43,11 @@ void main() {
           print('run:stdout: $line');
           if (vmServicePort == null) {
             vmServicePort = parseServicePort(line);
-            if (vmServicePort != null) {
-              print('service protocol connection available at port $vmServicePort');
-              print('run: ready!');
-              ready.complete();
-              ok ??= true;
-            }
-          }
+            print('service protocol connection available at port $vmServicePort');
+            print('run: ready!');
+            ready.complete();
+            ok ??= true;
+                    }
         });
       run.stderr
         .transform<String>(utf8.decoder)

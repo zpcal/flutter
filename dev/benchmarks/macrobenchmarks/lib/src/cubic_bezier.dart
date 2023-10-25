@@ -4,9 +4,9 @@
 
 import 'dart:math';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 // Based on https://github.com/eseidelGoogle/bezier_perf/blob/master/lib/main.dart
 class CubicBezierPage extends StatelessWidget {
@@ -364,14 +364,10 @@ class BezierPainter extends CustomPainter {
     canvas.scale(0.5, 0.5);
 
     for (int i = 0; i < path.length; i++) {
-      if (path[i].translate != null) {
-        canvas.translate(path[i].translate[0], path[i].translate[1]);
-      }
-
-      if (path[i].rotation != null) {
-        canvas.rotate(path[i].rotation);
-      }
-
+      canvas.translate(path[i].translate[0], path[i].translate[1]);
+    
+      canvas.rotate(path[i].rotation);
+    
       if (blur > 0) {
         final MaskFilter blur = MaskFilter.blur(BlurStyle.normal, this.blur);
         paint.maskFilter = blur;

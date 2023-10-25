@@ -8,11 +8,10 @@ import 'dart:ui' as ui;
 import 'dart:ui' show PointerChange;
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../flutter_test_alternative.dart';
 import './mouse_tracking_test_utils.dart';
 
 typedef MethodCallHandler = Future<dynamic> Function(MethodCall call);

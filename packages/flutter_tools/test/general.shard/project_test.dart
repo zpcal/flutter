@@ -13,10 +13,10 @@ import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/features.dart';
 import 'package:flutter_tools/src/flutter_manifest.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/ios/plist_parser.dart';
 import 'package:flutter_tools/src/ios/xcodeproj.dart';
 import 'package:flutter_tools/src/project.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
 
@@ -77,7 +77,7 @@ void main() {
       _testInMemory('treats missing pubspec.yaml as empty', () async {
         final Directory directory = globals.fs.directory('myproject')
           ..createSync(recursive: true);
-        expect((FlutterProject.fromDirectory(directory)).manifest.isEmpty,
+        expect(FlutterProject.fromDirectory(directory).manifest.isEmpty,
           true,
         );
       });

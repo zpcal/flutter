@@ -49,8 +49,7 @@ class FuchsiaDevFinder {
       _fuchsiaArtifacts.devFinder.path,
       'list',
       '-full',
-      if (timeout != null)
-        ...<String>['-timeout', '${timeout.inMilliseconds}ms']
+      ...<String>['-timeout', '${timeout.inMilliseconds}ms']
     ];
     final RunResult result = await _processUtils.run(command);
     if (result.exitCode != 0) {

@@ -28,7 +28,7 @@ void main() {
       await driver.tap(button);
 
       String batteryLevel;
-      while (batteryLevel == null || batteryLevel.contains('unknown')) {
+      while (batteryLevel.contains('unknown')) {
         batteryLevel = await driver.getText(batteryLevelLabel);
       }
 

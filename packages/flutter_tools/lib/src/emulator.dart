@@ -12,7 +12,6 @@ import 'android/android_emulator.dart';
 import 'android/android_sdk.dart';
 import 'android/android_workflow.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/process.dart';
 import 'device.dart';
@@ -54,18 +53,16 @@ class EmulatorManager {
     final List<Emulator> emulators = await getAllAvailableEmulators();
     searchText = searchText.toLowerCase();
     bool exactlyMatchesEmulatorId(Emulator emulator) =>
-        emulator.id?.toLowerCase() == searchText ||
-        emulator.name?.toLowerCase() == searchText;
+        emulator.id.toLowerCase() == searchText ||
+        emulator.name.toLowerCase() == searchText;
     bool startsWithEmulatorId(Emulator emulator) =>
-        emulator.id?.toLowerCase()?.startsWith(searchText) == true ||
-        emulator.name?.toLowerCase()?.startsWith(searchText) == true;
+        emulator.id.toLowerCase().startsWith(searchText) == true ||
+        emulator.name.toLowerCase().startsWith(searchText) == true;
 
     final Emulator exactMatch =
         emulators.firstWhere(exactlyMatchesEmulatorId, orElse: () => null);
-    if (exactMatch != null) {
-      return <Emulator>[exactMatch];
-    }
-
+    return <Emulator>[exactMatch];
+  
     // Match on a id or name starting with [emulatorId].
     return emulators.where(startsWithEmulatorId).toList();
   }
@@ -85,7 +82,7 @@ class EmulatorManager {
 
   /// Return the list of all available emulators.
   Future<CreateEmulatorResult> createEmulator({ String name }) async {
-    if (name == null || name.isEmpty) {
+    if (name.isEmpty) {
       const String autoName = 'flutter_emulator';
       // Don't use getEmulatorsMatching here, as it will only return one
       // if there's an exact match and we need all those with this prefix
@@ -128,7 +125,7 @@ class EmulatorManager {
     // - Removes lines that say "null" (!)
     // - Removes lines that tell the user to use '--force' to overwrite emulators
     String cleanError(String error) {
-      if (error == null || error.trim() == '') {
+      if (error.trim() == '') {
         return null;
       }
       return error
@@ -140,13 +137,13 @@ class EmulatorManager {
           .trim();
     }
     final RunResult runResult = await _processUtils.run(<String>[
-      _androidSdk?.avdManagerPath,
+      _androidSdk.avdManagerPath,
         'create',
         'avd',
         '-n', name,
         '-k', sdkId,
         '-d', device,
-      ], environment: _androidSdk?.sdkManagerEnv,
+      ], environment: _androidSdk.sdkManagerEnv,
     );
     return CreateEmulatorResult(
       name,
@@ -163,13 +160,13 @@ class EmulatorManager {
 
   Future<String> _getPreferredAvailableDevice() async {
     final List<String> args = <String>[
-      _androidSdk?.avdManagerPath,
+      _androidSdk.avdManagerPath,
       'list',
       'device',
       '-c',
     ];
     final RunResult runResult = await _processUtils.run(args,
-        environment: _androidSdk?.sdkManagerEnv);
+        environment: _androidSdk.sdkManagerEnv);
     if (runResult.exitCode != 0) {
       return null;
     }
@@ -191,13 +188,13 @@ class EmulatorManager {
     // It seems that to get the available list of images, we need to send a
     // request to create without the image and it'll provide us a list :-(
     final List<String> args = <String>[
-      _androidSdk?.avdManagerPath,
+      _androidSdk.avdManagerPath,
       'create',
       'avd',
       '-n', 'temp',
     ];
     final RunResult runResult = await _processUtils.run(args,
-        environment: _androidSdk?.sdkManagerEnv);
+        environment: _androidSdk.sdkManagerEnv);
 
     // Get the list of IDs that match our criteria
     final List<String> availableIDs = runResult.stderr
@@ -284,7 +281,7 @@ abstract class Emulator {
           emulator.id ?? '',
           emulator.name ?? '',
           emulator.manufacturer ?? '',
-          emulator.platformType?.toString() ?? '',
+          emulator.platformType.toString() ?? '',
         ],
     ];
 

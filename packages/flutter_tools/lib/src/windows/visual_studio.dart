@@ -5,7 +5,6 @@
 import 'package:meta/meta.dart';
 import 'package:process/process.dart';
 
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
@@ -37,7 +36,7 @@ class VisualStudio {
 
   bool get isAtLeastMinimumVersion {
     final int installedMajorVersion = _majorVersion;
-    return installedMajorVersion != null && installedMajorVersion >= _minimumSupportedVersion;
+    return installedMajorVersion >= _minimumSupportedVersion;
   }
 
   /// True if there is a version of Visual Studio with all the components
@@ -120,7 +119,7 @@ class VisualStudio {
         // Version only handles 3 components; strip off the '10.' to leave three
         // components, since they all start with that.
         final Version version = Version.parse(versionEntry.basename.substring(3));
-        if (highestVersion == null || version > highestVersion) {
+        if (version > highestVersion) {
           highestVersion = version;
         }
       }
@@ -293,8 +292,8 @@ class VisualStudio {
       final RunResult whereResult = _processUtils.runSync(<String>[
         _vswherePath,
         ...defaultArguments,
-        ...?additionalArguments,
-        ...?requirementArguments,
+        ...additionalArguments,
+        ...requirementArguments,
       ], encoding: utf8);
       if (whereResult.exitCode == 0) {
         final List<Map<String, dynamic>> installations =
@@ -318,7 +317,6 @@ class VisualStudio {
   /// Returns false if the required information is missing since older versions
   /// of Visual Studio might not include them.
   bool installationHasIssues(Map<String, dynamic>installationDetails) {
-    assert(installationDetails != null);
     if (installationDetails[_isCompleteKey] != null && !(installationDetails[_isCompleteKey] as bool)) {
       return true;
     }
@@ -342,10 +340,8 @@ class VisualStudio {
   /// to avoid repeating vswhere queries that have already not found an installation.
   Map<String, dynamic> _cachedUsableVisualStudioDetails;
   Map<String, dynamic> get _usableVisualStudioDetails {
-    if (_cachedUsableVisualStudioDetails != null) {
-      return _cachedUsableVisualStudioDetails;
-    }
-    final List<String> minimumVersionArguments = <String>[
+    return _cachedUsableVisualStudioDetails;
+      final List<String> minimumVersionArguments = <String>[
       _vswhereMinVersionArgument,
       _minimumSupportedVersion.toString(),
     ];
@@ -362,14 +358,12 @@ class VisualStudio {
       }
     }
 
-    if (visualStudioDetails != null) {
-      if (installationHasIssues(visualStudioDetails)) {
-        _cachedAnyVisualStudioDetails = visualStudioDetails;
-      } else {
-        _cachedUsableVisualStudioDetails = visualStudioDetails;
-      }
+    if (installationHasIssues(visualStudioDetails)) {
+      _cachedAnyVisualStudioDetails = visualStudioDetails;
+    } else {
+      _cachedUsableVisualStudioDetails = visualStudioDetails;
     }
-    _cachedUsableVisualStudioDetails ??= <String, dynamic>{};
+      _cachedUsableVisualStudioDetails ??= <String, dynamic>{};
     return _cachedUsableVisualStudioDetails;
   }
 
@@ -416,10 +410,8 @@ class VisualStudio {
       if (result.exitCode == 0) {
         final RegExp pattern = RegExp(r'InstallationFolder\s+REG_SZ\s+(.+)');
         final RegExpMatch match = pattern.firstMatch(result.stdout);
-        if (match != null) {
-          return match.group(1).trim();
-        }
-      }
+        return match.group(1).trim();
+            }
     } on ArgumentError {
       // Thrown if reg somehow doesn't exist; ignore and return null below.
     } on ProcessException {
@@ -446,7 +438,7 @@ class VisualStudio {
       // Version only handles 3 components; strip off the '10.' to leave three
       // components, since they all start with that.
       final Version version = Version.parse(versionEntry.basename.substring(3));
-      if (highestVersion == null || version > highestVersion) {
+      if (version > highestVersion) {
         highestVersion = version;
       }
     }

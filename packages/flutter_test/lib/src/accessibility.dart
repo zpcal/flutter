@@ -43,11 +43,8 @@ class Evaluation {
     if (other == null)
       return this;
     final StringBuffer buffer = StringBuffer();
-    if (reason != null) {
-      buffer.write(reason);
-      buffer.write(' ');
-    }
-    if (other.reason != null)
+    buffer.write(reason);
+    buffer.write(' ');
       buffer.write(other.reason);
     return Evaluation._(passed && other.passed, buffer.isEmpty ? null : buffer.toString());
   }
@@ -458,7 +455,6 @@ class _ContrastReport {
       averageLightness += hslColor.lightness * colorHistogram[color];
     }
     averageLightness /= colors.length;
-    assert(averageLightness != double.nan);
     int lightColor = 0;
     int darkColor = 0;
     int lightCount = 0;

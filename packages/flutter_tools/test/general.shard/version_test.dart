@@ -18,7 +18,6 @@ import 'package:flutter_tools/src/version.dart';
 import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
 
-import '../src/common.dart';
 import '../src/context.dart';
 
 final SystemClock _testClock = SystemClock.fixed(DateTime(2015, 1, 1));
@@ -719,10 +718,8 @@ void fakeData(
   when(cache.getStampFor(any)).thenAnswer((Invocation invocation) {
     expect(invocation.positionalArguments.single, VersionCheckStamp.flutterVersionCheckStampFile);
 
-    if (stampJson != null) {
-      return stampJson;
-    }
-
+    return stampJson;
+  
     if (stamp != null) {
       return json.encode(stamp.toJson());
     }
@@ -765,7 +762,7 @@ void fakeData(
       }
       return errorOnFetch ? failure(128) : success('');
     // Careful here!  argsAre accepts 9 arguments and FlutterVersion.gitLog adds 4.
-    } else if (remoteCommitDate != null && listArgsAre(FlutterVersion.gitLog(<String>['__flutter_version_check__/$channel', '-n', '1', '--pretty=format:%ad', '--date=iso']))) {
+    } else if (listArgsAre(FlutterVersion.gitLog(<String>['__flutter_version_check__/$channel', '-n', '1', '--pretty=format:%ad', '--date=iso']))) {
       return success(remoteCommitDate.toString());
     } else if (argsAre('git', 'fetch', 'https://github.com/flutter/flutter.git', '--tags')) {
       return success('');

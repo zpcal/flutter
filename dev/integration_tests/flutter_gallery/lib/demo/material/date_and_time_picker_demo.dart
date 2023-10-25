@@ -12,7 +12,6 @@ import '../../gallery/demo.dart';
 class _InputDropdown extends StatelessWidget {
   const _InputDropdown({
     Key key,
-    this.child,
     this.labelText,
     this.valueText,
     this.valueStyle,
@@ -72,7 +71,7 @@ class _DateTimePicker extends StatelessWidget {
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate)
+    if (picked != selectedDate)
       selectDate(picked);
   }
 

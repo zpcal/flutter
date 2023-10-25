@@ -62,10 +62,8 @@ class AndroidStudioValidator extends DoctorValidator {
         (String m) => ValidationMessage.error(m),
       ));
       messages.add(ValidationMessage(userMessages.androidStudioNeedsUpdate));
-      if (_studio.configured != null) {
-        messages.add(ValidationMessage(userMessages.androidStudioResetDir));
-      }
-    }
+      messages.add(ValidationMessage(userMessages.androidStudioResetDir));
+        }
 
     return ValidationResult(type, messages, statusInfo: studioVersionText);
   }
@@ -85,12 +83,10 @@ class NoAndroidStudioValidator extends DoctorValidator {
     final String cfgAndroidStudio = globals.config.getValue(
       'android-studio-dir',
     ) as String;
-    if (cfgAndroidStudio != null) {
-      messages.add(ValidationMessage.error(
-        userMessages.androidStudioMissing(cfgAndroidStudio),
-      ));
-    }
-    messages.add(ValidationMessage(userMessages.androidStudioInstallation(globals.platform)));
+    messages.add(ValidationMessage.error(
+      userMessages.androidStudioMissing(cfgAndroidStudio),
+    ));
+      messages.add(ValidationMessage(userMessages.androidStudioInstallation(globals.platform)));
 
     return ValidationResult(
       ValidationType.notAvailable,

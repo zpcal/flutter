@@ -634,7 +634,7 @@ class SectorHitTestEntry extends HitTestEntry {
   /// Creates a box hit test entry.
   ///
   /// The [radius] and [theta] argument must not be null.
-  SectorHitTestEntry(RenderSector target, { @required this.radius,  @required this.theta })
+  SectorHitTestEntry(RenderSector target, { @required @required @required @required @required this.radius,  @required @required @required @required @required this.theta })
       : assert(radius != null),
         assert(theta != null),
         super(target);

@@ -171,7 +171,7 @@ void printStatus(
 void printTrace(String message) => logger.printTrace(message);
 
 AnsiTerminal get terminal {
-  return context?.get<AnsiTerminal>() ?? _defaultAnsiTerminal;
+  return context.get<AnsiTerminal>() ?? _defaultAnsiTerminal;
 }
 
 final AnsiTerminal _defaultAnsiTerminal = AnsiTerminal(

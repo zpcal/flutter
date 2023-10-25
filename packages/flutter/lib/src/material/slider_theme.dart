@@ -13,7 +13,6 @@ import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
 import 'theme.dart';
-import 'theme_data.dart';
 
 /// Applies a slider theme to descendant [Slider] widgets.
 ///

@@ -222,8 +222,6 @@ class MockBrokenAndroidSdk extends Mock implements AndroidSdk {
   static void _createSdkFile(Directory dir, String filePath, { String contents }) {
     final File file = dir.childFile(filePath);
     file.createSync(recursive: true);
-    if (contents != null) {
-      file.writeAsStringSync(contents, flush: true);
+    file.writeAsStringSync(contents, flush: true);
     }
-  }
 }

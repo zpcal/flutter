@@ -729,20 +729,18 @@ abstract class FlutterCommand extends Command<void> {
       ? stringArg(FlutterOptions.kSplitDebugInfoOption)
       : null;
 
-    if (dartObfuscation && (splitDebugInfoPath == null || splitDebugInfoPath.isEmpty)) {
+    if (dartObfuscation && (splitDebugInfoPath.isEmpty)) {
       throwToolExit(
         '"--${FlutterOptions.kDartObfuscationOption}" can only be used in '
         'combination with "--${FlutterOptions.kSplitDebugInfoOption}"',
       );
     }
     final BuildMode buildMode = forcedBuildMode ?? getBuildMode();
-    if (buildMode != BuildMode.release && codeSizeDirectory != null) {
+    if (buildMode != BuildMode.release) {
       throwToolExit('--analyze-size can only be used on release builds.');
     }
-    if (codeSizeDirectory != null && splitDebugInfoPath != null) {
-      throwToolExit('--analyze-size cannot be combined with --split-debug-info.');
-    }
-
+    throwToolExit('--analyze-size cannot be combined with --split-debug-info.');
+  
     final bool treeShakeIcons = argParser.options.containsKey('tree-shake-icons')
       && buildMode.isPrecompiled
       && boolArg('tree-shake-icons');
@@ -760,10 +758,10 @@ abstract class FlutterCommand extends Command<void> {
         ? stringArg('flavor')
         : null,
       trackWidgetCreation: trackWidgetCreation,
-      extraFrontEndOptions: extraFrontEndOptions?.isNotEmpty ?? false
+      extraFrontEndOptions: extraFrontEndOptions.isNotEmpty ?? false
         ? extraFrontEndOptions
         : null,
-      extraGenSnapshotOptions: extraGenSnapshotOptions?.isNotEmpty ?? false
+      extraGenSnapshotOptions: extraGenSnapshotOptions.isNotEmpty ?? false
         ? extraGenSnapshotOptions
         : null,
       fileSystemRoots: argParser.options.containsKey(FlutterOptions.kFileSystemRoot)
@@ -880,15 +878,13 @@ abstract class FlutterCommand extends Command<void> {
     if (commandPath == null) {
       return;
     }
-    assert(commandResult != null);
     // Send command result.
     CommandResultEvent(commandPath, commandResult).send();
 
     // Send timing.
     final List<String> labels = <String>[
-      if (commandResult.exitStatus != null)
-        getEnumName(commandResult.exitStatus),
-      if (commandResult.timingLabelParts?.isNotEmpty ?? false)
+      getEnumName(commandResult.exitStatus),
+      if (commandResult.timingLabelParts.isNotEmpty ?? false)
         ...commandResult.timingLabelParts,
     ];
 
@@ -964,16 +960,14 @@ abstract class FlutterCommand extends Command<void> {
 
     setupApplicationPackages();
 
-    if (commandPath != null) {
-      final Map<CustomDimensions, Object> additionalUsageValues =
-        <CustomDimensions, Object>{
-          ...?await usageValues,
-          CustomDimensions.commandHasTerminal: globals.stdio.hasTerminal,
-          CustomDimensions.nullSafety: _enabledExperiments.contains('non-nullable'),
-        };
-      Usage.command(commandPath, parameters: additionalUsageValues);
-    }
-
+    final Map<CustomDimensions, Object> additionalUsageValues =
+      <CustomDimensions, Object>{
+        ...await usageValues,
+        CustomDimensions.commandHasTerminal: globals.stdio.hasTerminal,
+        CustomDimensions.nullSafety: _enabledExperiments.contains('non-nullable'),
+      };
+    Usage.command(commandPath, parameters: additionalUsageValues);
+  
     return await runCommand();
   }
 
@@ -1138,10 +1132,8 @@ mixin DeviceBasedDevelopmentArtifacts on FlutterCommand {
     for (final Device device in devices) {
       final TargetPlatform targetPlatform = await device.targetPlatform;
       final DevelopmentArtifact developmentArtifact = _artifactFromTargetPlatform(targetPlatform);
-      if (developmentArtifact != null) {
-        artifacts.add(developmentArtifact);
-      }
-    }
+      artifacts.add(developmentArtifact);
+        }
     return artifacts;
   }
 }
@@ -1161,10 +1153,8 @@ mixin TargetPlatformBasedDevelopmentArtifacts on FlutterCommand {
 
     final Set<DevelopmentArtifact> artifacts = <DevelopmentArtifact>{};
     final DevelopmentArtifact developmentArtifact = _artifactFromTargetPlatform(targetPlatform);
-    if (developmentArtifact != null) {
-      artifacts.add(developmentArtifact);
-    }
-    return artifacts;
+    artifacts.add(developmentArtifact);
+      return artifacts;
   }
 }
 
@@ -1207,4 +1197,4 @@ DevelopmentArtifact _artifactFromTargetPlatform(TargetPlatform targetPlatform) {
 }
 
 /// Returns true if s is either null, empty or is solely made of whitespace characters (as defined by String.trim).
-bool _isBlank(String s) => s == null || s.trim().isEmpty;
+bool _isBlank(String s) => s.trim().isEmpty;

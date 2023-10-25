@@ -25,8 +25,7 @@ class PluginEventChannel<T> {
     this.name, [
     this.codec = const StandardMethodCodec(),
     BinaryMessenger binaryMessenger,
-  ])  : assert(name != null),
-        assert(codec != null),
+  ])  : assert(codec != null),
         _binaryMessenger = binaryMessenger;
 
   /// The logical channel on which communication happens.
@@ -84,10 +83,8 @@ class _EventChannelHandler<T> {
 
   // TODO(hterkelsen): Support arguments.
   Future<ByteData> _listen() async {
-    if (subscription != null) {
-      await subscription.cancel();
-    }
-    subscription = controller.stream.listen((dynamic event) {
+    await subscription.cancel();
+      subscription = controller.stream.listen((dynamic event) {
       messenger.send(name, codec.encodeSuccessEnvelope(event));
     }, onError: (dynamic error) {
       messenger.send(name,

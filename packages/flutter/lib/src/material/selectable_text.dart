@@ -5,11 +5,11 @@
 // @dart = 2.8
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 
 import 'feedback.dart';
 import 'text_selection.dart';

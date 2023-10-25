@@ -25,7 +25,7 @@ void main() {
   });
 
   tearDown(() async {
-    await _flutter?.stop();
+    await _flutter.stop();
     tryToDelete(tempDir);
   });
 

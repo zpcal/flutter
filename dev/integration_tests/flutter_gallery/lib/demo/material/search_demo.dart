@@ -45,7 +45,7 @@ class _SearchDemoState extends State<SearchDemo> {
                 context: context,
                 delegate: _delegate,
               );
-              if (selected != null && selected != _lastIntegerSelected) {
+              if (selected != _lastIntegerSelected) {
                 setState(() {
                   _lastIntegerSelected = selected;
                 });
@@ -171,7 +171,7 @@ class _SearchDemoSearchDelegate extends SearchDelegate<int> {
   @override
   Widget buildResults(BuildContext context) {
     final int searched = int.tryParse(query);
-    if (searched == null || !_data.contains(searched)) {
+    if (!_data.contains(searched)) {
       return Center(
         child: Text(
           '"$query"\n is not a valid integer between 0 and 100,000.\nTry again.',

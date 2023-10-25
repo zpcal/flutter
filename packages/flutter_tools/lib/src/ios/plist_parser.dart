@@ -37,7 +37,6 @@ class PlistParser {
   ///
   /// The [plistFilePath] argument must not be null.
   Map<String, dynamic> parseFile(String plistFilePath) {
-    assert(plistFilePath != null);
     const String executable = '/usr/bin/plutil';
     if (!_fileSystem.isFileSync(executable)) {
       throw const FileNotFoundException(executable);
@@ -73,7 +72,6 @@ class PlistParser {
   ///
   /// The [plistFilePath] and [key] arguments must not be null.
   String getValueFromFile(String plistFilePath, String key) {
-    assert(key != null);
     final Map<String, dynamic> parsed = parseFile(plistFilePath);
     return parsed[key] as String;
   }

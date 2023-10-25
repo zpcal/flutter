@@ -67,7 +67,7 @@ bool run({
   final bool force = argResults[kForce] as bool;
   final bool skipTagging = argResults[kSkipTagging] as bool;
 
-  if (help || level == null || commit == null) {
+  if (help) {
     print(
       'roll_dev.dart --increment=level --commit=hash • update the version tags '
       'and roll a new dev build.\n$usage'

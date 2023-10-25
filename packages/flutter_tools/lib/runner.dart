@@ -5,13 +5,12 @@
 import 'dart:async';
 
 import 'package:args/command_runner.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
 import 'package:intl/intl_standalone.dart' as intl_standalone;
-import 'package:http/http.dart' as http;
 
 import 'src/base/common.dart';
 import 'src/base/context.dart';
-import 'src/base/file_system.dart';
 import 'src/base/io.dart';
 import 'src/base/logger.dart';
 import 'src/base/process.dart';
@@ -103,10 +102,8 @@ Future<int> _handleToolError(
     // Argument error exit code.
     return _exit(64);
   } else if (error is ToolExit) {
-    if (error.message != null) {
-      globals.printError(error.message);
-    }
-    if (verbose) {
+    globals.printError(error.message);
+      if (verbose) {
       globals.printError('\n$stackTrace\n');
     }
     return _exit(error.exitCode ?? 1);

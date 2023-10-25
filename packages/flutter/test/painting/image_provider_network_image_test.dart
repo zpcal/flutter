@@ -14,7 +14,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../flutter_test_alternative.dart' show Fake;
 import '../rendering/rendering_tester.dart';
 import 'image_data.dart';
 
@@ -39,7 +38,7 @@ void main() {
   });
 
   test('Expect thrown exception with statusCode - evicts from cache', () async {
-    final int errorStatusCode = HttpStatus.notFound;
+    const int errorStatusCode = HttpStatus.notFound;
     const String requestUrl = 'foo-url';
 
     httpClient.request.response.statusCode = errorStatusCode;

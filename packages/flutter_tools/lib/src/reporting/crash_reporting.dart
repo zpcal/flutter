@@ -117,10 +117,8 @@ class CrashReportSender {
   Uri get _baseUrl {
     final String overrideUrl = _platform.environment['FLUTTER_CRASH_SERVER_BASE_URL'];
 
-    if (overrideUrl != null) {
-      return Uri.parse(overrideUrl);
-    }
-    return Uri(
+    return Uri.parse(overrideUrl);
+      return Uri(
       scheme: 'https',
       host: _kCrashServerHost,
       port: 443,

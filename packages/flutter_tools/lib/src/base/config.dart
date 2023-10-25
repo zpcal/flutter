@@ -5,7 +5,6 @@
 import 'package:meta/meta.dart';
 
 import '../convert.dart';
-import 'file_system.dart';
 import 'logger.dart';
 import 'platform.dart';
 import 'utils.dart';

@@ -9,7 +9,6 @@ import 'package:package_config/package_config.dart';
 import 'package:yaml/yaml.dart';
 
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/utils.dart';
 import 'build_info.dart';
 import 'cache.dart';
@@ -194,7 +193,7 @@ class ManifestAssetBundle implements AssetBundle {
     // Add fonts and assets from packages.
     for (final Package package in packageConfig.packages) {
       final Uri packageUri = package.packageUriRoot;
-      if (packageUri != null && packageUri.scheme == 'file') {
+      if (packageUri.scheme == 'file') {
         final String packageManifestPath = globals.fs.path.fromUri(packageUri.resolve('../pubspec.yaml'));
         final FlutterManifest packageFlutterManifest = FlutterManifest.createFromPath(
           packageManifestPath,
@@ -389,7 +388,7 @@ final Map<String, dynamic> _materialFontsManifest = _readMaterialFontsManifest()
 
 List<Map<String, dynamic>> _getMaterialFonts(String fontSet) {
   final List<dynamic> fontsList = _materialFontsManifest[fontSet] as List<dynamic>;
-  return fontsList?.map<Map<String, dynamic>>(castStringKeyedMap)?.toList();
+  return fontsList.map<Map<String, dynamic>>(castStringKeyedMap).toList();
 }
 
 List<_Asset> _getMaterialAssets(String fontSet) {
@@ -448,7 +447,7 @@ class LicenseCollector {
 
     for (final Package package in packageConfig.packages) {
       final Uri packageUri = package.packageUriRoot;
-      if (packageUri == null || packageUri.scheme != 'file') {
+      if (packageUri.scheme != 'file') {
         continue;
       }
       // First check for NOTICES, then fallback to LICENSE
@@ -544,14 +543,11 @@ List<Map<String, dynamic>> _parseFonts(
   return <Map<String, dynamic>>[
     if (primary && manifest.usesMaterialDesign && includeDefaultFonts)
       ..._getMaterialFonts(ManifestAssetBundle._kFontSetMaterial),
-    if (packageName == null)
-      ...manifest.fontsDescriptor
-    else
-      ..._createFontsDescriptor(_parsePackageFonts(
-        manifest,
-        packageName,
-        packageConfig,
-      )),
+    ..._createFontsDescriptor(_parsePackageFonts(
+      manifest,
+      packageName,
+      packageConfig,
+    )),
   ];
 }
 
@@ -829,10 +825,8 @@ _Asset _resolveAsset(
       packageConfig,
       attributedPackage,
     );
-    if (packageAsset != null) {
-      return packageAsset;
+    return packageAsset;
     }
-  }
 
   return _Asset(
     baseDir: assetsBaseDir,
@@ -850,7 +844,7 @@ _Asset _resolvePackageAsset(Uri assetUri, PackageConfig packageConfig, Package a
     final String packageName = assetUri.pathSegments[1];
     final Package package = packageConfig[packageName];
     final Uri packageUri = package?.packageUriRoot;
-    if (packageUri != null && packageUri.scheme == 'file') {
+    if (packageUri.scheme == 'file') {
       return _Asset(
         baseDir: globals.fs.path.fromUri(packageUri),
         entryUri: assetUri,

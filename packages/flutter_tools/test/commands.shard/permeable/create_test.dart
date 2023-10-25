@@ -2174,7 +2174,7 @@ Future<void> _runFlutterTest(Directory workingDir, { String target }) async {
     flutterToolsSnapshotPath,
     'test',
     '--no-color',
-    if (target != null) target,
+    target,
   ];
 
   final ProcessResult exec = await Process.run(

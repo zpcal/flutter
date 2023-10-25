@@ -7,7 +7,6 @@
 @TestOn('!chrome') // web has different stack traces
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 void main() {
   // TODO(ianh): These tests and the filtering mechanism should be revisited to

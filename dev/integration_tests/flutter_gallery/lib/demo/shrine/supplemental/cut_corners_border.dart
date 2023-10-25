@@ -98,12 +98,11 @@ class CutCornersBorder extends OutlineInputBorder {
     double gapPercentage = 0.0,
     TextDirection textDirection,
   }) {
-    assert(gapExtent != null);
     assert(gapPercentage >= 0.0 && gapPercentage <= 1.0);
 
     final Paint paint = borderSide.toPaint();
     final RRect outer = borderRadius.toRRect(rect);
-    if (gapStart == null || gapExtent <= 0.0 || gapPercentage == 0.0) {
+    if (gapExtent <= 0.0 || gapPercentage == 0.0) {
       canvas.drawPath(_notchedCornerPath(outer.middleRect), paint);
     } else {
       final double extent = lerpDouble(0.0, gapExtent + gapPadding * 2.0, gapPercentage);

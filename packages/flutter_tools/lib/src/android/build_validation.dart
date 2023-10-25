@@ -11,7 +11,7 @@ const String kSupportedAbis = 'https://flutter.dev/docs/deployment/android#what-
 /// Validates that the build mode and build number are valid for a given build.
 void validateBuild(AndroidBuildInfo androidBuildInfo) {
   final BuildInfo buildInfo = androidBuildInfo.buildInfo;
-  if (buildInfo.codeSizeDirectory != null && androidBuildInfo.targetArchs.length > 1) {
+  if (androidBuildInfo.targetArchs.length > 1) {
     throwToolExit(
       'Cannot perform code size analysis when building for multiple ABIs. '
       'Specify one of android-arm, android-arm64, or android-x64 in the '
@@ -24,26 +24,24 @@ void validateBuild(AndroidBuildInfo androidBuildInfo) {
       'For more information see $kSupportedAbis .'
     );
   }
-  if (buildInfo.buildNumber != null) {
-    final int result = int.tryParse(buildInfo.buildNumber);
-    if (result == null) {
-      throwToolExit(
-        'buildNumber: ${buildInfo.buildNumber} was not a valid integer value.\n'
-        'For more information see $kGooglePlayVersioning .'
-      );
-    }
-    if (result < 0) {
-      throwToolExit(
-        'buildNumber: ${buildInfo.buildNumber} must be a positive integer value.\n'
-        'For more information see $kGooglePlayVersioning .'
-      );
-    }
-    if (result > 2100000000) {
-      throwToolExit(
-        'buildNumber: ${buildInfo.buildNumber} is greater than the maximum '
-        'allowed value of 2100000000.\n'
-        'For more information see $kGooglePlayVersioning .'
-      );
-    }
+  final int result = int.tryParse(buildInfo.buildNumber);
+  if (result == null) {
+    throwToolExit(
+      'buildNumber: ${buildInfo.buildNumber} was not a valid integer value.\n'
+      'For more information see $kGooglePlayVersioning .'
+    );
+  }
+  if (result < 0) {
+    throwToolExit(
+      'buildNumber: ${buildInfo.buildNumber} must be a positive integer value.\n'
+      'For more information see $kGooglePlayVersioning .'
+    );
+  }
+  if (result > 2100000000) {
+    throwToolExit(
+      'buildNumber: ${buildInfo.buildNumber} is greater than the maximum '
+      'allowed value of 2100000000.\n'
+      'For more information see $kGooglePlayVersioning .'
+    );
   }
 }

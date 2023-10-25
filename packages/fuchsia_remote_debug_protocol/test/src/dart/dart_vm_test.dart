@@ -8,7 +8,6 @@ import 'package:fuchsia_remote_debug_protocol/src/dart/dart_vm.dart';
 import 'package:json_rpc_2/json_rpc_2.dart' as json_rpc;
 import 'package:mockito/mockito.dart';
 
-import '../../common.dart';
 
 void main() {
   group('DartVm.connect', () {

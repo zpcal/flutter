@@ -5,7 +5,6 @@
 // @dart = 2.8
 
 import 'package:flutter/painting.dart';
-import '../flutter_test_alternative.dart';
 
 import '../rendering/rendering_tester.dart';
 import 'mocks_for_image_cache.dart';

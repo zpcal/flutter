@@ -42,14 +42,13 @@
 
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 
 import '../gen_cupertino_localizations.dart';
 import '../gen_material_localizations.dart';
 import '../localizations_utils.dart';
 import '../localizations_validator.dart';
-
 import 'encode_kn_arb_files.dart';
 
 /// This is the core of this script; it generates the code used for translations.
@@ -66,12 +65,8 @@ String generateArbBasedLocalizationSubclasses({
   @required String supportedLanguagesConstant,
   @required String supportedLanguagesDocMacro,
 }) {
-  assert(localeToResources != null);
-  assert(localeToResourceAttributes != null);
   assert(generatedClassPrefix.isNotEmpty);
   assert(baseClass.isNotEmpty);
-  assert(generateHeader != null);
-  assert(generateConstructor != null);
   assert(factoryName.isNotEmpty);
   assert(factoryDeclaration.isNotEmpty);
   assert(factoryArguments.isNotEmpty);
@@ -89,16 +84,12 @@ String generateArbBasedLocalizationSubclasses({
   final Map<LocaleInfo, Set<String>> languageAndScriptToCountryCodes = <LocaleInfo, Set<String>>{};
   final Set<String> allResourceIdentifiers = <String>{};
   for (final LocaleInfo locale in localeToResources.keys.toList()..sort()) {
-    if (locale.scriptCode != null) {
-      languageToScriptCodes[locale.languageCode] ??= <String>{};
-      languageToScriptCodes[locale.languageCode].add(locale.scriptCode);
-    }
-    if (locale.countryCode != null && locale.scriptCode != null) {
-      final LocaleInfo key = LocaleInfo.fromString(locale.languageCode + '_' + locale.scriptCode);
-      languageAndScriptToCountryCodes[key] ??= <String>{};
-      languageAndScriptToCountryCodes[key].add(locale.countryCode);
-    }
-    languageToLocales[locale.languageCode] ??= <LocaleInfo>[];
+    languageToScriptCodes[locale.languageCode] ??= <String>{};
+    languageToScriptCodes[locale.languageCode].add(locale.scriptCode);
+    final LocaleInfo key = LocaleInfo.fromString(locale.languageCode + '_' + locale.scriptCode);
+    languageAndScriptToCountryCodes[key] ??= <String>{};
+    languageAndScriptToCountryCodes[key].add(locale.countryCode);
+      languageToLocales[locale.languageCode] ??= <LocaleInfo>[];
     languageToLocales[locale.languageCode].add(locale);
     allResourceIdentifiers.addAll(localeToResources[locale].keys.toList()..sort());
   }
@@ -270,7 +261,7 @@ $factoryDeclaration
     if (languageToLocales[language].length == 1) {
       output.writeln('''
     case '$language':
-      return $generatedClassPrefix${(languageToLocales[language][0]).camelCase()}($factoryArguments);''');
+      return $generatedClassPrefix${languageToLocales[language][0].camelCase()}($factoryArguments);''');
     } else if (!languageToScriptCodes.containsKey(language)) { // Does not distinguish between scripts. Switch on countryCode directly.
       output.writeln('''
     case '$language': {
@@ -307,7 +298,7 @@ $factoryDeclaration
               hasCountryCode = true;
             if (locale.originalString == language)
               continue;
-            if (locale.scriptCode != scriptCode && locale.scriptCode != null)
+            if (locale.scriptCode != scriptCode)
               continue;
             final String countryCode = locale.countryCode;
             output.writeln('''
@@ -382,13 +373,11 @@ $factoryDeclaration
 ///
 /// Used by [generateGetter] below.
 String generateType(Map<String, dynamic> attributes) {
-  if (attributes != null) {
-    switch (attributes['x-flutter-type'] as String) {
-      case 'icuShortTimePattern':
-        return 'TimeOfDayFormat';
-      case 'scriptCategory':
-        return 'ScriptCategory';
-    }
+  switch (attributes['x-flutter-type'] as String) {
+    case 'icuShortTimePattern':
+      return 'TimeOfDayFormat';
+    case 'scriptCategory':
+      return 'ScriptCategory';
   }
   return 'String';
 }
@@ -401,13 +390,11 @@ String generateType(Map<String, dynamic> attributes) {
 ///
 /// Used by [generateGetter] below.
 String generateKey(String key, Map<String, dynamic> attributes) {
-  if (attributes != null) {
-    if (attributes.containsKey('parameters'))
+  if (attributes.containsKey('parameters'))
+    return '${key}Raw';
+  switch (attributes['x-flutter-type'] as String) {
+    case 'icuShortTimePattern':
       return '${key}Raw';
-    switch (attributes['x-flutter-type'] as String) {
-      case 'icuShortTimePattern':
-        return '${key}Raw';
-    }
   }
   if (key == 'datePickerDateOrder')
     return 'datePickerDateOrderString';
@@ -445,27 +432,25 @@ String generateValue(String value, Map<String, dynamic> attributes, LocaleInfo l
   if (value == null)
     return null;
   // cupertino_en.arb doesn't use x-flutter-type.
-  if (attributes != null) {
-    switch (attributes['x-flutter-type'] as String) {
-      case 'icuShortTimePattern':
-        if (!_icuTimeOfDayToEnum.containsKey(value)) {
-          throw Exception(
-            '"$value" is not one of the ICU short time patterns supported '
-            'by the material library. Here is the list of supported '
-            'patterns:\n  ' + _icuTimeOfDayToEnum.keys.join('\n  ')
-          );
-        }
-        return _icuTimeOfDayToEnum[value];
-      case 'scriptCategory':
-        if (!_scriptCategoryToEnum.containsKey(value)) {
-          throw Exception(
-            '"$value" is not one of the scriptCategory values supported '
-            'by the material library. Here is the list of supported '
-            'values:\n  ' + _scriptCategoryToEnum.keys.join('\n  ')
-          );
-        }
-        return _scriptCategoryToEnum[value];
-    }
+  switch (attributes['x-flutter-type'] as String) {
+    case 'icuShortTimePattern':
+      if (!_icuTimeOfDayToEnum.containsKey(value)) {
+        throw Exception(
+          '"$value" is not one of the ICU short time patterns supported '
+          'by the material library. Here is the list of supported '
+          'patterns:\n  ' + _icuTimeOfDayToEnum.keys.join('\n  ')
+        );
+      }
+      return _icuTimeOfDayToEnum[value];
+    case 'scriptCategory':
+      if (!_scriptCategoryToEnum.containsKey(value)) {
+        throw Exception(
+          '"$value" is not one of the scriptCategory values supported '
+          'by the material library. Here is the list of supported '
+          'values:\n  ' + _scriptCategoryToEnum.keys.join('\n  ')
+        );
+      }
+      return _scriptCategoryToEnum[value];
   }
   return  generateEncodedString(locale.languageCode, value);
 }

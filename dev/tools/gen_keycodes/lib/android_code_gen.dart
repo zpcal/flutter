@@ -18,12 +18,10 @@ class AndroidCodeGenerator extends PlatformCodeGenerator {
   String get _androidKeyCodeMap {
     final StringBuffer androidKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.androidKeyCodes != null) {
-        for (final int code in entry.androidKeyCodes.cast<int>()) {
-          androidKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-        }
+      for (final int code in entry.androidKeyCodes.cast<int>()) {
+        androidKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
       }
-    }
+        }
     return androidKeyCodeMap.toString().trimRight();
   }
 
@@ -31,12 +29,10 @@ class AndroidCodeGenerator extends PlatformCodeGenerator {
   String get _androidNumpadMap {
     final StringBuffer androidKeyCodeMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.androidKeyCodes != null) {
-        for (final int code in entry.androidKeyCodes.cast<int>()) {
-          androidKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-        }
+      for (final int code in entry.androidKeyCodes.cast<int>()) {
+        androidKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
       }
-    }
+        }
     return androidKeyCodeMap.toString().trimRight();
   }
 
@@ -44,12 +40,10 @@ class AndroidCodeGenerator extends PlatformCodeGenerator {
   String get _androidScanCodeMap {
     final StringBuffer androidScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.androidScanCodes != null) {
-        for (final int code in entry.androidScanCodes.cast<int>()) {
-          androidScanCodeMap.writeln('  { $code, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
-        }
+      for (final int code in entry.androidScanCodes.cast<int>()) {
+        androidScanCodeMap.writeln('  { $code, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
       }
-    }
+        }
     return androidScanCodeMap.toString().trimRight();
   }
 

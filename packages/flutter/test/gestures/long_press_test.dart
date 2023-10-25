@@ -6,7 +6,6 @@
 
 import 'package:flutter/gestures.dart';
 
-import '../flutter_test_alternative.dart';
 import 'gesture_tester.dart';
 
 // Down/move/up pair 1: normal tap sequence

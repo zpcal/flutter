@@ -290,7 +290,7 @@ class Palette {
   final int
       threshold; // titles for indices > threshold are white, otherwise black
 
-  bool get isValid => name != null && primary != null && threshold != null;
+  bool get isValid => primary != null;
 }
 
 final List<Palette> allPalettes = <Palette>[
@@ -377,9 +377,7 @@ class ColorItem extends StatelessWidget {
     @required this.index,
     @required this.color,
     this.prefix = '',
-  })  : assert(index != null),
-        assert(color != null),
-        assert(prefix != null),
+  })  : assert(color != null),
         super(key: key);
 
   final int index;
@@ -418,7 +416,7 @@ class PaletteTabView extends StatelessWidget {
   PaletteTabView({
     Key key,
     @required this.colors,
-  })  : assert(colors != null && colors.isValid),
+  })  : assert(colors.isValid),
         super(key: key);
 
   final Palette colors;

@@ -231,9 +231,7 @@ class _BoardIterator extends Iterator<BoardPoint> {
 @immutable
 class _Range {
   const _Range(this.min, this.max)
-    : assert(min != null),
-      assert(max != null),
-      assert(min <= max);
+    : assert(min <= max);
 
   final int min;
   final int max;

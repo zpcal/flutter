@@ -9,7 +9,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 dynamic getAssertionErrorWithMessage() {
   try {

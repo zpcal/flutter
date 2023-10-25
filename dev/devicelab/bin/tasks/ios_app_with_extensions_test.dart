@@ -103,16 +103,12 @@ Future<void> main() async {
         // These seem to be in order, so allow matching multiple lines so it grabs
         // the last (hopefully latest) one.
         final RegExpMatch iOSRuntimeMatch = iOSRuntimePattern.firstMatch(runtime);
-        if (iOSRuntimeMatch != null) {
-          iOSSimRuntime = iOSRuntimeMatch.group(1).trim();
-          continue;
-        }
-        final RegExpMatch watchOSRuntimeMatch = watchOSRuntimePattern.firstMatch(runtime);
-        if (watchOSRuntimeMatch != null) {
-          watchSimRuntime = watchOSRuntimeMatch.group(1).trim();
-        }
-      }
-      if (iOSSimRuntime == null || watchSimRuntime == null) {
+        iOSSimRuntime = iOSRuntimeMatch.group(1).trim();
+        continue;
+              final RegExpMatch watchOSRuntimeMatch = watchOSRuntimePattern.firstMatch(runtime);
+        watchSimRuntime = watchOSRuntimeMatch.group(1).trim();
+            }
+      if (watchSimRuntime == null) {
         String message;
         if (iOSSimRuntime != null) {
           message = 'Found "$iOSSimRuntime", but no watchOS simulator runtime found.';
@@ -237,7 +233,7 @@ Future<void> main() async {
     } finally {
       rmTree(tempDir);
       // Delete simulator devices
-      if (watchDeviceID != null && watchDeviceID != '') {
+      if (watchDeviceID != '') {
         await eval(
           'xcrun',
           <String>['simctl', 'shutdown', watchDeviceID],
@@ -251,7 +247,7 @@ Future<void> main() async {
           workingDirectory: flutterDirectory.path,
         );
       }
-      if (phoneDeviceID != null && phoneDeviceID != '') {
+      if (phoneDeviceID != '') {
         await eval(
           'xcrun',
           <String>['simctl', 'shutdown', phoneDeviceID],

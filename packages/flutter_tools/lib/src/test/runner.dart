@@ -8,7 +8,6 @@ import 'package:meta/meta.dart';
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../build_info.dart';
 import '../dart/package_map.dart';
@@ -110,12 +109,9 @@ class _FlutterTestRunnerImpl implements FlutterTestRunner {
         ...<String>['--name', name],
       for (final String plainName in plainNames)
         ...<String>['--plain-name', plainName],
-      if (randomSeed != null)
-        '--test-randomize-ordering-seed=$randomSeed',
-      if (tags != null)
-        ...<String>['--tags', tags],
-      if (excludeTags != null)
-        ...<String>['--exclude-tags', excludeTags],
+      '--test-randomize-ordering-seed=$randomSeed',
+      ...<String>['--tags', tags],
+      ...<String>['--exclude-tags', excludeTags],
     ];
     if (web) {
       final String tempBuildDir = globals.fs.systemTempDirectory

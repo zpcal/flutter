@@ -6,7 +6,6 @@
 
 import 'package:flutter/scheduler.dart';
 
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('Priority operators control test', () async {

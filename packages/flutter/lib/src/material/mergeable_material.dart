@@ -152,7 +152,6 @@ class _AnimationTuple {
     this.startAnimation,
     this.endAnimation,
     this.gapAnimation,
-    this.gapStart = 0.0,
   });
 
   final AnimationController controller;

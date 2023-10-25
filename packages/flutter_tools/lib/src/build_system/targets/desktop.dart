@@ -4,7 +4,6 @@
 
 import 'package:meta/meta.dart';
 
-import '../../base/file_system.dart';
 import '../depfile.dart';
 
 /// Unpack the engine artifact list [artifacts] from [engineSourcePath], ICU
@@ -48,13 +47,11 @@ Depfile unpackDesktopArtifacts({
     inputs.add(inputFile);
     outputs.add(destinationFile);
   }
-  if (icuDataPath != null) {
-    final File inputFile = fileSystem.file(icuDataPath);
-    final File outputFile = fileSystem.file(fileSystem.path.join(outputDirectory.path, inputFile.basename));
-    inputFile.copySync(outputFile.path);
-    inputs.add(inputFile);
-    outputs.add(outputFile);
-  }
+  final File inputFile = fileSystem.file(icuDataPath);
+  final File outputFile = fileSystem.file(fileSystem.path.join(outputDirectory.path, inputFile.basename));
+  inputFile.copySync(outputFile.path);
+  inputs.add(inputFile);
+  outputs.add(outputFile);
   if (clientSourcePaths == null) {
     return Depfile(inputs, outputs);
   }

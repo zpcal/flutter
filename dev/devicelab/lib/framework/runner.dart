@@ -6,11 +6,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_devicelab/framework/adb.dart' show DeviceIdEnvName;
+import 'package:flutter_devicelab/framework/utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:vm_service_client/vm_service_client.dart';
-
-import 'package:flutter_devicelab/framework/utils.dart';
-import 'package:flutter_devicelab/framework/adb.dart' show DeviceIdEnvName;
 
 /// Runs a task in a separate Dart VM and collects the result using the VM
 /// service protocol.
@@ -38,13 +37,12 @@ Future<Map<String, dynamic>> runTask(
       '--disable-dart-dev',
       '--enable-vm-service=0', // zero causes the system to choose a free port
       '--no-pause-isolates-on-exit',
-      if (localEngine != null) '-DlocalEngine=$localEngine',
-      if (localEngineSrcPath != null) '-DlocalEngineSrcPath=$localEngineSrcPath',
+      '-DlocalEngine=$localEngine',
+      '-DlocalEngineSrcPath=$localEngineSrcPath',
       taskExecutable,
     ],
     environment: <String, String>{
-      if (deviceId != null)
-        DeviceIdEnvName: deviceId,
+      DeviceIdEnvName: deviceId,
     },
   );
 
@@ -62,8 +60,7 @@ Future<Map<String, dynamic>> runTask(
       .listen((String line) {
     if (!uri.isCompleted) {
       final Uri serviceUri = parseServiceUri(line, prefix: 'Observatory listening on ');
-      if (serviceUri != null)
-        uri.complete(serviceUri);
+      uri.complete(serviceUri);
     }
     if (!silent) {
       stdout.writeln('[$taskName] [STDOUT] $line');

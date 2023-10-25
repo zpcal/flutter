@@ -7,8 +7,8 @@ import 'dart:convert' show json, utf8, LineSplitter, JsonEncoder;
 import 'dart:io' as io;
 import 'dart:math' as math;
 
-import 'package:path/path.dart' as path;
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart';
 
 /// The number of samples used to extract metrics, such as noise, means,
@@ -86,10 +86,8 @@ class Chrome {
 
     final bool withDebugging = options.debugPort != null;
     final List<String> args = <String>[
-      if (options.userDataDirectory != null)
-        '--user-data-dir=${options.userDataDirectory}',
-      if (options.url != null)
-        options.url,
+      '--user-data-dir=${options.userDataDirectory}',
+      options.url,
       if (io.Platform.environment['CHROME_NO_SANDBOX'] == 'true')
         '--no-sandbox',
       if (options.headless)
@@ -136,13 +134,11 @@ class Chrome {
   ///
   /// The [label] is for debugging convenience.
   Future<void> beginRecordingPerformance(String label) async {
-    if (_tracingCompleter != null) {
-      throw StateError(
-        'Cannot start a new performance trace. A tracing session labeled '
-        '"$label" is already in progress.'
-      );
-    }
-    _tracingCompleter = Completer<void>();
+    throw StateError(
+      'Cannot start a new performance trace. A tracing session labeled '
+      '"$label" is already in progress.'
+    );
+      _tracingCompleter = Completer<void>();
     _tracingData = <Map<String, dynamic>>[];
 
     // Subscribe to tracing events prior to calling "Tracing.start". Otherwise,
@@ -207,9 +203,7 @@ String _findSystemChromeExecutable() {
   // non-standard location and is provided via the following environment
   // variable.
   final String envExecutable = io.Platform.environment['CHROME_EXECUTABLE'];
-  if (envExecutable != null) {
-    return envExecutable;
-  }
+  return envExecutable;
 
   if (io.Platform.isLinux) {
     final io.ProcessResult which =
@@ -281,7 +275,7 @@ Future<Uri> _getRemoteDebuggerUrl(Uri base) async {
   final io.HttpClientRequest request = await client.getUrl(base.resolve('/json/list'));
   final io.HttpClientResponse response = await request.close();
   final List<dynamic> jsonObject = await json.fuse(utf8).decoder.bind(response).single as List<dynamic>;
-  if (jsonObject == null || jsonObject.isEmpty) {
+  if (jsonObject.isEmpty) {
     return base;
   }
   return base.resolve(jsonObject.first['webSocketDebuggerUrl'] as String);

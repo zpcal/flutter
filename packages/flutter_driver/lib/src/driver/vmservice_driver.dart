@@ -12,18 +12,10 @@ import 'package:json_rpc_2/json_rpc_2.dart' as rpc;
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 import 'package:vm_service_client/vm_service_client.dart';
-import 'package:webdriver/async_io.dart' as async_io;
 import 'package:web_socket_channel/io.dart';
+import 'package:webdriver/async_io.dart' as async_io;
 
 import '../../flutter_driver.dart';
-import '../common/error.dart';
-import '../common/frame_sync.dart';
-import '../common/fuchsia_compat.dart';
-import '../common/health.dart';
-import '../common/message.dart';
-import 'common.dart';
-import 'driver.dart';
-import 'timeline.dart';
 
 /// An implementation of the Flutter Driver over the vmservice protocol.
 class VMServiceFlutterDriver extends FlutterDriver {
@@ -281,7 +273,7 @@ class VMServiceFlutterDriver extends FlutterDriver {
   String _dartVmReconnectUrl;
 
   Future<void> _restorePeerConnectionIfNeeded() async {
-    if (!_peer.isClosed || _dartVmReconnectUrl == null) {
+    if (!_peer.isClosed) {
       return;
     }
 
@@ -389,8 +381,7 @@ class VMServiceFlutterDriver extends FlutterDriver {
     List<TimelineStream> streams = const <TimelineStream>[TimelineStream.all],
     Duration timeout = kUnusuallyLongTimeout,
   }) async {
-    assert(streams != null && streams.isNotEmpty);
-    assert(timeout != null);
+    assert(streams.isNotEmpty);
     try {
       await _warnIfSlow<void>(
         future: _peer.sendRequest(_setVMTimelineFlagsMethodName, <String, String>{
@@ -414,9 +405,8 @@ class VMServiceFlutterDriver extends FlutterDriver {
     int startTime,
     int endTime,
   }) async {
-    assert(timeout != null);
     assert((startTime == null && endTime == null) ||
-           (startTime != null && endTime != null));
+           (endTime != null));
 
     try {
       await _warnIfSlow<void>(
@@ -444,7 +434,7 @@ class VMServiceFlutterDriver extends FlutterDriver {
       } while (currentStart < endTime);
       return Timeline.fromJson(<String, Object>{
         'traceEvents': <Object> [
-          for (Map<String, Object> chunk in chunks)
+          for (final Map<String, Object> chunk in chunks)
             ...chunk['traceEvents'] as List<Object>,
         ],
       });
@@ -505,7 +495,6 @@ class VMServiceFlutterDriver extends FlutterDriver {
   Future<void> clearTimeline({
     Duration timeout = kUnusuallyLongTimeout,
   }) async {
-    assert(timeout != null);
     try {
       await _warnIfSlow<void>(
         future: _peer.sendRequest(_clearVMTimelineMethodName, <String, String>{}),
@@ -645,8 +634,8 @@ Future<VMServiceClientConnection> _waitAndConnect(
         )..listen(),
       );
     } catch (e) {
-      await ws1?.close();
-      await ws2?.close();
+      await ws1.close();
+      await ws2.close();
       if (attempts > 5)
         _log('It is taking an unusually long time to connect to the VM...');
       attempts += 1;
@@ -690,9 +679,6 @@ Future<T> _warnIfSlow<T>({
   @required Duration timeout,
   @required String message,
 }) {
-  assert(future != null);
-  assert(timeout != null);
-  assert(message != null);
   future
     .timeout(timeout, onTimeout: () {
       _log(message);

@@ -244,7 +244,6 @@ final GradleHandledError licenseNotAcceptedHandler = GradleHandledError(
       r'You have not accepted the license agreements of the following SDK components:\s*\[(.+)\]';
 
     final RegExp licenseFailure = RegExp(licenseNotAcceptedMatcher, multiLine: true);
-    assert(licenseFailure != null);
     final Match licenseMatch = licenseFailure.firstMatch(line);
     globals.printStatus(
       '$warningMark Unable to download needed Android SDK components, as the '
@@ -289,13 +288,11 @@ final GradleHandledError flavorUndefinedHandler = GradleHandledError(
     final Set<String> variants = <String>{};
     for (final String task in tasksRunResult.stdout.split('\n')) {
       final Match match = _assembleTaskPattern.matchAsPrefix(task);
-      if (match != null) {
-        final String variant = match.group(1).toLowerCase();
-        if (!variant.endsWith('test')) {
-          variants.add(variant);
-        }
+      final String variant = match.group(1).toLowerCase();
+      if (!variant.endsWith('test')) {
+        variants.add(variant);
       }
-    }
+        }
     final Set<String> productFlavors = <String>{};
     for (final String variant1 in variants) {
       for (final String variant2 in variants) {

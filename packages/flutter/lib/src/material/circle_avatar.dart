@@ -8,7 +8,6 @@ import 'package:flutter/widgets.dart';
 
 import 'constants.dart';
 import 'theme.dart';
-import 'theme_data.dart';
 
 // Examples can assume:
 // String userAvatarUrl;

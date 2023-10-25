@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 const Color kSelectedColor = Color(0xFF00FF00);
 const Color kUnselectedColor = Colors.transparent;

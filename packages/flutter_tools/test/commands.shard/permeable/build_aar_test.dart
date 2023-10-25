@@ -11,9 +11,9 @@ import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/commands/build_aar.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/project.dart';
 import 'package:flutter_tools/src/reporting/reporting.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:mockito/mockito.dart';
 import 'package:process/process.dart';
 
@@ -31,7 +31,7 @@ void main() {
     await runner.run(<String>[
       'aar',
       '--no-pub',
-      ...?arguments,
+      ...arguments,
       target,
     ]);
     return command;
@@ -287,7 +287,7 @@ Future<BuildAarCommand> runBuildAarCommand(
   await runner.run(<String>[
     'aar',
     '--no-pub',
-    ...?arguments,
+    ...arguments,
     globals.fs.path.join(target, 'lib', 'main.dart'),
   ]);
   return command;

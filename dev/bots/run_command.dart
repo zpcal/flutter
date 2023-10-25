@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core' hide print;
 import 'dart:io' hide exit;
@@ -40,12 +39,9 @@ Stream<String> runAndGetStdout(String executable, List<String> arguments, {
   yield* lines;
 
   final int exitCode = await process.exitCode;
-  if ((exitCode == 0) == expectNonZeroExit || (expectedExitCode != null && exitCode != expectedExitCode)) {
+  if ((exitCode == 0) == expectNonZeroExit || (exitCode != expectedExitCode)) {
     exitWithError(<String>[
-      if (failureMessage != null)
-        failureMessage
-      else
-        '${bold}ERROR: ${red}Last command exited with $exitCode (expected: ${expectNonZeroExit ? (expectedExitCode ?? 'non-zero') : 'zero'}).$reset',
+      failureMessage,
       '${bold}Command: $green$commandDescription$reset',
       '${bold}Relative working directory: $cyan$relativeWorkingDir$reset',
     ]);
@@ -97,13 +93,11 @@ Future<void> runCommand(String executable, List<String> arguments, {
   final Stream<List<int>> stdoutSource = process.stdout
     .transform<String>(const Utf8Decoder())
     .transform(const LineSplitter())
-    .where((String line) => removeLine == null || !removeLine(line))
+    .where((String line) => !removeLine(line))
     .map((String line) {
       final String formattedLine = '$line\n';
-      if (outputListener != null) {
-        outputListener(formattedLine, process);
-      }
-      return formattedLine;
+      outputListener(formattedLine, process);
+          return formattedLine;
     })
     .transform(const Utf8Encoder());
   switch (outputMode) {
@@ -121,12 +115,10 @@ Future<void> runCommand(String executable, List<String> arguments, {
   }
 
   final int exitCode = await process.exitCode;
-  if (output != null) {
-    output.stdout = _flattenToString(await savedStdout);
-    output.stderr = _flattenToString(await savedStderr);
-  }
+  output.stdout = _flattenToString(await savedStdout);
+  output.stderr = _flattenToString(await savedStderr);
 
-  if ((exitCode == 0) == expectNonZeroExit || (expectedExitCode != null && exitCode != expectedExitCode)) {
+  if ((exitCode == 0) == expectNonZeroExit || (exitCode != expectedExitCode)) {
     // Print the output when we get unexpected results (unless output was
     // printed already).
     switch (outputMode) {
@@ -139,10 +131,7 @@ Future<void> runCommand(String executable, List<String> arguments, {
         break;
     }
     exitWithError(<String>[
-      if (failureMessage != null)
-        failureMessage
-      else
-        '${bold}ERROR: ${red}Last command exited with $exitCode (expected: ${expectNonZeroExit ? (expectedExitCode ?? 'non-zero') : 'zero'}).$reset',
+      failureMessage,
       '${bold}Command: $green$commandDescription$reset',
       '${bold}Relative working directory: $cyan$relativeWorkingDir$reset',
     ]);

@@ -2,15 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:e2e/e2e.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
-
-import 'package:e2e/e2e.dart';
-
+import 'package:flutter_gallery/demo_lists.dart';
 import 'package:flutter_gallery/gallery/app.dart' show GalleryApp;
 import 'package:flutter_gallery/gallery/demos.dart';
-import 'package:flutter_gallery/demo_lists.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'e2e_utils.dart';
 import 'run_demos.dart';

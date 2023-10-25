@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class ScrollPositionListener extends StatefulWidget {
   const ScrollPositionListener({ Key key, this.child, this.log}) : super(key: key);

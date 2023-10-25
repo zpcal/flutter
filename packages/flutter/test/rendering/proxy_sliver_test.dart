@@ -7,7 +7,6 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import '../flutter_test_alternative.dart';
 
 import 'rendering_tester.dart';
 

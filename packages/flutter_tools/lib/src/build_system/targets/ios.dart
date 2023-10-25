@@ -5,7 +5,6 @@
 import '../../artifacts.dart';
 import '../../base/build.dart';
 import '../../base/common.dart';
-import '../../base/file_system.dart';
 import '../../base/io.dart';
 import '../../base/process.dart';
 import '../../build_info.dart';
@@ -54,8 +53,8 @@ abstract class AotAssemblyBase extends Target {
     final bool dartObfuscation = environment.defines[kDartObfuscation] == 'true';
     final List<DarwinArch> darwinArchs = environment.defines[kIosArchs]
       ?.split(' ')
-      ?.map(getIOSArchForName)
-      ?.toList()
+      .map(getIOSArchForName)
+      .toList()
       ?? <DarwinArch>[DarwinArch.arm64];
     if (targetPlatform != TargetPlatform.ios) {
       throw Exception('aot_assembly is only supported for iOS applications.');
@@ -73,17 +72,15 @@ abstract class AotAssemblyBase extends Target {
     final List<Future<int>> pending = <Future<int>>[];
     for (final DarwinArch darwinArch in darwinArchs) {
       final List<String> archExtraGenSnapshotOptions = List<String>.of(extraGenSnapshotOptions);
-      if (codeSizeDirectory != null) {
-        final File codeSizeFile = environment.fileSystem
-          .directory(codeSizeDirectory)
-          .childFile('snapshot.${getNameForDarwinArch(darwinArch)}.json');
-        final File precompilerTraceFile = environment.fileSystem
-          .directory(codeSizeDirectory)
-          .childFile('trace.${getNameForDarwinArch(darwinArch)}.json');
-        archExtraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
-        archExtraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
-      }
-      pending.add(snapshotter.build(
+      final File codeSizeFile = environment.fileSystem
+        .directory(codeSizeDirectory)
+        .childFile('snapshot.${getNameForDarwinArch(darwinArch)}.json');
+      final File precompilerTraceFile = environment.fileSystem
+        .directory(codeSizeDirectory)
+        .childFile('trace.${getNameForDarwinArch(darwinArch)}.json');
+      archExtraGenSnapshotOptions.add('--write-v8-snapshot-profile-to=${codeSizeFile.path}');
+      archExtraGenSnapshotOptions.add('--trace-precompiler-to=${precompilerTraceFile.path}');
+          pending.add(snapshotter.build(
         platform: targetPlatform,
         buildMode: buildMode,
         mainPath: environment.buildDir.childFile('app.dill').path,
@@ -213,8 +210,8 @@ class DebugUniveralFramework extends Target {
     // Generate a trivial App.framework.
     final Set<DarwinArch> iosArchs = environment.defines[kIosArchs]
       ?.split(' ')
-      ?.map(getIOSArchForName)
-      ?.toSet()
+      .map(getIOSArchForName)
+      .toSet()
       ?? <DarwinArch>{DarwinArch.arm64};
     final File iphoneFile = environment.buildDir.childFile('iphone_framework');
     final File simulatorFile = environment.buildDir.childFile('simulator_framework');

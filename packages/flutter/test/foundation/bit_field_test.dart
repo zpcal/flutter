@@ -7,7 +7,6 @@
 @TestOn('!chrome')
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 // ignore: unused_field
 enum _TestEnum { a, b, c, d, e, f, g, h, }

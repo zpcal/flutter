@@ -18,10 +18,8 @@ class WindowsCodeGenerator extends PlatformCodeGenerator {
   String get _windowsScanCodeMap {
     final StringBuffer windowsScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.windowsScanCode != null) {
-        windowsScanCodeMap.writeln('  { ${entry.windowsScanCode}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
-      }
-    }
+      windowsScanCodeMap.writeln('  { ${entry.windowsScanCode}, ${toHex(entry.usbHidCode)} },    // ${entry.constantName}');
+        }
     return windowsScanCodeMap.toString().trimRight();
   }
 
@@ -29,10 +27,8 @@ class WindowsCodeGenerator extends PlatformCodeGenerator {
   String get _windowsNumpadMap {
     final StringBuffer windowsNumPadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.windowsScanCode != null) {
-        windowsNumPadMap.writeln('  { ${toHex(entry.windowsScanCode)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-      }
-    }
+      windowsNumPadMap.writeln('  { ${toHex(entry.windowsScanCode)}, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
+        }
     return windowsNumPadMap.toString().trimRight();
   }
 
@@ -40,12 +36,10 @@ class WindowsCodeGenerator extends PlatformCodeGenerator {
   String get _windowsKeyCodeMap {
     final StringBuffer windowsKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.windowsKeyCodes != null) {
-        for (final int code in entry.windowsKeyCodes.cast<int>()) {
-          windowsKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-        }
+      for (final int code in entry.windowsKeyCodes.cast<int>()) {
+        windowsKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
       }
-    }
+        }
     return windowsKeyCodeMap.toString().trimRight();
   }
 

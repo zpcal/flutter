@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 // Assuming that the test container is 800x600. The height of the
 // viewport's contents is 650.0, the top and bottom text children

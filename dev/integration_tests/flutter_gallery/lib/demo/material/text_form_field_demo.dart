@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart' show DragStartBehavior;
 
 import '../../gallery/demo.dart';
 
@@ -269,7 +269,7 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
                   ),
                   const SizedBox(height: 24.0),
                   TextFormField(
-                    enabled: person.password != null && person.password.isNotEmpty,
+                    enabled: person.password.isNotEmpty,
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(),
                       filled: true,

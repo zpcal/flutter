@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:process/process.dart';
 
 import '../application_package.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/os.dart';
@@ -84,7 +83,7 @@ abstract class ChromiumDevice extends Device {
     ApplicationPackage app,
     bool includePastLogs = false,
   }) {
-    return _logReader ??= NoOpDeviceLogReader(app?.name);
+    return _logReader ??= NoOpDeviceLogReader(app.name);
   }
 
   @override
@@ -148,7 +147,7 @@ abstract class ChromiumDevice extends Device {
     ApplicationPackage app, {
     String userIdentifier,
   }) async {
-    await _chrome?.close();
+    await _chrome.close();
     return true;
   }
 
@@ -168,8 +167,8 @@ abstract class ChromiumDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    _logReader?.dispose();
-    await portForwarder?.dispose();
+    _logReader.dispose();
+    await portForwarder.dispose();
   }
 }
 
@@ -348,7 +347,7 @@ class WebDevices extends PollingDeviceDiscovery {
       _webServerDevice,
       if (_chromeDevice.isSupported())
         _chromeDevice,
-      if (await _edgeDevice?._meetsVersionConstraint() ?? false)
+      if (await _edgeDevice._meetsVersionConstraint() ?? false)
         _edgeDevice,
     ];
   }
@@ -390,7 +389,7 @@ class WebServerDevice extends Device {
     ApplicationPackage app,
     bool includePastLogs = false,
   }) {
-    return _logReader ??= NoOpDeviceLogReader(app?.name);
+    return _logReader ??= NoOpDeviceLogReader(app.name);
   }
 
   @override
@@ -479,7 +478,7 @@ class WebServerDevice extends Device {
 
   @override
   Future<void> dispose() async {
-    _logReader?.dispose();
-    await portForwarder?.dispose();
+    _logReader.dispose();
+    await portForwarder.dispose();
   }
 }

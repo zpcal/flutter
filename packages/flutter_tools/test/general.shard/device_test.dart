@@ -4,18 +4,18 @@
 
 import 'dart:async';
 
+import 'package:fake_async/fake_async.dart';
+import 'package:flutter_tools/src/artifacts.dart';
 import 'package:flutter_tools/src/base/common.dart';
+import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/base/logger.dart';
 import 'package:flutter_tools/src/base/terminal.dart';
-import 'package:flutter_tools/src/artifacts.dart';
 import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/device.dart';
-import 'package:flutter_tools/src/base/io.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/project.dart';
 import 'package:mockito/mockito.dart';
-import 'package:fake_async/fake_async.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 
 import '../src/common.dart';
 import '../src/context.dart';
@@ -524,8 +524,7 @@ class TestDeviceManager extends DeviceManager {
     _fakeDeviceDiscoverer = FakePollingDeviceDiscovery();
     _deviceDiscoverers = <DeviceDiscovery>[
       _fakeDeviceDiscoverer,
-      if (deviceDiscoveryOverrides != null)
-        ...deviceDiscoveryOverrides
+      ...deviceDiscoveryOverrides
     ];
     resetDevices(allDevices);
   }
@@ -542,10 +541,8 @@ class TestDeviceManager extends DeviceManager {
 
   @override
   bool isDeviceSupportedForProject(Device device, FlutterProject flutterProject) {
-    if (isAlwaysSupportedOverride != null) {
-      return isAlwaysSupportedOverride;
-    }
-    return super.isDeviceSupportedForProject(device, flutterProject);
+    return isAlwaysSupportedOverride;
+      return super.isDeviceSupportedForProject(device, flutterProject);
   }
 }
 

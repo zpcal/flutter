@@ -306,7 +306,6 @@ class _DefaultPub implements Pub {
         default:
           break loop;
       }
-      assert(message != null);
       versionSolvingFailed = false;
       _logger.printStatus(
         '$failureMessage ($message) -- attempting retry $attempts in $duration '
@@ -317,7 +316,6 @@ class _DefaultPub implements Pub {
         duration *= 2;
       }
     }
-    assert(code != null);
 
     String result = 'success';
     if (versionSolvingFailed) {
@@ -421,7 +419,7 @@ class _DefaultPub implements Pub {
     // We have server-side tooling that assumes the values are consistent.
     final String existing = _platform.environment[_kPubEnvironmentKey];
     final List<String> values = <String>[
-      if (existing != null && existing.isNotEmpty) existing,
+      if (existing.isNotEmpty) existing,
       if (await _botDetector.isRunningOnBot) 'flutter_bot',
       'flutter_cli',
       ...pubContext._values,
@@ -454,10 +452,8 @@ class _DefaultPub implements Pub {
       _kPubEnvironmentKey: await _getPubEnvironmentValue(context),
     };
     final String pubCache = _getRootPubCacheIfAvailable();
-    if (pubCache != null) {
-      environment[_kPubCacheEnvironmentKey] = pubCache;
-    }
-    return environment;
+    environment[_kPubCacheEnvironmentKey] = pubCache;
+      return environment;
   }
 
   /// Insert the flutter_gen synthetic package into the package configuration file if

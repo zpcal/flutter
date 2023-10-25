@@ -5,7 +5,6 @@
 // @dart = 2.8
 
 import 'package:flutter/rendering.dart';
-import '../flutter_test_alternative.dart';
 
 class RenderTestBox extends RenderBox {
   double value = 0.0;

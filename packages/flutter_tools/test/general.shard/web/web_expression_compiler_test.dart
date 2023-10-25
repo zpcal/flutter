@@ -3,11 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:dwds/dwds.dart';
-import 'package:flutter_tools/src/compile.dart';
 import 'package:flutter_tools/src/build_runner/devfs_web.dart';
+import 'package:flutter_tools/src/compile.dart';
+import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:matcher/matcher.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flutter_tools/src/globals.dart' as globals;
 
 import '../../src/common.dart';
 import '../../src/testbed.dart';

@@ -3,9 +3,11 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_driver/driver_extension.dart';
-import 'package:device_info/device_info.dart';
+
 import './image_page.dart';
 import './page.dart';
 

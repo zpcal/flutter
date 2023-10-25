@@ -87,29 +87,24 @@ class GalleryTransitionTest {
       file('${galleryDirectory.path}/build/$timelineSummaryFile.json').readAsStringSync(),
     ) as Map<String, dynamic>;
 
-    if (transitionDurationFile != null) {
-      final Map<String, dynamic> original = json.decode(
-        file('${galleryDirectory.path}/build/$transitionDurationFile.json').readAsStringSync(),
-      ) as Map<String, dynamic>;
-      final Map<String, List<int>> transitions = <String, List<int>>{};
-      for (final String key in original.keys) {
-        transitions[key] = List<int>.from(original[key] as List<dynamic>);
-      }
-      summary['transitions'] = transitions;
-      summary['missed_transition_count'] = _countMissedTransitions(transitions);
+    final Map<String, dynamic> original = json.decode(
+      file('${galleryDirectory.path}/build/$transitionDurationFile.json').readAsStringSync(),
+    ) as Map<String, dynamic>;
+    final Map<String, List<int>> transitions = <String, List<int>>{};
+    for (final String key in original.keys) {
+      transitions[key] = List<int>.from(original[key] as List<dynamic>);
     }
-    final List<String> detailFiles = <String>[
-      if (transitionDurationFile != null)
-        '${galleryDirectory.path}/build/$transitionDurationFile.json',
-      if (timelineTraceFile != null)
-        '${galleryDirectory.path}/build/$timelineTraceFile.json'
+    summary['transitions'] = transitions;
+    summary['missed_transition_count'] = _countMissedTransitions(transitions);
+      final List<String> detailFiles = <String>[
+      '${galleryDirectory.path}/build/$transitionDurationFile.json',
+      '${galleryDirectory.path}/build/$timelineTraceFile.json'
     ];
 
     return TaskResult.success(summary,
       detailFiles: detailFiles.isNotEmpty ? detailFiles : null,
       benchmarkScoreKeys: <String>[
-        if (transitionDurationFile != null)
-          'missed_transition_count',
+        'missed_transition_count',
         'average_frame_build_time_millis',
         'worst_frame_build_time_millis',
         '90th_percentile_frame_build_time_millis',

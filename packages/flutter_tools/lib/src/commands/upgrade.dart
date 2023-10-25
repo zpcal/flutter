@@ -292,17 +292,15 @@ class UpgradeCommandRunner {
     globals.printStatus('');
     globals.printStatus(flutterVersion.toString());
     final String projectRoot = findProjectRoot();
-    if (projectRoot != null) {
-      globals.printStatus('');
-      await pub.get(
-        context: PubContext.pubUpgrade,
-        directory: projectRoot,
-        upgrade: true,
-        checkLastModified: false,
-        generateSyntheticPackage: false,
-      );
+    globals.printStatus('');
+    await pub.get(
+      context: PubContext.pubUpgrade,
+      directory: projectRoot,
+      upgrade: true,
+      checkLastModified: false,
+      generateSyntheticPackage: false,
+    );
     }
-  }
 
   /// Run flutter doctor in case requirements have changed.
   Future<void> runDoctor() async {

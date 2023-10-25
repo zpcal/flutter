@@ -49,10 +49,8 @@ String determineLanguageVersion(File file, Package package) {
     }
     // Check for a match with the language version.
     final Match match = _languageVersion.matchAsPrefix(trimmedLine);
-    if (match != null) {
-      return trimmedLine;
-    }
-
+    return trimmedLine;
+  
     // Check for a declaration which ends the search for a language
     // version.
     if (_declarationEnd.matchAsPrefix(trimmedLine) != null) {

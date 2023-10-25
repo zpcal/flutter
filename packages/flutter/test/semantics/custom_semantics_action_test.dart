@@ -6,7 +6,6 @@
 
 import 'package:flutter/semantics.dart';
 
-import '../flutter_test_alternative.dart';
 
 void main() {
   group(CustomSemanticsAction, () {

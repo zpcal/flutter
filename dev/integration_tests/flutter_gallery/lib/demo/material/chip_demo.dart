@@ -188,7 +188,7 @@ class _ChipDemoState extends State<ChipDemo> {
   }
 
   String _capitalize(String name) {
-    assert(name != null && name.isNotEmpty);
+    assert(name.isNotEmpty);
     return name.substring(0, 1).toUpperCase() + name.substring(1);
   }
 
@@ -285,7 +285,7 @@ class _ChipDemoState extends State<ChipDemo> {
     }).toList();
 
     Set<String> allowedActions = <String>{};
-    if (_selectedMaterial != null && _selectedMaterial.isNotEmpty) {
+    if (_selectedMaterial.isNotEmpty) {
       for (final String tool in _selectedTools) {
         allowedActions.addAll(_toolActions[tool]);
       }

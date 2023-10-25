@@ -136,7 +136,7 @@ ManifestTask _validateAndParseTask(dynamic taskName, dynamic taskYaml) {
   }
 
   return ManifestTask._(
-    name: taskName as String,
+    name: taskName,
     description: taskYaml['description'] as String,
     stage: taskYaml['stage'] as String,
     requiredAgentCapabilities: capabilities as List<String>,
@@ -152,7 +152,7 @@ List<String> _validateAndParseCapabilities(String taskName, dynamic capabilities
     final dynamic capability = capabilitiesYaml[i];
     _checkType(capability is String, capability, 'required_agent_capabilities[$i]', 'string');
   }
-  return (capabilitiesYaml as List<dynamic>).cast<String>();
+  return capabilitiesYaml.cast<String>();
 }
 
 void _checkType(bool isValid, dynamic value, String variableName, String typeName) {

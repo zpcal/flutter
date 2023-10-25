@@ -9,11 +9,10 @@ import 'dart:ui' show PointerChange;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:vector_math/vector_math_64.dart' show Matrix4;
 
-import '../flutter_test_alternative.dart';
 import './mouse_tracking_test_utils.dart';
 
 TestMouseTrackerFlutterBinding _binding = TestMouseTrackerFlutterBinding();

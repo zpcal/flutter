@@ -4,12 +4,11 @@
 
 // @dart = 2.8
 
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:meta/meta.dart';
-import 'package:fake_async/fake_async.dart';
 
-import '../flutter_test_alternative.dart';
 
 class TestGestureFlutterBinding extends BindingBase with GestureBinding { }
 

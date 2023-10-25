@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 Future<void> main() async {
   testWidgets('Build method that returns context.widget throws FlutterError', (WidgetTester tester) async {

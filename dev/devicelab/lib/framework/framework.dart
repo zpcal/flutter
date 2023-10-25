@@ -8,8 +8,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:path/path.dart' as path;
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 import 'package:stack_trace/stack_trace.dart';
 
 import 'running_processes.dart';
@@ -99,8 +99,7 @@ class _TaskRunner {
       }
 
       Future<TaskResult> futureResult = _performTask();
-      if (taskTimeout != null)
-        futureResult = futureResult.timeout(taskTimeout);
+      futureResult = futureResult.timeout(taskTimeout);
 
       TaskResult result = await futureResult;
 
@@ -160,8 +159,8 @@ class _TaskRunner {
 
   /// Disables the keepalive port, allowing the VM to exit.
   void _closeKeepAlivePort() {
-    _startTaskTimeout?.cancel();
-    _keepAlivePort?.close();
+    _startTaskTimeout.cancel();
+    _keepAlivePort.close();
   }
 
   Future<TaskResult> _performTask() {
@@ -196,18 +195,16 @@ class TaskResult {
       : succeeded = true,
         message = 'success' {
     const JsonEncoder prettyJson = JsonEncoder.withIndent('  ');
-    if (benchmarkScoreKeys != null) {
-      for (final String key in benchmarkScoreKeys) {
-        if (!data.containsKey(key)) {
-          throw 'Invalid benchmark score key "$key". It does not exist in task '
-              'result data ${prettyJson.convert(data)}';
-        } else if (data[key] is! num) {
-          throw 'Invalid benchmark score for key "$key". It is expected to be a num '
-              'but was ${data[key].runtimeType}: ${prettyJson.convert(data[key])}';
-        }
+    for (final String key in benchmarkScoreKeys) {
+      if (!data.containsKey(key)) {
+        throw 'Invalid benchmark score key "$key". It does not exist in task '
+            'result data ${prettyJson.convert(data)}';
+      } else if (data[key] is! num) {
+        throw 'Invalid benchmark score for key "$key". It is expected to be a num '
+            'but was ${data[key].runtimeType}: ${prettyJson.convert(data[key])}';
       }
     }
-  }
+    }
 
   /// Constructs a successful result using JSON data stored in a file.
   factory TaskResult.successFromFile(File file,
@@ -267,8 +264,7 @@ class TaskResult {
 
     if (succeeded) {
       json['data'] = data;
-      if (detailFiles != null)
-        json['detailFiles'] = detailFiles;
+      json['detailFiles'] = detailFiles;
       json['benchmarkScoreKeys'] = benchmarkScoreKeys;
     } else {
       json['reason'] = message;

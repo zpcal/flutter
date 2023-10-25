@@ -8,7 +8,6 @@ import 'package:flutter_tools/src/windows/windows_workflow.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../src/common.dart';
-import '../../src/context.dart';
 import '../../src/testbed.dart';
 
 void main() {

@@ -10,7 +10,6 @@ import 'package:process/process.dart';
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
 import '../base/terminal.dart';
@@ -106,7 +105,7 @@ class AnalyzeOnce extends AnalyzeBase {
       void handleAnalysisStatus(bool isAnalyzing) {
         if (!isAnalyzing) {
           analysisCompleter.complete();
-          subscription?.cancel();
+          subscription.cancel();
           subscription = null;
         }
       }
@@ -144,8 +143,8 @@ class AnalyzeOnce extends AnalyzeBase {
       await analysisCompleter.future;
     } finally {
       await server.dispose();
-      progress?.cancel();
-      timer?.stop();
+      progress.cancel();
+      timer.stop();
     }
 
     final int undocumentedMembers = AnalyzeBase.countMissingDartDocs(errors);

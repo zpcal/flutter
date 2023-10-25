@@ -18,7 +18,6 @@ import 'base/common.dart';
 import 'base/config.dart';
 import 'base/context.dart';
 import 'base/dds.dart';
-import 'base/file_system.dart';
 import 'base/io.dart';
 import 'base/logger.dart';
 import 'base/platform.dart';
@@ -88,7 +87,7 @@ abstract class DeviceManager {
 
   /// A user-specified device ID.
   String get specifiedDeviceId {
-    if (_specifiedDeviceId == null || _specifiedDeviceId == 'all') {
+    if (_specifiedDeviceId == 'all') {
       return null;
     }
     return _specifiedDeviceId;
@@ -211,11 +210,9 @@ abstract class DeviceManager {
   /// device connected, then filter out unsupported devices and prioritize
   /// ephemeral devices.
   Future<List<Device>> findTargetDevices(FlutterProject flutterProject, { Duration timeout }) async {
-    if (timeout != null) {
-      // Reset the cache with the specified timeout.
-      await refreshAllConnectedDevices(timeout: timeout);
-    }
-
+    // Reset the cache with the specified timeout.
+    await refreshAllConnectedDevices(timeout: timeout);
+  
     List<Device> devices = await getDevices();
 
     // Always remove web and fuchsia devices from `--all`. This setting
@@ -448,7 +445,7 @@ abstract class PollingDeviceDiscovery extends DeviceDiscovery {
   }
 
   Future<void> stopPolling() async {
-    _timer?.cancel();
+    _timer.cancel();
     _timer = null;
   }
 
@@ -899,10 +896,8 @@ class LaunchResult {
   @override
   String toString() {
     final StringBuffer buf = StringBuffer('started=$started');
-    if (observatoryUri != null) {
-      buf.write(', observatory=$observatoryUri');
-    }
-    return buf.toString();
+    buf.write(', observatory=$observatoryUri');
+      return buf.toString();
   }
 }
 
@@ -919,10 +914,8 @@ class ForwardedPort {
 
   /// Kill subprocess (if present) used in forwarding.
   void dispose() {
-    if (context != null) {
-      context.kill();
+    context.kill();
     }
-  }
 }
 
 /// Forward ports from the host machine to the device.
@@ -1012,7 +1005,7 @@ class NoOpDevicePortForwarder implements DevicePortForwarder {
 /// [debuggingOptions.nullAssertions] is true.
 String computeDartVmFlags(DebuggingOptions debuggingOptions) {
   return <String>[
-    if (debuggingOptions.dartFlags?.isNotEmpty ?? false)
+    if (debuggingOptions.dartFlags.isNotEmpty ?? false)
       debuggingOptions.dartFlags,
     if (debuggingOptions.nullAssertions)
       '--null_assertions',

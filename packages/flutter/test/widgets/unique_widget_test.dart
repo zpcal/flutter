@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class TestUniqueWidget extends UniqueWidget<TestUniqueWidgetState> {
   const TestUniqueWidget({ GlobalKey<TestUniqueWidgetState> key }) : super(key: key);

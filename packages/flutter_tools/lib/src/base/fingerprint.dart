@@ -6,7 +6,6 @@ import 'package:crypto/crypto.dart' show md5;
 import 'package:meta/meta.dart';
 
 import '../convert.dart' show json;
-import 'file_system.dart';
 import 'logger.dart';
 import 'utils.dart';
 
@@ -22,8 +21,7 @@ class Fingerprinter {
     @required FileSystem fileSystem,
     @required Logger logger,
   }) : _paths = paths.toList(),
-       assert(fingerprintPath != null),
-       assert(paths != null && paths.every((String path) => path != null)),
+       assert(paths.every((String path) => path != null)),
        _logger = logger,
        _fileSystem = fileSystem;
 
@@ -103,7 +101,7 @@ class Fingerprint {
   factory Fingerprint.fromJson(String jsonData) {
     final Map<String, dynamic> content = castStringKeyedMap(json.decode(jsonData));
     return Fingerprint._(
-      checksums: castStringKeyedMap(content['files'])?.cast<String,String>() ?? <String, String>{},
+      checksums: castStringKeyedMap(content['files']).cast<String,String>() ?? <String, String>{},
     );
   }
 

@@ -131,10 +131,8 @@ Future<void> main() async {
         section('gradlew assembleDebug');
         await project.runGradleTask('assembleDebug');
         final String errorMessage = validateSnapshotDependency(project, 'kernel_blob.bin');
-        if (errorMessage != null) {
-          throw TaskResult.failure(errorMessage);
-        }
-      });
+        throw TaskResult.failure(errorMessage);
+            });
 
       await runProjectTest((FlutterProject project) async {
         section('gradlew assembleProfile');

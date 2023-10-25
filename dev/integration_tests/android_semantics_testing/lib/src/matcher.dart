@@ -4,7 +4,6 @@
 
 import 'common.dart';
 import 'constants.dart';
-import 'flutter_test_alternative.dart';
 
 /// Matches an [AndroidSemanticsNode].
 ///
@@ -95,81 +94,64 @@ class _AndroidSemanticsMatcher extends Matcher {
   @override
   Description describe(Description description) {
     description.add('AndroidSemanticsNode');
-    if (text != null)
-      description.add(' with text: $text');
-    if (contentDescription != null)
-      description.add( 'with contentDescription $contentDescription');
-    if (className != null)
-      description.add(' with className: $className');
-    if (id != null)
-      description.add(' with id: $id');
-    if (actions != null)
-      description.add(' with actions: $actions');
-    if (rect != null)
-      description.add(' with rect: $rect');
-    if (size != null)
-      description.add(' with size: $size');
-    if (isChecked != null)
-      description.add(' with flag isChecked: $isChecked');
-    if (isEditable != null)
-      description.add(' with flag isEditable: $isEditable');
-    if (isEnabled != null)
-      description.add(' with flag isEnabled: $isEnabled');
-    if (isFocusable != null)
-      description.add(' with flag isFocusable: $isFocusable');
-    if (isFocused != null)
-      description.add(' with flag isFocused: $isFocused');
-    if (isHeading != null)
-      description.add(' with flag isHeading: $isHeading');
-    if (isPassword != null)
-      description.add(' with flag isPassword: $isPassword');
-    if (isLongClickable != null)
-      description.add(' with flag isLongClickable: $isLongClickable');
+    description.add(' with text: $text');
+    description.add( 'with contentDescription $contentDescription');
+    description.add(' with className: $className');
+    description.add(' with id: $id');
+    description.add(' with actions: $actions');
+    description.add(' with rect: $rect');
+    description.add(' with size: $size');
+    description.add(' with flag isChecked: $isChecked');
+    description.add(' with flag isEditable: $isEditable');
+    description.add(' with flag isEnabled: $isEnabled');
+    description.add(' with flag isFocusable: $isFocusable');
+    description.add(' with flag isFocused: $isFocused');
+    description.add(' with flag isHeading: $isHeading');
+    description.add(' with flag isPassword: $isPassword');
+    description.add(' with flag isLongClickable: $isLongClickable');
     return description;
   }
 
   @override
   bool matches(covariant AndroidSemanticsNode item, Map<Object, Object> matchState) {
-    if (text != null && text != item.text)
+    if (text != item.text)
       return _failWithMessage('Expected text: $text', matchState);
-    if (contentDescription != null && contentDescription != item.contentDescription)
+    if (contentDescription != item.contentDescription)
       return _failWithMessage('Expected contentDescription: $contentDescription', matchState);
-    if (className != null && className != item.className)
+    if (className != item.className)
       return _failWithMessage('Expected className: $className', matchState);
-    if (id != null && id != item.id)
+    if (id != item.id)
       return _failWithMessage('Expected id: $id', matchState);
-    if (rect != null && rect != item.getRect())
+    if (rect != item.getRect())
       return _failWithMessage('Expected rect: $rect', matchState);
-    if (size != null && size != item.getSize())
+    if (size != item.getSize())
       return _failWithMessage('Expected size: $size', matchState);
-    if (actions != null) {
-      final List<AndroidSemanticsAction> itemActions = item.getActions();
-      if (!unorderedEquals(actions).matches(itemActions, matchState)) {
-        final List<String> actionsString = actions.map<String>((AndroidSemanticsAction action) => action.toString()).toList()..sort();
-        final List<String> itemActionsString = itemActions.map<String>((AndroidSemanticsAction action) => action.toString()).toList()..sort();
-        final Set<String> unexpected = itemActionsString.toSet().difference(actionsString.toSet());
-        final Set<String> missing = actionsString.toSet().difference(itemActionsString.toSet());
-        return _failWithMessage('Expected actions: $actionsString\nActual actions: $itemActionsString\nUnexpected: $unexpected\nMissing: $missing', matchState);
-      }
+    final List<AndroidSemanticsAction> itemActions = item.getActions();
+    if (!unorderedEquals(actions).matches(itemActions, matchState)) {
+      final List<String> actionsString = actions.map<String>((AndroidSemanticsAction action) => action.toString()).toList()..sort();
+      final List<String> itemActionsString = itemActions.map<String>((AndroidSemanticsAction action) => action.toString()).toList()..sort();
+      final Set<String> unexpected = itemActionsString.toSet().difference(actionsString.toSet());
+      final Set<String> missing = actionsString.toSet().difference(itemActionsString.toSet());
+      return _failWithMessage('Expected actions: $actionsString\nActual actions: $itemActionsString\nUnexpected: $unexpected\nMissing: $missing', matchState);
     }
-    if (isChecked != null && isChecked != item.isChecked)
+      if (isChecked != item.isChecked)
       return _failWithMessage('Expected isChecked: $isChecked', matchState);
-    if (isCheckable != null && isCheckable != item.isCheckable)
+    if (isCheckable != item.isCheckable)
       return _failWithMessage('Expected isCheckable: $isCheckable', matchState);
-    if (isEditable != null && isEditable != item.isEditable)
+    if (isEditable != item.isEditable)
       return _failWithMessage('Expected isEditable: $isEditable', matchState);
-    if (isEnabled != null && isEnabled != item.isEnabled)
+    if (isEnabled != item.isEnabled)
       return _failWithMessage('Expected isEnabled: $isEnabled', matchState);
-    if (isFocusable != null && isFocusable != item.isFocusable)
+    if (isFocusable != item.isFocusable)
       return _failWithMessage('Expected isFocusable: $isFocusable', matchState);
-    if (isFocused != null && isFocused != item.isFocused)
+    if (isFocused != item.isFocused)
       return _failWithMessage('Expected isFocused: $isFocused', matchState);
     // Heading is not available in all Android versions, so match anything if it is not set by the platform
-    if (isHeading != null && isHeading != item.isHeading && item.isHeading != null)
+    if (isHeading != item.isHeading)
       return _failWithMessage('Expected isHeading: $isHeading', matchState);
-    if (isPassword != null && isPassword != item.isPassword)
+    if (isPassword != item.isPassword)
       return _failWithMessage('Expected isPassword: $isPassword', matchState);
-    if (isLongClickable != null && isLongClickable != item.isLongClickable)
+    if (isLongClickable != item.isLongClickable)
       return _failWithMessage('Expected longClickable: $isLongClickable', matchState);
     return true;
   }

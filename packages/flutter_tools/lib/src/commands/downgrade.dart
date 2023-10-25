@@ -5,7 +5,6 @@
 import 'package:process/process.dart';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/process.dart';
@@ -100,7 +99,7 @@ class DowngradeCommand extends FlutterCommand {
     }
     final String lastFlutterVesion = _persistentToolState.lastActiveVersion(channel);
     final String currentFlutterVersion = _flutterVersion.frameworkRevision;
-    if (lastFlutterVesion == null || currentFlutterVersion == lastFlutterVesion) {
+    if (currentFlutterVersion == lastFlutterVesion) {
       final String trailing = await _createErrorMessage(workingDirectory, channel);
       throwToolExit(
         'There is no previously recorded version for channel "$currentChannel".\n'

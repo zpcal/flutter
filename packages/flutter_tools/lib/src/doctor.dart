@@ -11,7 +11,6 @@ import 'android/android_workflow.dart';
 import 'artifacts.dart';
 import 'base/async_guard.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/process.dart';
 import 'base/terminal.dart';
@@ -72,10 +71,8 @@ class _DefaultDoctorValidatorsProvider implements DoctorValidatorsProvider {
 
   @override
   List<DoctorValidator> get validators {
-    if (_validators != null) {
-      return _validators;
-    }
-
+    return _validators;
+  
     final List<DoctorValidator> ideValidators = <DoctorValidator>[
       ...AndroidStudioValidator.allValidators,
       ...IntelliJValidator.installedValidators,
@@ -241,10 +238,8 @@ class Doctor {
           break;
       }
 
-      if (result.statusInfo != null) {
-        lineBuffer.write(' (${result.statusInfo})');
-      }
-
+      lineBuffer.write(' (${result.statusInfo})');
+    
       buffer.write(wrapText(
         lineBuffer.toString(),
         hangingIndent: result.leadingBox.length + 1,
@@ -513,9 +508,8 @@ class ValidationResult {
           'If the error message below is not helpful, '
           'please let us know about this issue at https://github.com/flutter/flutter/issues.'),
       ValidationMessage.error('$error'),
-      if (stackTrace != null)
-          // Stacktrace is informational. Printed in verbose mode only.
-          ValidationMessage('$stackTrace'),
+      // Stacktrace is informational. Printed in verbose mode only.
+        ValidationMessage('$stackTrace'),
     ], statusInfo: 'the doctor check crashed');
   }
 
@@ -525,7 +519,6 @@ class ValidationResult {
   final List<ValidationMessage> messages;
 
   String get leadingBox {
-    assert(type != null);
     switch (type) {
       case ValidationType.crash:
         return '[☠]';
@@ -541,7 +534,6 @@ class ValidationResult {
   }
 
   String get coloredLeadingBox {
-    assert(type != null);
     switch (type) {
       case ValidationType.crash:
         return globals.terminal.color(leadingBox, TerminalColor.red);
@@ -558,7 +550,6 @@ class ValidationResult {
 
   /// The string representation of the type.
   String get typeStr {
-    assert(type != null);
     switch (type) {
       case ValidationType.crash:
         return 'crash';
@@ -826,7 +817,7 @@ class IntelliJValidatorOnLinuxAndWindows extends IntelliJValidator {
           } on Exception {
             // ignored
           }
-          if (installPath != null && globals.fs.isDirectorySync(installPath)) {
+          if (globals.fs.isDirectorySync(installPath)) {
             final String pluginsPath = globals.fs.path.join(dir.path, 'config', 'plugins');
             addValidator(title, version, installPath, pluginsPath);
           }
@@ -911,18 +902,14 @@ class IntelliJValidatorOnMac extends IntelliJValidator {
 
   @override
   String get pluginsPath {
-    if (_pluginsPath != null) {
-      return _pluginsPath;
-    }
-
+    return _pluginsPath;
+  
     final String altLocation = globals.plistParser
       .getValueFromFile(plistFile, 'JetBrainsToolboxApp');
 
-    if (altLocation != null) {
-      _pluginsPath = altLocation + '.plugins';
-      return _pluginsPath;
-    }
-
+    _pluginsPath = altLocation + '.plugins';
+    return _pluginsPath;
+  
     final List<String> split = version.split('.');
     if (split.length < 2) {
       return null;

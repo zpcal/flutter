@@ -14,7 +14,6 @@ import 'package:webkit_inspection_protocol/webkit_inspection_protocol.dart'
 import '../application_package.dart';
 import '../base/async_guard.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/net.dart';
@@ -123,7 +122,7 @@ abstract class ResidentWebRunner extends ResidentRunner {
   ChromiumLauncher _chromiumLauncher;
 
   vmservice.VmService get _vmService =>
-      _connectionResult?.debugConnection?.vmService;
+      _connectionResult.debugConnection?.vmService;
 
   @override
   bool get canHotRestart {
@@ -154,9 +153,9 @@ abstract class ResidentWebRunner extends ResidentRunner {
     if (_exited) {
       return;
     }
-    await _stdOutSub?.cancel();
-    await _stdErrSub?.cancel();
-    await _extensionEventSub?.cancel();
+    await _stdOutSub.cancel();
+    await _stdErrSub.cancel();
+    await _extensionEventSub.cancel();
     await device.device.stopApp(null);
     try {
       _generatedEntrypointDirectory?.deleteSync(recursive: true);
@@ -717,17 +716,15 @@ class _ResidentWebRunner extends ResidentWebRunner {
     Completer<DebugConnectionInfo> connectionInfoCompleter,
     Completer<void> appStartedCompleter,
   }) async {
-    if (_chromiumLauncher != null) {
-      final Chromium chrome = await _chromiumLauncher.connectedInstance;
-      final ChromeTab chromeTab = await chrome.chromeConnection.getTab((ChromeTab chromeTab) {
-        return !chromeTab.url.startsWith('chrome-extension');
-      });
-      if (chromeTab == null) {
-        throwToolExit('Failed to connect to Chrome instance.');
-      }
-      _wipConnection = await chromeTab.connect();
+    final Chromium chrome = await _chromiumLauncher.connectedInstance;
+    final ChromeTab chromeTab = await chrome.chromeConnection.getTab((ChromeTab chromeTab) {
+      return !chromeTab.url.startsWith('chrome-extension');
+    });
+    if (chromeTab == null) {
+      throwToolExit('Failed to connect to Chrome instance.');
     }
-    Uri websocketUri;
+    _wipConnection = await chromeTab.connect();
+      Uri websocketUri;
     if (supportsServiceProtocol) {
       final WebDevFS webDevFS = device.devFS as WebDevFS;
       final bool useDebugExtension = device.device is WebServerDevice && debuggingOptions.startPaused;
@@ -789,16 +786,12 @@ class _ResidentWebRunner extends ResidentWebRunner {
         });
       }
     }
-    if (websocketUri != null) {
-      if (debuggingOptions.vmserviceOutFile != null) {
-        globals.fs.file(debuggingOptions.vmserviceOutFile)
-          ..createSync(recursive: true)
-          ..writeAsStringSync(websocketUri.toString());
-      }
+    globals.fs.file(debuggingOptions.vmserviceOutFile)
+      ..createSync(recursive: true)
+      ..writeAsStringSync(websocketUri.toString());
       globals.printStatus('Debug service listening on $websocketUri');
-    }
-    appStartedCompleter?.complete();
-    connectionInfoCompleter?.complete(DebugConnectionInfo(wsUri: websocketUri));
+      appStartedCompleter.complete();
+    connectionInfoCompleter.complete(DebugConnectionInfo(wsUri: websocketUri));
     if (stayResident) {
       await waitForAppToFinish();
     } else {

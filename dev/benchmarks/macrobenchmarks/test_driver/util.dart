@@ -5,9 +5,8 @@
 import 'dart:async';
 
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
-
 import 'package:macrobenchmarks/common.dart';
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 void macroPerfTest(
     String testName,
@@ -36,21 +35,15 @@ void macroPerfTest(
     await driver.scrollUntilVisible(scrollable, button, dyScroll: -50.0);
     await driver.tap(button);
 
-    if (pageDelay != null) {
-      // Wait for the page to load
-      await Future<void>.delayed(pageDelay);
-    }
-
-    if (setupOps != null) {
-      await setupOps(driver);
-    }
-
+    // Wait for the page to load
+    await Future<void>.delayed(pageDelay);
+  
+    await setupOps(driver);
+  
     final Timeline timeline = await driver.traceAction(() async {
       final Future<void> durationFuture = Future<void>.delayed(duration);
-      if (driverOps != null) {
-        await driverOps(driver);
-      }
-      await durationFuture;
+      await driverOps(driver);
+          await durationFuture;
     });
 
     driver.close();

@@ -13,12 +13,9 @@ import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 
-import 'basic.dart';
 import 'framework.dart';
-import 'gesture_detector.dart';
 import 'scroll_metrics.dart';
 import 'scroll_notification.dart';
-import 'ticker_provider.dart';
 
 /// A backend for a [ScrollActivity].
 ///

@@ -7,12 +7,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:path/path.dart' as path;
-
 import 'package:flutter_devicelab/framework/ab.dart';
 import 'package:flutter_devicelab/framework/manifest.dart';
 import 'package:flutter_devicelab/framework/runner.dart';
 import 'package:flutter_devicelab/framework/utils.dart';
+import 'package:path/path.dart' as path;
 
 ArgResults args;
 
@@ -221,7 +220,7 @@ void addTasks({
   // Only start skipping if user specified a task to continue from
   final String stage = args['stage'] as String;
   for (final ManifestTask task in tasks) {
-    final bool isQualifyingStage = stage == null || task.stage == stage;
+    final bool isQualifyingStage = task.stage == stage;
     final bool isQualifyingHost = !(args['match-host-platform'] as bool) || task.isSupportedByHost();
     if (isQualifyingHost && isQualifyingStage) {
       taskNames.add(task.name);
@@ -280,7 +279,7 @@ final ArgParser _argParser = ArgParser()
           'between the two engines. --local-engine is required when running\n'
           'an A/B test.',
     callback: (String value) {
-      if (value != null && int.tryParse(value) == null) {
+      if (int.tryParse(value) == null) {
         throw ArgParserException('Option --ab must be a number, but was "$value".');
       }
     },

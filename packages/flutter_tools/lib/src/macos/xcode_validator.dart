@@ -54,7 +54,7 @@ class XcodeValidator extends DoctorValidator {
 
     } else {
       xcodeStatus = ValidationType.missing;
-      if (_xcode.xcodeSelectPath == null || _xcode.xcodeSelectPath.isEmpty) {
+      if (_xcode.xcodeSelectPath.isEmpty) {
         messages.add(ValidationMessage.error(_userMessages.xcodeMissing));
       } else {
         messages.add(ValidationMessage.error(_userMessages.xcodeIncomplete));

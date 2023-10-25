@@ -4,7 +4,6 @@
 
 import 'package:meta/meta.dart';
 
-import '../base/file_system.dart';
 import '../base/logger.dart';
 
 /// A service for creating and parsing [Depfile]s.

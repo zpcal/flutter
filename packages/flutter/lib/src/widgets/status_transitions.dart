@@ -4,7 +4,6 @@
 
 // @dart = 2.8
 
-import 'basic.dart';
 import 'framework.dart';
 
 /// A widget that rebuilds when the given animation changes status.

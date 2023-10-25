@@ -5,7 +5,6 @@
 import 'package:meta/meta.dart';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/os.dart';
 import '../base/platform.dart';
 import '../base/process.dart';
@@ -78,43 +77,35 @@ class AndroidSdk {
       } else if (globals.platform.environment.containsKey(kAndroidSdkRoot)) {
         androidHomeDir = globals.platform.environment[kAndroidSdkRoot];
       } else if (globals.platform.isLinux) {
-        if (globals.fsUtils.homeDirPath != null) {
-          androidHomeDir = globals.fs.path.join(
-            globals.fsUtils.homeDirPath,
-            'Android',
-            'Sdk',
-          );
-        }
-      } else if (globals.platform.isMacOS) {
-        if (globals.fsUtils.homeDirPath != null) {
-          androidHomeDir = globals.fs.path.join(
-            globals.fsUtils.homeDirPath,
-            'Library',
-            'Android',
-            'sdk',
-          );
-        }
-      } else if (globals.platform.isWindows) {
-        if (globals.fsUtils.homeDirPath != null) {
-          androidHomeDir = globals.fs.path.join(
-            globals.fsUtils.homeDirPath,
-            'AppData',
-            'Local',
-            'Android',
-            'sdk',
-          );
-        }
-      }
+        androidHomeDir = globals.fs.path.join(
+          globals.fsUtils.homeDirPath,
+          'Android',
+          'Sdk',
+        );
+            } else if (globals.platform.isMacOS) {
+        androidHomeDir = globals.fs.path.join(
+          globals.fsUtils.homeDirPath,
+          'Library',
+          'Android',
+          'sdk',
+        );
+            } else if (globals.platform.isWindows) {
+        androidHomeDir = globals.fs.path.join(
+          globals.fsUtils.homeDirPath,
+          'AppData',
+          'Local',
+          'Android',
+          'sdk',
+        );
+            }
 
-      if (androidHomeDir != null) {
-        if (validSdkDirectory(androidHomeDir)) {
-          return androidHomeDir;
-        }
-        if (validSdkDirectory(globals.fs.path.join(androidHomeDir, 'sdk'))) {
-          return globals.fs.path.join(androidHomeDir, 'sdk');
-        }
+      if (validSdkDirectory(androidHomeDir)) {
+        return androidHomeDir;
       }
-
+      if (validSdkDirectory(globals.fs.path.join(androidHomeDir, 'sdk'))) {
+        return globals.fs.path.join(androidHomeDir, 'sdk');
+      }
+    
       // in build-tools/$version/aapt
       final List<File> aaptBins = globals.os.whichAll('aapt');
       for (File aaptBin in aaptBins) {
@@ -184,13 +175,11 @@ class AndroidSdk {
       final String homeDrive = globals.platform.environment['HOMEDRIVE'];
       final String homePath = globals.platform.environment['HOMEPATH'];
 
-      if (homeDrive != null && homePath != null) {
-        // Can't use path.join for HOMEDRIVE/HOMEPATH
-        // https://github.com/dart-lang/path/issues/37
-        final String home = homeDrive + homePath;
-        searchPaths.add(globals.fs.path.join(home, '.android', 'avd'));
-      }
-    }
+      // Can't use path.join for HOMEDRIVE/HOMEPATH
+      // https://github.com/dart-lang/path/issues/37
+      final String home = homeDrive + homePath;
+      searchPaths.add(globals.fs.path.join(home, '.android', 'avd'));
+        }
 
     return searchPaths.where((String p) => p != null).firstWhere(
       (String p) => globals.fs.directory(p).existsSync(),
@@ -213,11 +202,11 @@ class AndroidSdk {
   /// Validate the Android SDK. This returns an empty list if there are no
   /// issues; otherwise, it returns a list of issues found.
   List<String> validateSdkWellFormed() {
-    if (adbPath == null || !globals.processManager.canRun(adbPath)) {
+    if (!globals.processManager.canRun(adbPath)) {
       return <String>['Android SDK file not found: ${adbPath ?? 'adb'}.'];
     }
 
-    if (sdkVersions.isEmpty || latestVersion == null) {
+    if (sdkVersions.isEmpty) {
       final StringBuffer msg = StringBuffer('No valid Android SDK platforms found in ${_platformsDir.path}.');
       if (_platforms.isEmpty) {
         msg.write(' Directory was empty.');
@@ -356,16 +345,12 @@ class AndroidSdk {
     @required OperatingSystemUtils operatingSystemUtils,
     @required Platform platform,
   }) {
-    if (androidStudio?.javaPath != null) {
-      return fileSystem.path.join(androidStudio.javaPath, 'bin', 'java');
-    }
-
+    return fileSystem.path.join(androidStudio.javaPath, 'bin', 'java');
+  
     final String javaHomeEnv = platform.environment[_javaHomeEnvironmentVariable];
-    if (javaHomeEnv != null) {
-      // Trust JAVA_HOME.
-      return fileSystem.path.join(javaHomeEnv, 'bin', 'java');
-    }
-
+    // Trust JAVA_HOME.
+    return fileSystem.path.join(javaHomeEnv, 'bin', 'java');
+  
     // MacOS specific logic to avoid popping up a dialog window.
     // See: http://stackoverflow.com/questions/14292698/how-do-i-check-if-the-java-jdk-is-installed-on-mac.
     if (platform.isMacOS) {
@@ -375,13 +360,11 @@ class AndroidSdk {
           throwOnError: true,
           hideStdout: true,
         ).stdout.trim();
-        if (javaHomeOutput != null) {
-          if ((javaHomeOutput != null) && (javaHomeOutput.isNotEmpty)) {
-            final String javaHome = javaHomeOutput.split('\n').last.trim();
-            return fileSystem.path.join(javaHome, 'bin', 'java');
-          }
+        if ((javaHomeOutput != null) && (javaHomeOutput.isNotEmpty)) {
+          final String javaHome = javaHomeOutput.split('\n').last.trim();
+          return fileSystem.path.join(javaHome, 'bin', 'java');
         }
-      } on Exception catch (_) { /* ignore */ }
+            } on Exception catch (_) { /* ignore */ }
     }
 
     // Fallback to PATH based lookup.
@@ -401,12 +384,10 @@ class AndroidSdk {
         operatingSystemUtils: globals.os,
         platform: globals.platform,
       );
-      if (javaBinary != null) {
-        _sdkManagerEnv['PATH'] = globals.fs.path.dirname(javaBinary) +
-                                 globals.os.pathVarSeparator +
-                                 globals.platform.environment['PATH'];
-      }
-    }
+      _sdkManagerEnv['PATH'] = globals.fs.path.dirname(javaBinary) +
+                               globals.os.pathVarSeparator +
+                               globals.platform.environment['PATH'];
+        }
     return _sdkManagerEnv;
   }
 
@@ -436,9 +417,7 @@ class AndroidSdkVersion implements Comparable<AndroidSdkVersion> {
     @required this.sdkLevel,
     @required this.platformName,
     @required this.buildToolsVersion,
-  }) : assert(sdkLevel != null),
-       assert(platformName != null),
-       assert(buildToolsVersion != null);
+  });
 
   final AndroidSdk sdk;
   final int sdkLevel;
@@ -452,14 +431,10 @@ class AndroidSdkVersion implements Comparable<AndroidSdkVersion> {
   String get aaptPath => getBuildToolsPath('aapt');
 
   List<String> validateSdkWellFormed() {
-    if (_exists(androidJarPath) != null) {
-      return <String>[_exists(androidJarPath)];
-    }
-
-    if (_canRun(aaptPath) != null) {
-      return <String>[_canRun(aaptPath)];
-    }
-
+    return <String>[_exists(androidJarPath)];
+  
+    return <String>[_canRun(aaptPath)];
+  
     return <String>[];
   }
 

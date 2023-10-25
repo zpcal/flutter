@@ -88,18 +88,12 @@ class FlutterFeatureFlags implements FeatureFlags {
       return false;
     }
     bool isEnabled = featureSetting.enabledByDefault;
-    if (feature.configSetting != null) {
-      final bool configOverride = globals.config.getValue(feature.configSetting) as bool;
-      if (configOverride != null) {
-        isEnabled = configOverride;
-      }
+    final bool configOverride = globals.config.getValue(feature.configSetting) as bool;
+    isEnabled = configOverride;
+        if (globals.platform.environment[feature.environmentOverride]?.toLowerCase() == 'true') {
+      isEnabled = true;
     }
-    if (feature.environmentOverride != null) {
-      if (globals.platform.environment[feature.environmentOverride]?.toLowerCase() == 'true') {
-        isEnabled = true;
-      }
-    }
-    return isEnabled;
+      return isEnabled;
   }
 }
 

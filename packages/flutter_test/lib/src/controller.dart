@@ -536,7 +536,6 @@ abstract class WidgetController {
     assert(kDragSlopDefault > kTouchSlop);
     return TestAsyncUtils.guard<void>(() async {
       final TestGesture gesture = await startGesture(startLocation, pointer: pointer, buttons: buttons);
-      assert(gesture != null);
 
       final double xSign = offset.dx.sign;
       final double ySign = offset.dy.sign;
@@ -852,7 +851,6 @@ abstract class WidgetController {
   ///  - [sendKeyDownEvent] to simulate only a key down event.
   ///  - [sendKeyUpEvent] to simulate only a key up event.
   Future<void> sendKeyEvent(LogicalKeyboardKey key, { String platform = 'android' }) async {
-    assert(platform != null);
     await simulateKeyDownEvent(key, platform: platform);
     // Internally wrapped in async guard.
     return simulateKeyUpEvent(key, platform: platform);
@@ -875,7 +873,6 @@ abstract class WidgetController {
   ///  - [sendKeyUpEvent] to simulate the corresponding key up event.
   ///  - [sendKeyEvent] to simulate both the key up and key down in the same call.
   Future<void> sendKeyDownEvent(LogicalKeyboardKey key, { String platform = 'android' }) async {
-    assert(platform != null);
     // Internally wrapped in async guard.
     return simulateKeyDownEvent(key, platform: platform);
   }
@@ -894,7 +891,6 @@ abstract class WidgetController {
   ///  - [sendKeyDownEvent] to simulate the corresponding key down event.
   ///  - [sendKeyEvent] to simulate both the key up and key down in the same call.
   Future<void> sendKeyUpEvent(LogicalKeyboardKey key, { String platform = 'android' }) async {
-    assert(platform != null);
     // Internally wrapped in async guard.
     return simulateKeyUpEvent(key, platform: platform);
   }
@@ -1045,8 +1041,7 @@ class LiveWidgetController extends WidgetController {
 
   @override
   Future<void> pump([Duration duration]) async {
-    if (duration != null)
-      await Future<void>.delayed(duration);
+    await Future<void>.delayed(duration);
     binding.scheduleFrame();
     await binding.endOfFrame;
   }
@@ -1055,7 +1050,6 @@ class LiveWidgetController extends WidgetController {
   Future<int> pumpAndSettle([
     Duration duration = const Duration(milliseconds: 100),
   ]) {
-    assert(duration != null);
     assert(duration > Duration.zero);
     return TestAsyncUtils.guard<int>(() async {
       int count = 0;
@@ -1069,7 +1063,6 @@ class LiveWidgetController extends WidgetController {
 
   @override
   Future<List<Duration>> handlePointerEventRecord(List<PointerEventRecord> records) {
-    assert(records != null);
     assert(records.isNotEmpty);
     return TestAsyncUtils.guard<List<Duration>>(() async {
       // hitTestHistory is an equivalence of _hitTests in [GestureBinding],

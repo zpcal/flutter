@@ -13,7 +13,6 @@ import 'package:path/path.dart' as path; // ignore: package_path_import
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../build_info.dart';
 import '../cache.dart';
 import '../dart/pub.dart';
@@ -75,7 +74,7 @@ class BuildRunnerWebCompilationProxy extends WebCompilationProxy {
         break;
       }
     }
-    if (!success || testOutputDir == null) {
+    if (!success) {
       return success;
     }
     final Directory rootDirectory = projectDirectory
@@ -115,7 +114,7 @@ class WebTestTargetManifest {
 
   final List<String> buildFilters;
 
-  bool get hasBuildFilters => buildFilters != null && buildFilters.isNotEmpty;
+  bool get hasBuildFilters => buildFilters.isNotEmpty;
 }
 
 /// A testable interface for starting a build daemon.
@@ -169,16 +168,14 @@ class BuildDaemonCreator {
     client.registerBuildTarget(DefaultBuildTarget((DefaultBuildTargetBuilder b) => b
       ..target = 'web'
       ..outputLocation = outputLocation?.toBuilder()));
-    if (testTargets != null) {
-      client.registerBuildTarget(DefaultBuildTarget((DefaultBuildTargetBuilder b) {
-        b.target = 'test';
-        b.outputLocation = outputLocation?.toBuilder();
-        if (testTargets.hasBuildFilters) {
-          b.buildFilters.addAll(testTargets.buildFilters);
-        }
-      }));
+    client.registerBuildTarget(DefaultBuildTarget((DefaultBuildTargetBuilder b) {
+      b.target = 'test';
+      b.outputLocation = outputLocation?.toBuilder();
+      if (testTargets.hasBuildFilters) {
+        b.buildFilters.addAll(testTargets.buildFilters);
+      }
+    }));
     }
-  }
 
   Future<BuildDaemonClient> _connectClient(
     String workingDirectory, {
@@ -234,7 +231,7 @@ class BuildDaemonCreator {
       '--define', 'flutter_tools:shell=hasPlugins=$hasPlugins',
       '--define', 'flutter_tools:shell=initializePlatform=$initializePlatform',
       // The following will cause build runner to only build tests that were requested.
-      if (testTargets != null && testTargets.hasBuildFilters)
+      if (testTargets.hasBuildFilters)
         for (final String buildFilter in testTargets.buildFilters)
           '--build-filter=$buildFilter',
     ];

@@ -13,8 +13,8 @@ import 'package:flutter_driver/src/driver/driver.dart';
 import 'package:flutter_driver/src/driver/timeline.dart';
 import 'package:json_rpc_2/json_rpc_2.dart' as rpc;
 import 'package:mockito/mockito.dart';
-import 'package:vm_service_client/vm_service_client.dart';
 import 'package:quiver/testing/async.dart';
+import 'package:vm_service_client/vm_service_client.dart';
 
 import 'common.dart';
 

@@ -4,12 +4,12 @@
 
 // @dart = 2.8
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../rendering/mock_canvas.dart';
 import '../rendering/recording_canvas.dart';
@@ -1597,8 +1597,8 @@ void main() {
     expect(tester.getRect(find.byKey(tabs[2].key)), tabRect);
 
     // Tab 0 selected, indicatorPadding == labelPadding
-    final double indicatorLeft = indicatorPadding.left + indicatorWeight / 2.0;
-    final double indicatorRight = 130.0 + labelPadding.horizontal - indicatorPadding.right - indicatorWeight / 2.0;
+    const double indicatorLeft = indicatorPadding.left + indicatorWeight / 2.0;
+    const double indicatorRight = 130.0 + labelPadding.horizontal - indicatorPadding.right - indicatorWeight / 2.0;
     final double indicatorY = tabBottom + indicatorWeight / 2.0;
     expect(tabBarBox, paints..line(
       strokeWidth: indicatorWeight,

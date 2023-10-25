@@ -10,7 +10,6 @@ import 'package:process/process.dart';
 import '../build_info.dart';
 import '../globals.dart' as globals;
 import 'common.dart';
-import 'file_system.dart';
 import 'io.dart';
 import 'logger.dart';
 import 'platform.dart';
@@ -85,7 +84,7 @@ abstract class OperatingSystemUtils {
   /// if `which` was not able to locate the binary.
   File which(String execName) {
     final List<File> result = _which(execName);
-    if (result == null || result.isEmpty) {
+    if (result.isEmpty) {
       return null;
     }
     return result.first;
@@ -153,10 +152,8 @@ abstract class OperatingSystemUtils {
       // Failures are signaled by a return value of 0 from this function.
       _logger.printTrace('findFreePort failed: $e');
     } finally {
-      if (serverSocket != null) {
-        await serverSocket.close();
-      }
-    }
+      await serverSocket.close();
+        }
     return port;
   }
 }

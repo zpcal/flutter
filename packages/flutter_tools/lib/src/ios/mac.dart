@@ -10,7 +10,6 @@ import 'package:process/process.dart';
 import '../application_package.dart';
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/process.dart';
@@ -154,14 +153,14 @@ Future<XcodeBuildResult> buildXcodeProject({
 
   final FlutterManifest manifest = app.project.parent.manifest;
   final String buildName = parsedBuildName(manifest: manifest, buildInfo: buildInfo);
-  final bool buildNameIsMissing = buildName == null || buildName.isEmpty;
+  final bool buildNameIsMissing = buildName.isEmpty;
 
   if (buildNameIsMissing) {
     globals.printStatus('Warning: Missing build name (CFBundleShortVersionString).');
   }
 
   final String buildNumber = parsedBuildNumber(manifest: manifest, buildInfo: buildInfo);
-  final bool buildNumberIsMissing = buildNumber == null || buildNumber.isEmpty;
+  final bool buildNumberIsMissing = buildNumber.isEmpty;
 
   if (buildNumberIsMissing) {
     globals.printStatus('Warning: Missing build number (CFBundleVersion).');
@@ -208,13 +207,11 @@ Future<XcodeBuildResult> buildXcodeProject({
     buildCommands.add('-quiet');
   }
 
-  if (autoSigningConfigs != null) {
-    for (final MapEntry<String, String> signingConfig in autoSigningConfigs.entries) {
-      buildCommands.add('${signingConfig.key}=${signingConfig.value}');
-    }
-    buildCommands.add('-allowProvisioningUpdates');
-    buildCommands.add('-allowProvisioningDeviceRegistration');
+  for (final MapEntry<String, String> signingConfig in autoSigningConfigs.entries) {
+    buildCommands.add('${signingConfig.key}=${signingConfig.value}');
   }
+  buildCommands.add('-allowProvisioningUpdates');
+  buildCommands.add('-allowProvisioningDeviceRegistration');
 
   final List<FileSystemEntity> contents = app.project.hostAppRoot.listSync();
   for (final FileSystemEntity entity in contents) {
@@ -237,7 +234,7 @@ Future<XcodeBuildResult> buildXcodeProject({
     // The -sdk argument has to be omitted if a watchOS companion app exists.
     // Otherwise the build will fail as WatchKit dependencies cannot be build using the iOS SDK.
     globals.printStatus('Watch companion app found. Adjusting build settings.');
-    if (!buildForDevice && (deviceID == null || deviceID == '')) {
+    if (!buildForDevice && (deviceID == '')) {
       globals.printError('No simulator device ID has been set.');
       globals.printError('A device ID is required to build an app with a watchOS companion app.');
       globals.printError('Please run "flutter devices" to get a list of available device IDs');
@@ -255,16 +252,12 @@ Future<XcodeBuildResult> buildXcodeProject({
     }
   }
 
-  if (activeArch != null) {
-    final String activeArchName = getNameForDarwinArch(activeArch);
-    if (activeArchName != null) {
-      buildCommands.add('ONLY_ACTIVE_ARCH=YES');
-      // Setting ARCHS to $activeArchName will break the build if a watchOS companion app exists,
-      // as it cannot be build for the architecture of the flutter app.
-      if (!hasWatchCompanion) {
-        buildCommands.add('ARCHS=$activeArchName');
-      }
-    }
+  final String activeArchName = getNameForDarwinArch(activeArch);
+  buildCommands.add('ONLY_ACTIVE_ARCH=YES');
+  // Setting ARCHS to $activeArchName will break the build if a watchOS companion app exists,
+  // as it cannot be build for the architecture of the flutter app.
+  if (!hasWatchCompanion) {
+    buildCommands.add('ARCHS=$activeArchName');
   }
 
   if (!codesign) {
@@ -291,7 +284,7 @@ Future<XcodeBuildResult> buildXcodeProject({
       final List<String> lines = await scriptOutputPipeFile.readAsLines();
       for (final String line in lines) {
         if (line == 'done' || line == 'all done') {
-          buildSubStatus?.stop();
+          buildSubStatus.stop();
           buildSubStatus = null;
           if (line == 'all done') {
             // Free pipe file.
@@ -299,7 +292,7 @@ Future<XcodeBuildResult> buildXcodeProject({
             return;
           }
         } else {
-          initialBuildStatus?.cancel();
+          initialBuildStatus.cancel();
           initialBuildStatus = null;
           buildSubStatus = globals.logger.startProgress(
             line,
@@ -330,9 +323,9 @@ Future<XcodeBuildResult> buildXcodeProject({
 
   // Notifies listener that no more output is coming.
   scriptOutputPipeFile?.writeAsStringSync('all done');
-  buildSubStatus?.stop();
+  buildSubStatus.stop();
   buildSubStatus = null;
-  initialBuildStatus?.cancel();
+  initialBuildStatus.cancel();
   initialBuildStatus = null;
   globals.printStatus(
     'Xcode build done.'.padRight(kDefaultStatusPadding + 1)
@@ -501,15 +494,13 @@ Future<RunResult> _runBuildWithRetries(List<String> buildCommands, BuildableIOSA
 
 bool _isXcodeConcurrentBuildFailure(RunResult result) {
 return result.exitCode != 0 &&
-    result.stdout != null &&
     result.stdout.contains('database is locked') &&
     result.stdout.contains('there are two concurrent builds running');
 }
 
 Future<void> diagnoseXcodeBuildFailure(XcodeBuildResult result, Usage flutterUsage, Logger logger) async {
-  if (result.xcodeBuildExecution != null &&
-      result.xcodeBuildExecution.buildForPhysicalDevice &&
-      result.stdout?.toUpperCase()?.contains('BITCODE') == true) {
+  if (result.xcodeBuildExecution.buildForPhysicalDevice &&
+      result.stdout.toUpperCase().contains('BITCODE') == true) {
     BuildEvent('xcode-bitcode-failure',
       command: result.xcodeBuildExecution.buildCommands.toString(),
       settings: result.xcodeBuildExecution.buildSettings.toString(),
@@ -520,9 +511,9 @@ Future<void> diagnoseXcodeBuildFailure(XcodeBuildResult result, Usage flutterUsa
   // Building for iOS Simulator, but the linked and embedded framework 'App.framework' was built for iOS.
   // or
   // Building for iOS, but the linked and embedded framework 'App.framework' was built for iOS Simulator.
-  if (result.stdout?.contains('Building for iOS') == true
-      && result.stdout?.contains('but the linked and embedded framework') == true
-      && result.stdout?.contains('was built for iOS') == true) {
+  if (result.stdout.contains('Building for iOS') == true
+      && result.stdout.contains('but the linked and embedded framework') == true
+      && result.stdout.contains('was built for iOS') == true) {
     logger.printError('');
     logger.printError('Your Xcode project requires migration. See https://flutter.dev/docs/development/ios-project-migration for details.');
     logger.printError('');
@@ -531,26 +522,23 @@ Future<void> diagnoseXcodeBuildFailure(XcodeBuildResult result, Usage flutterUsa
     return;
   }
 
-  if (result.xcodeBuildExecution != null &&
-      result.xcodeBuildExecution.buildForPhysicalDevice &&
-      result.stdout?.contains('BCEROR') == true &&
+  if (result.xcodeBuildExecution.buildForPhysicalDevice &&
+      result.stdout.contains('BCEROR') == true &&
       // May need updating if Xcode changes its outputs.
-      result.stdout?.contains("Xcode couldn't find a provisioning profile matching") == true) {
+      result.stdout.contains("Xcode couldn't find a provisioning profile matching") == true) {
     logger.printError(noProvisioningProfileInstruction, emphasis: true);
     return;
   }
   // Make sure the user has specified one of:
   // * DEVELOPMENT_TEAM (automatic signing)
   // * PROVISIONING_PROFILE (manual signing)
-  if (result.xcodeBuildExecution != null &&
-      result.xcodeBuildExecution.buildForPhysicalDevice &&
+  if (result.xcodeBuildExecution.buildForPhysicalDevice &&
       !<String>['DEVELOPMENT_TEAM', 'PROVISIONING_PROFILE'].any(
         result.xcodeBuildExecution.buildSettings.containsKey)) {
     logger.printError(noDevelopmentTeamInstruction, emphasis: true);
     return;
   }
-  if (result.xcodeBuildExecution != null &&
-      result.xcodeBuildExecution.buildForPhysicalDevice &&
+  if (result.xcodeBuildExecution.buildForPhysicalDevice &&
       result.xcodeBuildExecution.buildSettings['PRODUCT_BUNDLE_IDENTIFIER']?.contains('com.example') == true) {
     logger.printError('');
     logger.printError('It appears that your application still contains the default signing identifier.');
@@ -558,7 +546,7 @@ Future<void> diagnoseXcodeBuildFailure(XcodeBuildResult result, Usage flutterUsa
     logger.printError('  open ios/Runner.xcworkspace');
     return;
   }
-  if (result.stdout?.contains('Code Sign error') == true) {
+  if (result.stdout.contains('Code Sign error') == true) {
     logger.printError('');
     logger.printError('It appears that there was a problem signing your application prior to installation on the device.');
     logger.printError('');

@@ -10,7 +10,6 @@ import 'package:flutter_tools/src/base/version.dart';
 import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/vscode/vscode.dart';
 
-import '../../src/common.dart';
 import '../../src/context.dart';
 
 void main() {

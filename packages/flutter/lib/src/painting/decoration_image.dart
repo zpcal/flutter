@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'alignment.dart';
-import 'basic_types.dart';
 import 'borders.dart';
 import 'box_fit.dart';
 import 'debug.dart';
@@ -537,7 +536,7 @@ void paintImage({
         developer.postEvent(
           'Flutter.ImageSizesForFrame',
           <String, Object>{
-            for (ImageSizeInfo imageSizeInfo in _pendingImageSizeInfo.values)
+            for (final ImageSizeInfo imageSizeInfo in _pendingImageSizeInfo.values)
               imageSizeInfo.source!: imageSizeInfo.toJson()
           },
         );

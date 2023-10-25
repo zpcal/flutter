@@ -8,7 +8,6 @@ import 'package:meta/meta.dart';
 
 import '../convert.dart';
 import 'common.dart';
-import 'file_system.dart';
 import 'io.dart';
 import 'logger.dart';
 import 'platform.dart';
@@ -65,10 +64,10 @@ class Net {
         destSink: sink,
       );
       if (result) {
-        return memorySink?.writes?.takeBytes() ?? <int>[];
+        return memorySink.writes.takeBytes() ?? <int>[];
       }
 
-      if (maxAttempts != null && attempts >= maxAttempts) {
+      if (attempts >= maxAttempts) {
         _logger.printStatus('Download failed -- retry $attempts');
         return null;
       }
@@ -110,7 +109,7 @@ class Net {
       response = await request.close();
     } on ArgumentError catch (error) {
       final String overrideUrl = _platform.environment['FLUTTER_STORAGE_BASE_URL'];
-      if (overrideUrl != null && url.toString().contains(overrideUrl)) {
+      if (url.toString().contains(overrideUrl)) {
         _logger.printError(error.toString());
         throwToolExit(
           'The value of FLUTTER_STORAGE_BASE_URL ($overrideUrl) could not be '
@@ -136,7 +135,6 @@ class Net {
       _logger.printTrace('Download error: $error');
       return false;
     }
-    assert(response != null);
 
     // If we're making a HEAD request, we're only checking to see if the URL is
     // valid.
@@ -158,15 +156,14 @@ class Net {
     }
     _logger.printTrace('Received response from server, collecting bytes...');
     try {
-      assert(destSink != null);
       await response.forEach(destSink.add);
       return true;
     } on IOException catch (error) {
       _logger.printTrace('Download error: $error');
       return false;
     } finally {
-      await destSink?.flush();
-      await destSink?.close();
+      await destSink.flush();
+      await destSink.close();
     }
   }
 }

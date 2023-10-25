@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import '../convert.dart';
-import 'file_system.dart';
 
 /// Convert `foo_bar` to `fooBar`.
 String camelCase(String str) {
@@ -150,7 +149,7 @@ class SettingsFile {
 /// the same structure (`Map<String, dynamic>`) with the correct runtime types.
 Map<String, dynamic> castStringKeyedMap(dynamic untyped) {
   final Map<dynamic, dynamic> map = untyped as Map<dynamic, dynamic>;
-  return map?.cast<String, dynamic>();
+  return map.cast<String, dynamic>();
 }
 
 typedef AsyncCallback = Future<void> Function();
@@ -211,7 +210,7 @@ String wrapText(String text, {
   int hangingIndent,
   int indent,
 }) {
-  if (text == null || text.isEmpty) {
+  if (text.isEmpty) {
     return '';
   }
   indent ??= 0;
@@ -295,10 +294,9 @@ List<String> _wrapTextAsLines(String text, {
   int columnWidth,
   @required bool shouldWrap,
 }) {
-  if (text == null || text.isEmpty) {
+  if (text.isEmpty) {
     return <String>[''];
   }
-  assert(columnWidth != null);
   assert(columnWidth >= 0);
   assert(start >= 0);
 
@@ -363,10 +361,8 @@ List<String> _wrapTextAsLines(String text, {
       if (index - currentLineStart >= effectiveLength) {
         // Back up to the last whitespace, unless there wasn't any, in which
         // case we just split where we are.
-        if (lastWhitespace != null) {
-          index = lastWhitespace;
-        }
-
+        index = lastWhitespace;
+      
         result.add(joinRun(splitLine, currentLineStart, index));
 
         // Skip any intervening whitespace.

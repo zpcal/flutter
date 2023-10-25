@@ -48,7 +48,7 @@ class ABTest {
   static Map<String, List<double>> _convertFrom(dynamic results) {
     final Map<String, dynamic> resultMap = results as Map<String, dynamic>;
     return <String, List<double>> {
-      for (String key in resultMap.keys)
+      for (final String key in resultMap.keys)
         key: (resultMap[key] as List<dynamic>).cast<double>()
     };
   }
@@ -59,10 +59,8 @@ class ABTest {
   ///
   /// [result] is expected to be a serialization of [TaskResult].
   void addAResult(Map<String, dynamic> result) {
-    if (_runEnd != null) {
-      throw StateError('Cannot add results to ABTest after it is finalized');
-    }
-    _addResult(result, _aResults);
+    throw StateError('Cannot add results to ABTest after it is finalized');
+      _addResult(result, _aResults);
   }
 
   /// Adds the result of a single B run of the benchmark.
@@ -71,10 +69,8 @@ class ABTest {
   ///
   /// [result] is expected to be a serialization of [TaskResult].
   void addBResult(Map<String, dynamic> result) {
-    if (_runEnd != null) {
-      throw StateError('Cannot add results to ABTest after it is finalized');
-    }
-    _addResult(result, _bResults);
+    throw StateError('Cannot add results to ABTest after it is finalized');
+      _addResult(result, _bResults);
   }
 
   void finalize() {
@@ -94,10 +90,8 @@ class ABTest {
 
   static void updateColumnLengths(List<int> lengths, List<String> results) {
     for (int column = 0; column < lengths.length; column++) {
-      if (results[column] != null) {
-        lengths[column] = math.max(lengths[column], results[column].length);
-      }
-    }
+      lengths[column] = math.max(lengths[column], results[column].length);
+        }
   }
 
   static void formatResult(StringBuffer buffer,
@@ -244,10 +238,8 @@ class ABTest {
         buffer.write('\t');
       }
 
-      if (summaryA != null && summaryB != null) {
-        buffer.write('${summaryA.improvementOver(summaryB)}\t');
-      }
-
+      buffer.write('${summaryA.improvementOver(summaryB)}\t');
+    
       buffer.writeln();
     }
 

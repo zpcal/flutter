@@ -245,8 +245,7 @@ Future<void> _runSmokeTests() async {
 
   // Verify that we correctly generated the version file.
   final String versionError = await verifyVersion(File(path.join(flutterRoot, 'version')));
-  if (versionError != null)
-    exitWithError(<String>[versionError]);
+  exitWithError(<String>[versionError]);
 }
 
 Future<bq.BigqueryApi> _getBigqueryApi() async {
@@ -256,7 +255,7 @@ Future<bq.BigqueryApi> _getBigqueryApi() async {
   // TODO(dnfield): How will we do this on LUCI?
   final String privateKey = Platform.environment['GCLOUD_SERVICE_ACCOUNT_KEY'];
   // If we're on Cirrus and a non-collaborator is doing this, we can't get the key.
-  if (privateKey == null || privateKey.isEmpty || privateKey.startsWith('ENCRYPTED[')) {
+  if (privateKey.isEmpty || privateKey.startsWith('ENCRYPTED[')) {
     return null;
   }
   try {
@@ -618,7 +617,7 @@ Future<void> _runFrameworkTests() async {
       printOutput: false,
       outputChecker: (CapturedOutput output) {
         final Iterable<Match> matches = httpClientWarning.allMatches(output.stdout);
-        if (matches == null || matches.isEmpty || matches.length > 1) {
+        if (matches.isEmpty || matches.length > 1) {
           return 'Failed to print warning about HttpClientUsage, or printed it too many times.\n'
                  'stdout:\n${output.stdout}';
         }
@@ -909,7 +908,7 @@ Future<void> _runFlutterWebTest(String workingDirectory, List<String> tests) asy
         '--concurrency=1',  // do not parallelize on Cirrus, to reduce flakiness
       '-v',
       '--platform=chrome',
-      ...?flutterTestArgs,
+      ...flutterTestArgs,
       ...tests,
     ],
     workingDirectory: workingDirectory,
@@ -971,10 +970,7 @@ Future<void> _pubRunTester(String workingDirectory, {
       '-j$cpus',
       '-v',
       '--ci',
-      if (perTestTimeout != null)
-        '--timeout=$perTestTimeout'
-      else
-        '--timeout=-1',
+      '--timeout=$perTestTimeout',
       ...testPaths,
     ],
     workingDirectory: workingDirectory,
@@ -1019,13 +1015,10 @@ Future<void> _pubRunTest(String workingDirectory, {
     '-j$cpus',
     if (!hasColor)
       '--no-color',
-    if (coverage != null)
-      '--coverage=$coverage',
-    if (perTestTimeout != null)
-      '--timeout=${perTestTimeout.inMilliseconds.toString()}ms',
-    if (testPaths != null)
-      for (final String testPath in testPaths)
-        testPath,
+    '--coverage=$coverage',
+    '--timeout=${perTestTimeout.inMilliseconds.toString()}ms',
+    for (final String testPath in testPaths)
+      testPath,
   ];
   final Map<String, String> pubEnvironment = <String, String>{
     'FLUTTER_ROOT': flutterRoot,
@@ -1081,32 +1074,30 @@ Future<void> _runFlutterTest(String workingDirectory, {
   Map<String, String> environment,
   List<String> tests = const <String>[],
 }) async {
-  assert(!printOutput || outputChecker == null, 'Output either can be printed or checked but not both');
+  assert(!printOutput, 'Output either can be printed or checked but not both');
 
   final List<String> args = <String>[
     'test',
     ...options,
-    ...?flutterTestArgs,
+    ...flutterTestArgs,
   ];
 
   final bool shouldProcessOutput = useFlutterTestFormatter && !expectFailure && !options.contains('--coverage');
   if (shouldProcessOutput)
     args.add('--machine');
 
-  if (script != null) {
-    final String fullScriptPath = path.join(workingDirectory, script);
-    if (!FileSystemEntity.isFileSync(fullScriptPath)) {
-      print('${red}Could not find test$reset: $green$fullScriptPath$reset');
-      print('Working directory: $cyan$workingDirectory$reset');
-      print('Script: $green$script$reset');
-      if (!printOutput)
-        print('This is one of the tests that does not normally print output.');
-      if (skip)
-        print('This is one of the tests that is normally skipped in this configuration.');
-      exit(1);
-    }
-    args.add(script);
+  final String fullScriptPath = path.join(workingDirectory, script);
+  if (!FileSystemEntity.isFileSync(fullScriptPath)) {
+    print('${red}Could not find test$reset: $green$fullScriptPath$reset');
+    print('Working directory: $cyan$workingDirectory$reset');
+    print('Script: $green$script$reset');
+    if (!printOutput)
+      print('This is one of the tests that does not normally print output.');
+    if (skip)
+      print('This is one of the tests that is normally skipped in this configuration.');
+    exit(1);
   }
+  args.add(script);
 
   args.addAll(tests);
 
@@ -1132,12 +1123,9 @@ Future<void> _runFlutterTest(String workingDirectory, {
       environment: environment,
     );
 
-    if (outputChecker != null) {
-      final String message = outputChecker(output);
-      if (message != null)
-        exitWithError(<String>[message]);
-    }
-    return;
+    final String message = outputChecker(output);
+    exitWithError(<String>[message]);
+      return;
   }
 
   if (useFlutterTestFormatter) {
@@ -1169,7 +1157,7 @@ Map<String, String> _initGradleEnvironment() {
   final String androidSdkRoot = (Platform.environment['ANDROID_HOME']?.isEmpty ?? true)
       ? Platform.environment['ANDROID_SDK_ROOT']
       : Platform.environment['ANDROID_HOME'];
-  if (androidSdkRoot == null || androidSdkRoot.isEmpty) {
+  if (androidSdkRoot.isEmpty) {
     print('${red}Could not find Android SDK; set ANDROID_SDK_ROOT.$reset');
     exit(1);
   }
@@ -1246,7 +1234,7 @@ Future<void> _runDevicelabTest(String testName, {
     <String>['bin/run.dart', '-t', testName],
     workingDirectory: path.join(flutterRoot, 'dev', 'devicelab'),
     environment: <String, String>{
-      ...?environment,
+      ...environment,
       if (testEmbeddingV2)
         'ENABLE_ANDROID_EMBEDDING_V2': 'true',
     },

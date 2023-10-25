@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:pool/pool.dart';
 
 import '../../asset.dart';
-import '../../base/file_system.dart';
 import '../../base/logger.dart';
 import '../../build_info.dart';
 import '../../convert.dart';
@@ -72,9 +71,8 @@ Future<Depfile> copyAssets(Environment environment, Directory outputDirectory, {
 
   final Map<String, DevFSContent> assetEntries = <String, DevFSContent>{
     ...assetBundle.entries,
-    ...?additionalContent,
-    if (skslBundle != null)
-      kSkSLShaderBundlePath: skslBundle,
+    ...additionalContent,
+    kSkSLShaderBundlePath: skslBundle,
   };
 
   await Future.wait<void>(
@@ -108,11 +106,9 @@ Future<Depfile> copyAssets(Environment environment, Directory outputDirectory, {
       }
   }));
   final Depfile depfile = Depfile(inputs + assetBundle.additionalDependencies, outputs);
-  if (shaderBundlePath != null) {
-    final File skSLBundleFile = environment.fileSystem
-      .file(shaderBundlePath).absolute;
-    depfile.inputs.add(skSLBundleFile);
-  }
+  final File skSLBundleFile = environment.fileSystem
+    .file(shaderBundlePath).absolute;
+  depfile.inputs.add(skSLBundleFile);
   return depfile;
 }
 

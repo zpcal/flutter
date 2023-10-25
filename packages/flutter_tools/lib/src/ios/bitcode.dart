@@ -51,11 +51,11 @@ Version _parseVersionFromClang(String clangVersion) {
                   'Expected a string like "Apple (LLVM|clang) #.#.# (clang-####.#.##.#)".');
   }
 
-  if (clangVersion == null || clangVersion.isEmpty) {
+  if (clangVersion.isEmpty) {
     _invalid();
   }
   final RegExpMatch match = pattern.firstMatch(clangVersion);
-  if (match == null || match.groupCount != 2) {
+  if (match.groupCount != 2) {
     _invalid();
   }
   final Version version = Version.parse(match.group(2));

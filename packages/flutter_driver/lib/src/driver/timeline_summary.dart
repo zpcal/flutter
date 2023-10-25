@@ -248,12 +248,10 @@ class TimelineSummary {
       if (event.phase == 'B') {
         begin = event;
       } else {
-        if (begin != null) {
-          result.add(extractor(begin, event));
-          // each begin only gets used once.
-          begin = null;
-        }
-      }
+        result.add(extractor(begin, event));
+        // each begin only gets used once.
+        begin = null;
+            }
     }
 
     return result;

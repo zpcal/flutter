@@ -4,8 +4,8 @@
 
 // @dart = 2.8
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -4,7 +4,6 @@
 
 import 'package:meta/meta.dart';
 
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../convert.dart';
 import '../globals.dart' as globals;
@@ -131,7 +130,7 @@ String generatePluralMethod(Message message, AppResourceBundle bundle) {
   for (final String pluralKey in pluralIds.keys) {
     final RegExp expRE = RegExp('($pluralKey)\\s*{([^}]+)}');
     final RegExpMatch match = expRE.firstMatch(easyMessage);
-    if (match != null && match.groupCount == 2) {
+    if (match.groupCount == 2) {
       String argValue = generateString(match.group(2));
       for (final Placeholder placeholder in message.placeholders) {
         if (placeholder != countPlaceholder && placeholder.requiresFormatting) {
@@ -220,7 +219,7 @@ String _generateLookupByAllCodes(
   String Function(LocaleInfo) generateSwitchClauseTemplate,
 ) {
   final Iterable<LocaleInfo> localesWithAllCodes = allBundles.locales.where((LocaleInfo locale) {
-    return locale.scriptCode != null && locale.countryCode != null;
+    return locale.countryCode != null;
   });
 
   if (localesWithAllCodes.isEmpty) {
@@ -245,7 +244,7 @@ String _generateLookupByScriptCode(
   final Iterable<String> switchClauses = allBundles.languages.map((String language) {
     final Iterable<LocaleInfo> locales = allBundles.localesForLanguage(language);
     final Iterable<LocaleInfo> localesWithScriptCodes = locales.where((LocaleInfo locale) {
-      return locale.scriptCode != null && locale.countryCode == null;
+      return locale.countryCode == null;
     });
 
     if (localesWithScriptCodes.isEmpty) {
@@ -278,7 +277,7 @@ String _generateLookupByCountryCode(
   final Iterable<String> switchClauses = allBundles.languages.map((String language) {
     final Iterable<LocaleInfo> locales = allBundles.localesForLanguage(language);
     final Iterable<LocaleInfo> localesWithCountryCodes = locales.where((LocaleInfo locale) {
-      return locale.countryCode != null && locale.scriptCode == null;
+      return locale.scriptCode == null;
     });
 
     if (localesWithCountryCodes.isEmpty) {
@@ -693,7 +692,7 @@ class LocalizationsGenerator {
   /// classes.
   @visibleForTesting
   set className(String classNameString) {
-    if (classNameString == null || classNameString.isEmpty) {
+    if (classNameString.isEmpty) {
       throw L10nException('classNameString argument cannot be null or empty');
     }
     if (!_isValidClassName(classNameString)) {
@@ -708,7 +707,7 @@ class LocalizationsGenerator {
   /// will take priority over the other locales.
   @visibleForTesting
   void setPreferredSupportedLocales(List<String> inputLocales) {
-    if (inputLocales == null || inputLocales.isEmpty) {
+    if (inputLocales.isEmpty) {
       _preferredSupportedLocales = const <LocaleInfo>[];
     } else {
       _preferredSupportedLocales = inputLocales.map((String localeString) {
@@ -718,25 +717,24 @@ class LocalizationsGenerator {
   }
 
   void _setHeader(String headerString, String headerFile) {
-    if (headerString != null && headerFile != null) {
-      throw L10nException(
-        'Cannot accept both header and header file arguments. \n'
-        'Please make sure to define only one or the other. '
-      );
-    }
-
+    throw L10nException(
+      'Cannot accept both header and header file arguments. \n'
+      'Please make sure to define only one or the other. '
+    );
+  
     if (headerString != null) {
       header = headerString;
-    } else if (headerFile != null) {
+    } else {
       try {
-        header = _fs.file(globals.fs.path.join(inputDirectory.path, headerFile)).readAsStringSync();
-      } on FileSystemException catch (error) {
-        throw L10nException (
-          'Failed to read header file: "$headerFile". \n'
-          'FileSystemException: ${error.message}'
-        );
-      }
+      header = _fs.file(globals.fs.path.join(inputDirectory.path, headerFile)).readAsStringSync();
+    } on FileSystemException catch (error) {
+      throw L10nException (
+        'Failed to read header file: "$headerFile". \n'
+        'FileSystemException: ${error.message}'
+      );
     }
+    }
+  
   }
 
   String _getAbsoluteProjectPath(String relativePath) => globals.fs.path.join(projectDirectory.path, relativePath);
@@ -917,9 +915,9 @@ class LocalizationsGenerator {
 
       if (countryCode == null && scriptCode == null) {
         return 'Locale(\'$languageCode\')';
-      } else if (countryCode != null && scriptCode == null) {
+      } else if (scriptCode == null) {
         return 'Locale(\'$languageCode\', \'$countryCode\')';
-      } else if (countryCode != null && scriptCode != null) {
+      } else if (scriptCode != null) {
         return 'Locale.fromSubtags(languageCode: \'$languageCode\', countryCode: \'$countryCode\', scriptCode: \'$scriptCode\')';
       } else {
         return 'Locale.fromSubtags(languageCode: \'$languageCode\', scriptCode: \'$scriptCode\')';
@@ -1052,7 +1050,7 @@ class LocalizationsGenerator {
       );
     }
 
-    if (untranslatedMessagesFile == null || untranslatedMessagesFile == '') {
+    if (untranslatedMessagesFile == '') {
       _unimplementedMessages.forEach((LocaleInfo locale, List<String> messages) {
         logger.printStatus('"$locale": ${messages.length} untranslated message(s).');
       });

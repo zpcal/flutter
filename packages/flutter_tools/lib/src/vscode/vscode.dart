@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import '../base/file_system.dart';
 import '../base/platform.dart';
 import '../base/utils.dart';
 import '../base/version.dart';
@@ -67,10 +66,8 @@ class VsCode {
         globals.fs.path.join(installPath, 'resources', 'app', 'package.json');
     final String versionString = _getVersionFromPackageJson(packageJsonPath);
     Version version;
-    if (versionString != null) {
-      version = Version.parse(versionString);
-    }
-    return VsCode._(installPath, extensionDirectory, version: version, edition: edition);
+    version = Version.parse(versionString);
+      return VsCode._(installPath, extensionDirectory, version: version, edition: edition);
   }
 
   final String directory;
@@ -166,45 +163,41 @@ class VsCode {
     final String localAppData = platform.environment['localappdata'];
 
     final List<_VsCodeInstallLocation> searchLocations = <_VsCodeInstallLocation>[
-      if (localAppData != null)
+      _VsCodeInstallLocation(
+        fileSystem.path.join(localAppData, r'Programs\Microsoft VS Code'),
+        '.vscode',
+      ),
+      ...<_VsCodeInstallLocation>[
         _VsCodeInstallLocation(
-          fileSystem.path.join(localAppData, r'Programs\Microsoft VS Code'),
+          fileSystem.path.join(progFiles86, 'Microsoft VS Code'),
           '.vscode',
+          edition: '32-bit edition',
         ),
-      if (progFiles86 != null)
-        ...<_VsCodeInstallLocation>[
-          _VsCodeInstallLocation(
-            fileSystem.path.join(progFiles86, 'Microsoft VS Code'),
-            '.vscode',
-            edition: '32-bit edition',
-          ),
-          _VsCodeInstallLocation(
-            fileSystem.path.join(progFiles86, 'Microsoft VS Code Insiders'),
-            '.vscode-insiders',
-            edition: '32-bit edition',
-            isInsiders: true,
-          ),
-        ],
-      if (progFiles != null)
-        ...<_VsCodeInstallLocation>[
-          _VsCodeInstallLocation(
-            fileSystem.path.join(progFiles, 'Microsoft VS Code'),
-            '.vscode',
-            edition: '64-bit edition',
-          ),
-          _VsCodeInstallLocation(
-            fileSystem.path.join(progFiles, 'Microsoft VS Code Insiders'),
-            '.vscode-insiders',
-            edition: '64-bit edition',
-            isInsiders: true,
-          ),
-        ],
-      if (localAppData != null)
         _VsCodeInstallLocation(
-          fileSystem.path.join(localAppData, r'Programs\Microsoft VS Code Insiders'),
+          fileSystem.path.join(progFiles86, 'Microsoft VS Code Insiders'),
           '.vscode-insiders',
+          edition: '32-bit edition',
           isInsiders: true,
         ),
+      ],
+      ...<_VsCodeInstallLocation>[
+        _VsCodeInstallLocation(
+          fileSystem.path.join(progFiles, 'Microsoft VS Code'),
+          '.vscode',
+          edition: '64-bit edition',
+        ),
+        _VsCodeInstallLocation(
+          fileSystem.path.join(progFiles, 'Microsoft VS Code Insiders'),
+          '.vscode-insiders',
+          edition: '64-bit edition',
+          isInsiders: true,
+        ),
+      ],
+      _VsCodeInstallLocation(
+        fileSystem.path.join(localAppData, r'Programs\Microsoft VS Code Insiders'),
+        '.vscode-insiders',
+        isInsiders: true,
+      ),
     ];
     return _findInstalled(searchLocations, fileSystem);
   }

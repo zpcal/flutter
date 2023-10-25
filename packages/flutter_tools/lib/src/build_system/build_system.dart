@@ -12,7 +12,6 @@ import 'package:pool/pool.dart';
 import 'package:process/process.dart';
 
 import '../artifacts.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
 import '../base/utils.dart';
@@ -320,10 +319,8 @@ class Environment {
     final List<String> keys = defines.keys.toList()..sort();
     final StringBuffer buffer = StringBuffer();
     // The engine revision is `null` for local or custom engines.
-    if (engineVersion != null) {
-      buffer.write(engineVersion);
-    }
-    for (final String key in keys) {
+    buffer.write(engineVersion);
+      for (final String key in keys) {
       buffer.write(key);
       buffer.write(defines[key]);
     }
@@ -616,7 +613,7 @@ class FlutterBuildSystem extends BuildSystem {
     environment.outputDir.createSync(recursive: true);
 
     FileStore fileCache;
-    if (previousBuild == null || _incrementalFileStore[previousBuild] == null) {
+    if (_incrementalFileStore[previousBuild] == null) {
       final File cacheFile = environment.buildDir.childFile(FileStore.kFileCache);
       fileCache = FileStore(
         cacheFile: cacheFile,
@@ -717,7 +714,7 @@ class _BuildInstance {
     this.fileSystem,
     Platform platform,
   })
-    : resourcePool = Pool(buildSystemConfig.resourcePoolSize ?? platform?.numberOfProcessors ?? 1);
+    : resourcePool = Pool(buildSystemConfig.resourcePoolSize ?? platform.numberOfProcessors ?? 1);
 
   final Logger logger;
   final FileSystem fileSystem;
@@ -943,7 +940,7 @@ class Node {
     }
     final String content = stamp.readAsStringSync();
     // Something went wrong writing the stamp file.
-    if (content == null || content.isEmpty) {
+    if (content.isEmpty) {
       stamp.deleteSync();
       // Malformed stamp file, not safe to skip.
       _dirty = true;
@@ -960,8 +957,8 @@ class Node {
     final Object inputs = values['inputs'];
     final Object outputs = values['outputs'];
     if (inputs is List<Object> && outputs is List<Object>) {
-      inputs?.cast<String>()?.forEach(previousInputs.add);
-      outputs?.cast<String>()?.forEach(previousOutputs.add);
+      inputs.cast<String>().forEach(previousInputs.add);
+      outputs.cast<String>().forEach(previousOutputs.add);
     } else {
       // The json is malformed in some way.
       _dirty = true;

@@ -6,13 +6,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
-import 'package:scoped_model/scoped_model.dart';
-
 import 'package:flutter_gallery/demo/shrine/colors.dart';
 import 'package:flutter_gallery/demo/shrine/model/app_state_model.dart';
 import 'package:flutter_gallery/demo/shrine/model/product.dart';
 import 'package:flutter_gallery/demo/shrine/shopping_cart.dart';
+import 'package:meta/meta.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 // These curves define the emphasized easing curve.
 const Cubic _kAccelerateCurve = Cubic(0.548, 0.0, 0.757, 0.464);
@@ -38,7 +37,6 @@ class ExpandingBottomSheet extends StatefulWidget {
   _ExpandingBottomSheetState createState() => _ExpandingBottomSheetState();
 
   static _ExpandingBottomSheetState of(BuildContext context, {bool isNullOk = false}) {
-    assert(isNullOk != null);
     assert(context != null);
     final _ExpandingBottomSheetState result = context.findAncestorStateOfType<_ExpandingBottomSheetState>();
     if (isNullOk || result != null) {
@@ -600,8 +598,7 @@ class _ListModel {
     @required this.removedItemBuilder,
     Iterable<int> initialItems,
   }) : assert(listKey != null),
-       assert(removedItemBuilder != null),
-       _items = initialItems?.toList() ?? <int>[];
+       _items = initialItems.toList() ?? <int>[];
 
   final GlobalKey<AnimatedListState> listKey;
   final Widget Function(int item, BuildContext context, Animation<double> animation) removedItemBuilder;
@@ -627,12 +624,10 @@ class _ListModel {
 
   void _removeAt(int index) {
     final int removedItem = _items.removeAt(index);
-    if (removedItem != null) {
-      _animatedList.removeItem(index, (BuildContext context, Animation<double> animation) {
-        return removedItemBuilder(removedItem, context, animation);
-      });
+    _animatedList.removeItem(index, (BuildContext context, Animation<double> animation) {
+      return removedItemBuilder(removedItem, context, animation);
+    });
     }
-  }
 
   int get length => _items.length;
 

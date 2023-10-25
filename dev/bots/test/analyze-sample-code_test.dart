@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'common.dart';
 
 void main() {
   test('analyze-sample-code', () {

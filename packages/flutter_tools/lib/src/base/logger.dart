@@ -217,7 +217,7 @@ class StdoutLogger extends Logger {
     int hangingIndent,
     bool wrap,
   }) {
-    _status?.pause();
+    _status.pause();
     message ??= '';
     message = wrapText(message,
       indent: indent,
@@ -230,10 +230,8 @@ class StdoutLogger extends Logger {
     }
     message = _terminal.color(message, color ?? TerminalColor.red);
     writeToStdErr('$message\n');
-    if (stackTrace != null) {
-      writeToStdErr('$stackTrace\n');
-    }
-    _status?.resume();
+    writeToStdErr('$stackTrace\n');
+      _status.resume();
   }
 
   @override
@@ -246,7 +244,7 @@ class StdoutLogger extends Logger {
     int hangingIndent,
     bool wrap,
   }) {
-    _status?.pause();
+    _status.pause();
     message ??= '';
     message = wrapText(message,
       indent: indent,
@@ -257,14 +255,12 @@ class StdoutLogger extends Logger {
     if (emphasis == true) {
       message = _terminal.bolden(message);
     }
-    if (color != null) {
-      message = _terminal.color(message, color);
-    }
-    if (newline != false) {
+    message = _terminal.color(message, color);
+      if (newline != false) {
       message = '$message\n';
     }
     writeToStdOut(message);
-    _status?.resume();
+    _status.resume();
   }
 
   @protected
@@ -284,17 +280,14 @@ class StdoutLogger extends Logger {
     bool multilineOutput = false,
     int progressIndicatorPadding = kDefaultStatusPadding,
   }) {
-    assert(progressIndicatorPadding != null);
-    if (_status != null) {
-      // Ignore nested progresses; return a no-op status object.
-      return SilentStatus(
-        timeout: timeout,
-        onFinish: _clearStatus,
-        timeoutConfiguration: _timeoutConfiguration,
-        stopwatch: _stopwatchFactory.createStopwatch(),
-      )..start();
-    }
-    if (supportsColor) {
+    // Ignore nested progresses; return a no-op status object.
+    return SilentStatus(
+      timeout: timeout,
+      onFinish: _clearStatus,
+      timeoutConfiguration: _timeoutConfiguration,
+      stopwatch: _stopwatchFactory.createStopwatch(),
+    )..start();
+      if (supportsColor) {
       _status = AnsiStatus(
         message: message,
         timeout: timeout,
@@ -329,9 +322,9 @@ class StdoutLogger extends Logger {
 
   @override
   void clear() {
-    _status?.pause();
+    _status.pause();
     writeToStdOut(_terminal.clearScreen() + '\n');
-    _status?.resume();
+    _status.resume();
   }
 }
 
@@ -482,7 +475,6 @@ class BufferLogger extends Logger {
     bool multilineOutput = false,
     int progressIndicatorPadding = kDefaultStatusPadding,
   }) {
-    assert(progressIndicatorPadding != null);
     printStatus(message);
     return SilentStatus(
       timeout: timeout,
@@ -587,7 +579,6 @@ class VerboseLogger extends Logger {
     bool multilineOutput = false,
     int progressIndicatorPadding = kDefaultStatusPadding,
   }) {
-    assert(progressIndicatorPadding != null);
     printStatus(message);
     final Stopwatch timer = _stopwatchFactory.createStopwatch()..start();
     return SilentStatus(
@@ -597,12 +588,12 @@ class VerboseLogger extends Logger {
       stopwatch: _stopwatchFactory.createStopwatch(),
       onFinish: () {
         String time;
-        if (timeout == null || timeout > _timeoutConfiguration.fastOperation) {
+        if (timeout > _timeoutConfiguration.fastOperation) {
           time = getElapsedAsSeconds(timer.elapsed);
         } else {
           time = getElapsedAsMilliseconds(timer.elapsed);
         }
-        if (timeout != null && timer.elapsed > timeout) {
+        if (timer.elapsed > timeout) {
           printTrace('$message (completed in $time, longer than expected)');
         } else {
           printTrace('$message (completed in $time)');
@@ -636,10 +627,8 @@ class VerboseLogger extends Logger {
 
     if (type == _LogType.error) {
       parent.printError(prefix + _terminal.bolden(indentMessage));
-      if (stackTrace != null) {
-        parent.printError(indent + stackTrace.toString().replaceAll('\n', '\n$indent'));
-      }
-    } else if (type == _LogType.status) {
+      parent.printError(indent + stackTrace.toString().replaceAll('\n', '\n$indent'));
+        } else if (type == _LogType.status) {
       parent.printStatus(prefix + _terminal.bolden(indentMessage));
     } else {
       parent.printStatus(prefix + indentMessage);
@@ -729,11 +718,11 @@ abstract class Status {
 
   @protected
   @visibleForTesting
-  bool get seemsSlow => timeout != null && _stopwatch.elapsed > timeout;
+  bool get seemsSlow => _stopwatch.elapsed > timeout;
 
   @protected
   String get elapsedTime {
-    if (timeout == null || timeout > _timeoutConfiguration.fastOperation) {
+    if (timeout > _timeoutConfiguration.fastOperation) {
       return getElapsedAsSeconds(_stopwatch.elapsed);
     }
     return getElapsedAsMilliseconds(_stopwatch.elapsed);
@@ -765,10 +754,8 @@ abstract class Status {
   void finish() {
     assert(_stopwatch.isRunning);
     _stopwatch.stop();
-    if (onFinish != null) {
-      onFinish();
+    onFinish();
     }
-  }
 }
 
 /// A [SilentStatus] shows nothing.
@@ -787,10 +774,8 @@ class SilentStatus extends Status {
 
   @override
   void finish() {
-    if (onFinish != null) {
-      onFinish();
+    onFinish();
     }
-  }
 }
 
 /// Constructor writes [message] to [stdout].  On [cancel] or [stop], will call
@@ -804,9 +789,7 @@ class SummaryStatus extends Status {
     this.padding = kDefaultStatusPadding,
     VoidCallback onFinish,
     Stdio stdio,
-  }) : assert(message != null),
-       assert(padding != null),
-       _stdio = stdio ?? globals.stdio,
+  }) : _stdio = stdio ?? globals.stdio,
        super(
          timeout: timeout,
          onFinish: onFinish,
@@ -943,7 +926,6 @@ class AnsiSpinner extends Status {
 
   void _callback(Timer timer) {
     assert(this.timer == timer);
-    assert(timer != null);
     assert(timer.isActive);
     _writeToStdOut(_backspace);
     ticks += 1;
@@ -964,7 +946,6 @@ class AnsiSpinner extends Status {
 
   @override
   void finish() {
-    assert(timer != null);
     assert(timer.isActive);
     timer.cancel();
     timer = null;
@@ -978,7 +959,6 @@ class AnsiSpinner extends Status {
 
   @override
   void pause() {
-    assert(timer != null);
     assert(timer.isActive);
     _clearSpinner();
     timer.cancel();
@@ -986,7 +966,6 @@ class AnsiSpinner extends Status {
 
   @override
   void resume() {
-    assert(timer != null);
     assert(!timer.isActive);
     _startSpinner();
   }
@@ -1011,10 +990,7 @@ class AnsiStatus extends AnsiSpinner {
     VoidCallback onFinish,
     Stdio stdio,
     TimeoutConfiguration timeoutConfiguration,
-  }) : assert(message != null),
-       assert(multilineOutput != null),
-       assert(padding != null),
-       super(
+  }) : super(
          timeout: timeout,
          onFinish: onFinish,
          stdio: stdio,

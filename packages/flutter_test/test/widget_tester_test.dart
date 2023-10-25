@@ -6,17 +6,16 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:test_api/src/frontend/async_matcher.dart' show AsyncMatcher;
 // ignore: deprecated_member_use
 import 'package:test_api/test_api.dart' as test_package;
-import 'package:test_api/src/frontend/async_matcher.dart' show AsyncMatcher;
 
 const List<Widget> fooBarTexts = <Text>[
   Text('foo', textDirection: TextDirection.ltr),
@@ -785,7 +784,6 @@ class _SingleTickerTestState extends State<_SingleTickerTest> with SingleTickerP
 
 class _AlwaysAnimating extends StatefulWidget {
   const _AlwaysAnimating({
-    this.child,
     this.onPaint,
   });
 

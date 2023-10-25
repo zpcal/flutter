@@ -6,9 +6,9 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart' show DragStartBehavior;
 
 import 'backdrop.dart';
 import 'demos.dart';
@@ -170,14 +170,12 @@ class _DemoItem extends StatelessWidget {
   final GalleryDemo demo;
 
   void _launchDemo(BuildContext context) {
-    if (demo.routeName != null) {
-      Timeline.instantSync('Start Transition', arguments: <String, String>{
-        'from': '/',
-        'to': demo.routeName,
-      });
-      Navigator.pushNamed(context, demo.routeName);
+    Timeline.instantSync('Start Transition', arguments: <String, String>{
+      'from': '/',
+      'to': demo.routeName,
+    });
+    Navigator.pushNamed(context, demo.routeName);
     }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,13 +214,12 @@ class _DemoItem extends StatelessWidget {
                       color: isDark ? Colors.white : const Color(0xFF202124),
                     ),
                   ),
-                  if (demo.subtitle != null)
-                    Text(
-                      demo.subtitle,
-                      style: theme.textTheme.bodyText2.copyWith(
-                        color: isDark ? Colors.white : const Color(0xFF60646B)
-                      ),
+                  Text(
+                    demo.subtitle,
+                    style: theme.textTheme.bodyText2.copyWith(
+                      color: isDark ? Colors.white : const Color(0xFF60646B)
                     ),
+                  ),
                 ],
               ),
             ),
@@ -333,11 +330,9 @@ class _GalleryHomeState extends State<GalleryHome> with SingleTickerProviderStat
         child: WillPopScope(
           onWillPop: () {
             // Pop the category page if Android back button is pressed.
-            if (_category != null) {
-              setState(() => _category = null);
-              return Future<bool>.value(false);
-            }
-            return Future<bool>.value(true);
+            setState(() => _category = null);
+            return Future<bool>.value(false);
+                      return Future<bool>.value(true);
           },
           child: Backdrop(
             backTitle: const Text('Options'),

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter_devicelab/framework/running_processes.dart';
-import 'common.dart';
 
 void main() {
   test('Parse PowerShell result', () {

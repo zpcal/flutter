@@ -5,10 +5,10 @@
 import 'package:file/file.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/flutter_manifest.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter_tools/src/globals.dart' as globals;
+import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
-import 'common.dart';
+
 
 /// Writes a schemaData used for validating pubspec.yaml files when parsing
 /// asset information.

@@ -32,7 +32,6 @@ class AndroidConsole {
   StreamQueue<String> _queue;
 
   Future<void> connect() async {
-    assert(_socket != null);
     assert(_queue == null);
 
     _queue = StreamQueue<String>(_socket.asyncMap(ascii.decode));
@@ -50,7 +49,7 @@ class AndroidConsole {
   }
 
   void destroy() {
-    _socket?.destroy();
+    _socket.destroy();
     _socket = null;
     _queue = null;
   }
@@ -80,6 +79,6 @@ class AndroidConsole {
   }
 
   void _write(String text) {
-    _socket?.add(ascii.encode(text));
+    _socket.add(ascii.encode(text));
   }
 }

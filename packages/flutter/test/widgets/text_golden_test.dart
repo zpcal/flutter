@@ -4,10 +4,10 @@
 
 // @dart = 2.8
 
-@TestOn('!chrome') // Flaky on web
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+@TestOn('!chrome') // Flaky on web
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('Centered text', (WidgetTester tester) async {

@@ -91,7 +91,7 @@ Future<void> main(List<String> args) async {
     outputDill,
     '--packages',
     packages,
-    if (deviceName != null && deviceName.isNotEmpty) ...<String>['-d', deviceName],
+    if (deviceName.isNotEmpty) ...<String>['-d', deviceName],
     if (verbose) '--verbose',
   ];
   Cache.disableLocking(); // ignore: invalid_use_of_visible_for_testing_member

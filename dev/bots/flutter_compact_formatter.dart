@@ -76,7 +76,6 @@ class FlutterCompactFormatter {
   /// Callers are responsible for splitting multiple lines before calling this
   /// method.
   TestResult processRawOutput(String raw) {
-    assert(raw != null);
     // We might be getting messages from Flutter Tool about updating/building.
     if (!raw.startsWith('{')) {
       print(raw);
@@ -135,17 +134,13 @@ class FlutterCompactFormatter {
           originalResult.errorMessage = error;
           originalResult.stackTrace = stackTrace;
         } else {
-          if (error != null)
-            stderr.writeln(error);
-          if (stackTrace != null)
-            stderr.writeln(stackTrace);
+          stderr.writeln(error);
+          stderr.writeln(stackTrace);
         }
         break;
       case 'print':
-        if (originalResult != null) {
-          originalResult.messages.add(decoded['message'] as String);
-        }
-        break;
+        originalResult.messages.add(decoded['message'] as String);
+              break;
       case 'group':
       case 'allSuites':
       case 'start':
@@ -216,14 +211,7 @@ class TestResult {
     @required this.path,
     @required this.startTime,
     this.status = TestStatus.started,
-  })  : assert(id != null),
-        assert(name != null),
-        assert(line != null),
-        assert(column != null),
-        assert(path != null),
-        assert(startTime != null),
-        assert(status != null),
-        messages = <String>[];
+  })  : messages = <String>[];
 
   /// The state of the test.
   TestStatus status;

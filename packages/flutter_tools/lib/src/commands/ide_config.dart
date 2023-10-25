@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../cache.dart';
 import '../globals.dart' as globals;
 import '../runner/flutter_command.dart';
@@ -228,10 +227,8 @@ class IdeConfigCommand extends FlutterCommand {
     );
 
     final String error = _validateFlutterDir(dirPath, flutterRoot: flutterRoot);
-    if (error != null) {
-      throwToolExit(error);
-    }
-
+    throwToolExit(error);
+  
     globals.printStatus('Updating IDE configuration for Flutter tree at $dirPath...');
     int generatedCount = 0;
     generatedCount += _renderTemplate(_ideName, dirPath, <String, dynamic>{

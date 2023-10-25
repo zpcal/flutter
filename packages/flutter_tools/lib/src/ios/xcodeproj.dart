@@ -9,7 +9,6 @@ import 'package:process/process.dart';
 
 import '../artifacts.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/platform.dart';
@@ -124,7 +123,7 @@ String parsedBuildName({
   @required FlutterManifest manifest,
   @required BuildInfo buildInfo,
 }) {
-  final String buildNameToParse = buildInfo?.buildName ?? manifest.buildName;
+  final String buildNameToParse = buildInfo.buildName ?? manifest.buildName;
   return validatedBuildNameForPlatform(TargetPlatform.ios, buildNameToParse, globals.logger);
 }
 
@@ -133,18 +132,18 @@ String parsedBuildNumber({
   @required FlutterManifest manifest,
   @required BuildInfo buildInfo,
 }) {
-  String buildNumberToParse = buildInfo?.buildNumber ?? manifest.buildNumber;
+  String buildNumberToParse = buildInfo.buildNumber ?? manifest.buildNumber;
   final String buildNumber = validatedBuildNumberForPlatform(
     TargetPlatform.ios,
     buildNumberToParse,
     globals.logger,
   );
-  if (buildNumber != null && buildNumber.isNotEmpty) {
+  if (buildNumber.isNotEmpty) {
     return buildNumber;
   }
   // Drop back to parsing build name if build number is not present. Build number is optional in the manifest, but
   // FLUTTER_BUILD_NUMBER is required as the backing value for the required CFBundleVersion.
-  buildNumberToParse = buildInfo?.buildName ?? manifest.buildName;
+  buildNumberToParse = buildInfo.buildName ?? manifest.buildName;
   return validatedBuildNumberForPlatform(
     TargetPlatform.ios,
     buildNumberToParse,
@@ -170,9 +169,7 @@ List<String> _xcodeBuildSettingsLines({
   xcodeBuildSettings.add('FLUTTER_APPLICATION_PATH=${globals.fs.path.normalize(project.directory.path)}');
 
   // Relative to FLUTTER_APPLICATION_PATH, which is [Directory.current].
-  if (targetOverride != null) {
-    xcodeBuildSettings.add('FLUTTER_TARGET=$targetOverride');
-  }
+  xcodeBuildSettings.add('FLUTTER_TARGET=$targetOverride');
 
   // The build outputs directory, relative to FLUTTER_APPLICATION_PATH.
   xcodeBuildSettings.add('FLUTTER_BUILD_DIR=${buildDirOverride ?? getBuildDirectory()}');
@@ -338,8 +335,7 @@ class XcodeProjectInterpreter {
       _executable,
       '-project',
       _fileSystem.path.absolute(projectPath),
-      if (scheme != null)
-        ...<String>['-scheme', scheme],
+      ...<String>['-scheme', scheme],
       '-showBuildSettings',
       ...environmentVariablesAsXcodeBuildSettings(_platform)
     ];
@@ -393,7 +389,7 @@ class XcodeProjectInterpreter {
       <String>[
         _executable,
         '-list',
-        if (projectFilename != null) ...<String>['-project', projectFilename],
+        ...<String>['-project', projectFilename],
       ],
       throwOnError: true,
       allowedFailures: (int c) => c == missingProjectExitCode,
@@ -424,10 +420,8 @@ List<String> environmentVariablesAsXcodeBuildSettings(Platform platform) {
 Map<String, String> parseXcodeBuildSettings(String showBuildSettingsOutput) {
   final Map<String, String> settings = <String, String>{};
   for (final Match match in showBuildSettingsOutput.split('\n').map<Match>(_settingExpr.firstMatch)) {
-    if (match != null) {
-      settings[match[1]] = match[2];
+    settings[match[1]] = match[2];
     }
-  }
   return settings;
 }
 
@@ -472,7 +466,7 @@ class XcodeProjectInfo {
         collector = schemes;
         continue;
       }
-      collector?.add(line.trim());
+      collector.add(line.trim());
     }
     if (schemes.isEmpty) {
       schemes.add('Runner');
@@ -490,7 +484,7 @@ class XcodeProjectInfo {
   /// The expected scheme for [buildInfo].
   @visibleForTesting
   static String expectedSchemeFor(BuildInfo buildInfo) {
-    return toTitleCase(buildInfo?.flavor ?? 'runner');
+    return toTitleCase(buildInfo.flavor ?? 'runner');
   }
 
   /// The expected build configuration for [buildInfo] and [scheme].

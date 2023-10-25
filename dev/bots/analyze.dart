@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core' hide print;
 import 'dart:io' hide exit;
@@ -223,7 +222,6 @@ Future<void> verifyDeprecations(String workingDirectory, { int minimumMatches = 
 }
 
 String _generateLicense(String prefix) {
-  assert(prefix != null);
   return '${prefix}Copyright 2014 The Flutter Authors. All rights reserved.\n'
          '${prefix}Use of this source code is governed by a BSD-style license that can be\n'
          '${prefix}found in the LICENSE file.';
@@ -283,7 +281,7 @@ Future<void> verifyNoTestImports(String workingDirectory) async {
   for (final File file in dartFiles) {
     for (final String line in file.readAsLinesSync()) {
       final Match match = _testImportPattern.firstMatch(line);
-      if (match != null && !_exemptTestImports.contains(match.group(2)))
+      if (!_exemptTestImports.contains(match.group(2)))
         errors.add(file.path);
     }
   }
@@ -402,7 +400,7 @@ Future<void> verifyGeneratedPluginRegistrants(String flutterRoot) async {
   if (outOfDate.isNotEmpty) {
     exitWithError(<String>[
       '${bold}The following GeneratedPluginRegistrants are out of date:$reset',
-      for (String registrant in outOfDate) ' - $registrant',
+      for (final String registrant in outOfDate) ' - $registrant',
       '\nRun "flutter inject-plugins" in the package that\'s out of date.',
     ]);
   }
@@ -463,13 +461,11 @@ Future<void> verifyNoBadImportsInFlutter(String workingDirectory) async {
 
   for (final String package in dependencyMap.keys) {
     final List<String> loop = _deepSearch<String>(dependencyMap, package);
-    if (loop != null) {
-      errors.add(
-        '${yellow}Dependency loop:$reset ' +
-        loop.join(' depends on ')
-      );
+    errors.add(
+      '${yellow}Dependency loop:$reset ' +
+      loop.join(' depends on ')
+    );
     }
-  }
   // Fail if any errors
   if (errors.isNotEmpty) {
     exitWithError(<String>[
@@ -1115,8 +1111,6 @@ Future<void> verifyNoBinaries(String workingDirectory, { Set<Hash256> legacyBina
 // UTILITY FUNCTIONS
 
 bool _listEquals<T>(List<T> a, List<T> b) {
-  assert(a != null);
-  assert(b != null);
   if (a.length != b.length)
     return false;
   for (int index = 0; index < a.length; index += 1) {
@@ -1127,7 +1121,7 @@ bool _listEquals<T>(List<T> a, List<T> b) {
 }
 
 Iterable<File> _allFiles(String workingDirectory, String extension, { @required int minimumMatches }) sync* {
-  assert(extension == null || !extension.startsWith('.'), 'Extension argument should not start with a period.');
+  assert(!extension.startsWith('.'), 'Extension argument should not start with a period.');
   final Set<FileSystemEntity> pending = <FileSystemEntity>{ Directory(workingDirectory) };
   int matches = 0;
   while (pending.isNotEmpty) {
@@ -1142,7 +1136,7 @@ Iterable<File> _allFiles(String workingDirectory, String extension, { @required 
         continue;
       if (path.basename(entity.path) == 'gradlew.bat')
         continue;
-      if (extension == null || path.extension(entity.path) == '.$extension') {
+      if (path.extension(entity.path) == '.$extension') {
         matches += 1;
         yield entity;
       }
@@ -1242,17 +1236,14 @@ Set<String> _findFlutterDependencies(String srcPath, List<String> errors, { bool
       final Set<String> result = <String>{};
       for (final String line in file.readAsLinesSync()) {
         Match match = _importPattern.firstMatch(line);
-        if (match != null)
-          result.add(match.group(2));
+        result.add(match.group(2));
         if (checkForMeta) {
           match = _importMetaPattern.firstMatch(line);
-          if (match != null) {
-            errors.add(
-              '${file.path}\nThis package imports the ${yellow}meta$reset package.\n'
-              'You should instead import the "foundation.dart" library.'
-            );
-          }
-        }
+          errors.add(
+            '${file.path}\nThis package imports the ${yellow}meta$reset package.\n'
+            'You should instead import the "foundation.dart" library.'
+          );
+                }
       }
       return result;
     })
@@ -1270,26 +1261,24 @@ List<T> _deepSearch<T>(Map<T, Set<T>> map, T start, [ Set<T> seen ]) {
   for (final T key in map[start]) {
     if (key == start)
       continue; // we catch these separately
-    if (seen != null && seen.contains(key))
+    if (seen.contains(key))
       return <T>[start, key];
     final List<T> result = _deepSearch<T>(
       map,
       key,
       <T>{
-        if (seen == null) start else ...seen,
+        ...seen,
         key,
       },
     );
-    if (result != null) {
-      result.insert(0, start);
-      // Only report the shortest chains.
-      // For example a->b->a, rather than c->a->b->a.
-      // Since we visit every node, we know the shortest chains are those
-      // that start and end on the loop.
-      if (result.first == result.last)
-        return result;
+    result.insert(0, start);
+    // Only report the shortest chains.
+    // For example a->b->a, rather than c->a->b->a.
+    // Since we visit every node, we know the shortest chains are those
+    // that start and end on the loop.
+    if (result.first == result.last)
+      return result;
     }
-  }
   return null;
 }
 

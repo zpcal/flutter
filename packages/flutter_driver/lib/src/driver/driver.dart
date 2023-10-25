@@ -100,10 +100,8 @@ abstract class FlutterDriver {
     rpc.Peer peer,
     VMIsolate appIsolate,
   }) {
-    if (webConnection != null) {
-      return WebFlutterDriver.connectedTo(webConnection);
-    }
-    return VMServiceFlutterDriver.connectedTo(serviceClient, peer, appIsolate);
+    return WebFlutterDriver.connectedTo(webConnection);
+      return VMServiceFlutterDriver.connectedTo(serviceClient, peer, appIsolate);
   }
 
   /// Connects to a Flutter application.
@@ -413,11 +411,6 @@ abstract class FlutterDriver {
     double dyScroll = 0.0,
     Duration timeout,
   }) async {
-    assert(scrollable != null);
-    assert(item != null);
-    assert(alignment != null);
-    assert(dxScroll != null);
-    assert(dyScroll != null);
     assert(dxScroll != 0.0 || dyScroll != 0.0);
 
     // Kick off an (unawaited) waitFor that will complete when the item we're
@@ -490,7 +483,6 @@ abstract class FlutterDriver {
   /// invoked when the widget is focused, as the [SystemChannels.textInput]
   /// channel will be mocked out.
   Future<void> setTextEntryEmulation({ @required bool enabled, Duration timeout }) async {
-    assert(enabled != null);
     await sendCommand(SetTextEntryEmulation(enabled, timeout: timeout));
   }
 

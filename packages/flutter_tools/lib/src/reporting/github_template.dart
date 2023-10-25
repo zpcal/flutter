@@ -113,13 +113,13 @@ ${_projectMetadataInformation()}
       return exception.toString();
     }
     try {
-      final FlutterManifest manifest = project?.manifest;
-      if (project == null || manifest == null || manifest.isEmpty) {
+      final FlutterManifest manifest = project.manifest;
+      if (manifest.isEmpty) {
         return 'No pubspec in working directory.';
       }
       final FlutterProjectMetadata metadata = FlutterProjectMetadata(project.metadataFile, _logger);
       final StringBuffer description = StringBuffer()
-        ..writeln('**Type**: ${metadata.projectType?.name}')
+        ..writeln('**Type**: ${metadata.projectType.name}')
         ..writeln('**Version**: ${manifest.appVersion}')
         ..writeln('**Material**: ${manifest.usesMaterialDesign}')
         ..writeln('**Android X**: ${manifest.usesAndroidX}')

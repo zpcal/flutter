@@ -11,7 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import 'basic.dart';
-import 'binding.dart';
 import 'container.dart';
 import 'framework.dart';
 

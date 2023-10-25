@@ -8,7 +8,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import '../flutter_test_alternative.dart';
 
 class TestFoundationFlutterBinding extends BindingBase {
   bool wasLocked;

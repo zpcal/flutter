@@ -3,10 +3,11 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'package:package_config/package_config.dart';
-import 'package:vm_service/vm_service.dart' as vm_service;
+
 import 'package:meta/meta.dart';
+import 'package:package_config/package_config.dart';
 import 'package:pool/pool.dart';
+import 'package:vm_service/vm_service.dart' as vm_service;
 
 import 'base/async_guard.dart';
 import 'base/context.dart';
@@ -154,15 +155,11 @@ class HotRunner extends ResidentRunner {
     bool isStatic,
   ) async {
     for (final FlutterDevice device in flutterDevices) {
-      if (device.generator != null) {
-        final CompilerOutput compilerOutput =
-            await device.generator.compileExpression(expression, definitions,
-                typeDefinitions, libraryUri, klass, isStatic);
-        if (compilerOutput != null && compilerOutput.outputFilename != null) {
-          return base64.encode(globals.fs.file(compilerOutput.outputFilename).readAsBytesSync());
-        }
-      }
-    }
+      final CompilerOutput compilerOutput =
+          await device.generator.compileExpression(expression, definitions,
+              typeDefinitions, libraryUri, klass, isStatic);
+      return base64.encode(globals.fs.file(compilerOutput.outputFilename).readAsBytesSync());
+            }
     throw 'Failed to compile $expression';
   }
 
@@ -208,17 +205,15 @@ class HotRunner extends ResidentRunner {
     }
     try {
       final List<Uri> baseUris = await _initDevFS();
-      if (connectionInfoCompleter != null) {
-        // Only handle one debugger connection.
-        connectionInfoCompleter.complete(
-          DebugConnectionInfo(
-            httpUri: flutterDevices.first.vmService.httpAddress,
-            wsUri: flutterDevices.first.vmService.wsAddress,
-            baseUri: baseUris.first.toString(),
-          ),
-        );
-      }
-    } on Exception catch (error) {
+      // Only handle one debugger connection.
+      connectionInfoCompleter.complete(
+        DebugConnectionInfo(
+          httpUri: flutterDevices.first.vmService.httpAddress,
+          wsUri: flutterDevices.first.vmService.wsAddress,
+          baseUri: baseUris.first.toString(),
+        ),
+      );
+        } on Exception catch (error) {
       globals.printError('Error initializing DevFS: $error');
       return 3;
     }
@@ -235,10 +230,8 @@ class HotRunner extends ResidentRunner {
     for (final FlutterDevice device in flutterDevices) {
       // VM must have accepted the kernel binary, there will be no reload
       // report, so we let incremental compiler know that source code was accepted.
-      if (device.generator != null) {
-        device.generator.accept();
-      }
-      final List<FlutterView> views = await device.vmService.getFlutterViews();
+      device.generator.accept();
+          final List<FlutterView> views = await device.vmService.getFlutterViews();
       for (final FlutterView view in views) {
         globals.printTrace('Connected to $view.');
       }
@@ -256,7 +249,7 @@ class HotRunner extends ResidentRunner {
       );
     }
 
-    appStartedCompleter?.complete();
+    appStartedCompleter.complete();
 
     if (benchmarkMode) {
       // We are running in benchmark mode.
@@ -320,23 +313,21 @@ class HotRunner extends ResidentRunner {
       // invocation of the frontend server produces a full dill file that the
       // subsequent invocation in devfs will not overwrite.
       await runSourceGenerators();
-      if (device.generator != null) {
-        startupTasks.add(
-          device.generator.recompile(
-            globals.fs.file(mainPath).uri,
-            <Uri>[],
-            // When running without a provided applicationBinary, the tool will
-            // simultaneously run the initial frontend_server compilation and
-            // the native build step. If there is a Dart compilation error, it
-            // should only be displayed once.
-            suppressErrors: applicationBinary == null,
-            outputPath: dillOutputPath ??
-              getDefaultApplicationKernelPath(trackWidgetCreation: debuggingOptions.buildInfo.trackWidgetCreation),
-            packageConfig: packageConfig,
-          ).then((CompilerOutput output) => output?.errorCount == 0)
-        );
-      }
-      startupTasks.add(device.runHot(
+      startupTasks.add(
+        device.generator.recompile(
+          globals.fs.file(mainPath).uri,
+          <Uri>[],
+          // When running without a provided applicationBinary, the tool will
+          // simultaneously run the initial frontend_server compilation and
+          // the native build step. If there is a Dart compilation error, it
+          // should only be displayed once.
+          suppressErrors: applicationBinary == null,
+          outputPath: dillOutputPath ??
+            getDefaultApplicationKernelPath(trackWidgetCreation: debuggingOptions.buildInfo.trackWidgetCreation),
+          packageConfig: packageConfig,
+        ).then((CompilerOutput output) => output.errorCount == 0)
+      );
+          startupTasks.add(device.runHot(
         hotRunner: this,
         route: route,
       ).then((int result) => result == 0));
@@ -428,16 +419,14 @@ class HotRunner extends ResidentRunner {
   Future<void> _cleanupDevFS() async {
     final List<Future<void>> futures = <Future<void>>[];
     for (final FlutterDevice device in flutterDevices) {
-      if (device.devFS != null) {
-        // Cleanup the devFS, but don't wait indefinitely.
-        // We ignore any errors, because it's not clear what we would do anyway.
-        futures.add(device.devFS.destroy()
-          .timeout(const Duration(milliseconds: 250))
-          .catchError((dynamic error) {
-            globals.printTrace('Ignored error while cleaning up DevFS: $error');
-          }));
-      }
-      device.devFS = null;
+      // Cleanup the devFS, but don't wait indefinitely.
+      // We ignore any errors, because it's not clear what we would do anyway.
+      futures.add(device.devFS.destroy()
+        .timeout(const Duration(milliseconds: 250))
+        .catchError((dynamic error) {
+          globals.printTrace('Ignored error while cleaning up DevFS: $error');
+        }));
+          device.devFS = null;
     }
     await Future.wait(futures);
   }
@@ -494,20 +483,16 @@ class HotRunner extends ResidentRunner {
     final UpdateFSReport updatedDevFS = await _updateDevFS(fullRestart: true);
     if (!updatedDevFS.success) {
       for (final FlutterDevice device in flutterDevices) {
-        if (device.generator != null) {
-          await device.generator.reject();
-        }
-      }
+        await device.generator.reject();
+            }
       return OperationResult(1, 'DevFS synchronization failed');
     }
     _resetDirtyAssets();
     for (final FlutterDevice device in flutterDevices) {
       // VM must have accepted the kernel binary, there will be no reload
       // report, so we let incremental compiler know that source code was accepted.
-      if (device.generator != null) {
-        device.generator.accept();
-      }
-    }
+      device.generator.accept();
+        }
     // Check if the isolate is paused and resume it.
     final List<Future<void>> operations = <Future<void>>[];
     for (final FlutterDevice device in flutterDevices) {
@@ -745,7 +730,7 @@ class HotRunner extends ResidentRunner {
         fullRestart: true,
         nullSafety: usageNullSafety,
         reason: reason).send();
-      status?.cancel();
+      status.cancel();
     }
     return result;
   }
@@ -771,7 +756,7 @@ class HotRunner extends ResidentRunner {
         reason: reason,
         pause: pause,
         onSlow: (String message) {
-          status?.cancel();
+          status.cancel();
           status = globals.logger.startProgress(
             message,
             timeout: timeoutConfiguration.slowOperation,
@@ -953,10 +938,8 @@ class HotRunner extends ResidentRunner {
       }
     }
     if (pausedIsolatesFound > 0) {
-      if (onSlow != null) {
-        onSlow('${_describePausedIsolates(pausedIsolatesFound, serviceEventKind)}; interface might not update.');
-      }
-      if (reassembleViews.isEmpty) {
+      onSlow('${_describePausedIsolates(pausedIsolatesFound, serviceEventKind)}; interface might not update.');
+          if (reassembleViews.isEmpty) {
         globals.printTrace('Skipping reassemble because all isolates are paused.');
         return OperationResult(OperationResult.ok.code, reloadMessage);
       }
@@ -998,10 +981,8 @@ class HotRunner extends ResidentRunner {
           return;
         }
         shouldReportReloadTime = false;
-        if (onSlow != null) {
-          onSlow('${_describePausedIsolates(postReloadPausedIsolatesFound, serviceEventKind)}.');
-        }
-      },
+        onSlow('${_describePausedIsolates(postReloadPausedIsolatesFound, serviceEventKind)}.');
+            },
     );
     // Record time it took for Flutter to reassemble the application.
     _addBenchmarkData('hotReloadFlutterReassembleMilliseconds', reassembleTimer.elapsed.inMilliseconds);
@@ -1058,7 +1039,6 @@ class HotRunner extends ResidentRunner {
       message.write('$pausedIsolatesFound isolates are ');
       plural = true;
     }
-    assert(serviceEventKind != null);
     switch (serviceEventKind) {
       case vm_service.EventKind.kPauseStart:
         message.write('paused (probably due to --start-paused)');
@@ -1211,8 +1191,6 @@ class ProjectFileInvalidator {
     @required PackageConfig packageConfig,
     bool asyncScanning = false,
   }) async {
-    assert(urisToMonitor != null);
-    assert(packagesPath != null);
 
     if (lastCompiled == null) {
       // Initial load.
@@ -1239,7 +1217,7 @@ class ProjectFileInvalidator {
             .stat(uri.toFilePath(windows: _platform.isWindows))
             .then((FileStat stat) {
               final DateTime updatedAt = stat.modified;
-              if (updatedAt != null && updatedAt.isAfter(lastCompiled)) {
+              if (updatedAt.isAfter(lastCompiled)) {
                 invalidatedFiles.add(uri);
               }
             })
@@ -1250,7 +1228,7 @@ class ProjectFileInvalidator {
       for (final Uri uri in urisToScan) {
         final DateTime updatedAt = _fileSystem.statSync(
             uri.toFilePath(windows: _platform.isWindows)).modified;
-        if (updatedAt != null && updatedAt.isAfter(lastCompiled)) {
+        if (updatedAt.isAfter(lastCompiled)) {
           invalidatedFiles.add(uri);
         }
       }
@@ -1259,7 +1237,7 @@ class ProjectFileInvalidator {
     final Uri packageUri = _fileSystem.file(packagesPath).uri;
     final DateTime updatedAt = _fileSystem.statSync(
       packageUri.toFilePath(windows: _platform.isWindows)).modified;
-    if (updatedAt != null && updatedAt.isAfter(lastCompiled)) {
+    if (updatedAt.isAfter(lastCompiled)) {
       invalidatedFiles.add(packageUri);
       packageConfig = await _createPackageConfig(packagesPath);
       // The frontend_server might be monitoring the package_config.json file,

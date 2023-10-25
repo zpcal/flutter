@@ -4,20 +4,16 @@
 
 import 'dart:async';
 
-import 'package:flutter_tools/src/base/dds.dart';
-import 'package:flutter_tools/src/base/platform.dart';
-import 'package:flutter_tools/src/widget_cache.dart';
-import 'package:meta/meta.dart';
-import 'package:package_config/package_config.dart';
-import 'package:vm_service/vm_service.dart' as vm_service;
 import 'package:file/memory.dart';
 import 'package:file_testing/file_testing.dart';
 import 'package:flutter_tools/src/artifacts.dart';
 import 'package:flutter_tools/src/base/command_help.dart';
 import 'package:flutter_tools/src/base/common.dart';
 import 'package:flutter_tools/src/base/context.dart';
+import 'package:flutter_tools/src/base/dds.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/io.dart' as io;
+import 'package:flutter_tools/src/base/platform.dart';
 import 'package:flutter_tools/src/build_info.dart';
 import 'package:flutter_tools/src/compile.dart';
 import 'package:flutter_tools/src/convert.dart';
@@ -30,7 +26,11 @@ import 'package:flutter_tools/src/resident_runner.dart';
 import 'package:flutter_tools/src/run_cold.dart';
 import 'package:flutter_tools/src/run_hot.dart';
 import 'package:flutter_tools/src/vmservice.dart';
+import 'package:flutter_tools/src/widget_cache.dart';
+import 'package:meta/meta.dart';
 import 'package:mockito/mockito.dart';
+import 'package:package_config/package_config.dart';
+import 'package:vm_service/vm_service.dart' as vm_service;
 
 import '../src/common.dart';
 import '../src/context.dart';
@@ -187,7 +187,7 @@ void main() {
         return testUri;
       });
     when(mockFlutterDevice.vmService).thenAnswer((Invocation invocation) {
-      return fakeVmServiceHost?.vmService;
+      return fakeVmServiceHost.vmService;
     });
     when(mockFlutterDevice.reloadSources(any, pause: anyNamed('pause'))).thenAnswer((Invocation invocation) async {
       return <Future<vm_service.ReloadReport>>[

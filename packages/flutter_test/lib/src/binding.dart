@@ -15,9 +15,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWindow;
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
 // ignore: deprecated_member_use
 import 'package:test_api/test_api.dart' as test_package;
-import 'package:stack_trace/stack_trace.dart' as stack_trace;
 import 'package:vector_math/vector_math_64.dart';
 
 import '_binding_io.dart' if (dart.library.html) '_binding_web.dart' as binding;
@@ -105,11 +105,9 @@ class TestDefaultBinaryMessenger extends BinaryMessenger {
     final Future<ByteData> resultFuture = delegate.send(channel, message);
     // Removes the future itself from the [_pendingMessages] list when it
     // completes.
-    if (resultFuture != null) {
-      _pendingMessages.add(resultFuture);
-      resultFuture.whenComplete(() => _pendingMessages.remove(resultFuture));
-    }
-    return resultFuture;
+    _pendingMessages.add(resultFuture);
+    resultFuture.whenComplete(() => _pendingMessages.remove(resultFuture));
+      return resultFuture;
   }
 
   /// Returns a Future that completes after all the platform calls are finished.
@@ -639,7 +637,6 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
     String description, {
     Future<void> timeout,
   }) {
-    assert(description != null);
     assert(inTest);
     _oldExceptionHandler = FlutterError.onError;
     _oldStackTraceDemangler = FlutterError.demangleStackTrace;
@@ -750,7 +747,6 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
             yield DiagnosticsProperty<String>('The test description was', description, style: DiagnosticsTreeStyle.errorProperty);
         },
       ));
-      assert(_parentZone != null);
       assert(_pendingExceptionDetails != null, 'A test overrode FlutterError.onError but either failed to return it to its original state, or had unexpected additional errors that it could not handle. Typically, this is caused by using expect() before restoring FlutterError.onError.');
       _parentZone.run<void>(testCompletionHandler);
     }
@@ -763,7 +759,7 @@ abstract class TestWidgetsFlutterBinding extends BindingBase
     final Zone testZone = _parentZone.fork(specification: errorHandlingZoneSpecification);
     testZone.runBinary<Future<void>, Future<void> Function(), VoidCallback>(_runTestBody, testBody, invariantTester)
       .whenComplete(testCompletionHandler);
-    timeout?.catchError(handleUncaughtError);
+    timeout.catchError(handleUncaughtError);
     return testCompleter.future;
   }
 
@@ -948,8 +944,7 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
     return TestAsyncUtils.guard<void>(() {
       assert(inTest);
       assert(_clock != null);
-      if (duration != null)
-        _currentFakeAsync.elapse(duration);
+      _currentFakeAsync.elapse(duration);
       _phase = newPhase;
       if (hasScheduledFrame) {
         addTime(const Duration(milliseconds: 500));
@@ -970,7 +965,6 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
     Future<T> callback(), {
     Duration additionalTime = const Duration(milliseconds: 1000),
   }) {
-    assert(additionalTime != null);
     assert(() {
       if (_pendingAsyncTasks == null)
         return true;
@@ -1118,7 +1112,6 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
 
   void _checkTimeout(Timer timer) {
     assert(_timeoutTimer == timer);
-    assert(_timeout != null);
     if (_timeoutStopwatch.elapsed > _timeout) {
       _timeoutCompleter.completeError(
         TimeoutException(
@@ -1132,8 +1125,7 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
 
   @override
   void addTime(Duration duration) {
-    if (_timeout != null)
-      _timeout += duration;
+    _timeout += duration;
   }
 
   @override
@@ -1151,18 +1143,15 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
     String description = '',
     Duration timeout,
   }) {
-    assert(description != null);
     assert(!inTest);
     assert(_currentFakeAsync == null);
     assert(_clock == null);
 
     _timeout = timeout;
-    if (_timeout != null) {
-      _timeoutStopwatch = Stopwatch()..start();
-      _timeoutTimer = Timer.periodic(const Duration(seconds: 1), _checkTimeout);
-      _timeoutCompleter = Completer<void>();
-    }
-
+    _timeoutStopwatch = Stopwatch()..start();
+    _timeoutTimer = Timer.periodic(const Duration(seconds: 1), _checkTimeout);
+    _timeoutCompleter = Completer<void>();
+  
     final FakeAsync fakeAsync = FakeAsync();
     _currentFakeAsync = fakeAsync; // reset in postTest
     _clock = fakeAsync.getClock(DateTime.utc(2015, 1, 1));
@@ -1170,7 +1159,7 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
     fakeAsync.run((FakeAsync localFakeAsync) {
       assert(fakeAsync == _currentFakeAsync);
       assert(fakeAsync == localFakeAsync);
-      testBodyResult = _runTest(testBody, invariantTester, description, timeout: _timeoutCompleter?.future);
+      testBodyResult = _runTest(testBody, invariantTester, description, timeout: _timeoutCompleter.future);
       assert(inTest);
     });
 
@@ -1231,7 +1220,7 @@ class AutomatedTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
     _clock = null;
     _currentFakeAsync = null;
     _timeoutCompleter = null;
-    _timeoutTimer?.cancel();
+    _timeoutTimer.cancel();
     _timeoutTimer = null;
     _timeoutStopwatch = null;
     _timeout = null;
@@ -1442,13 +1431,11 @@ class LiveTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
 
   @override
   void handleDrawFrame() {
-    assert(_doDrawThisFrame != null);
     if (_doDrawThisFrame)
       super.handleDrawFrame();
     _doDrawThisFrame = null;
     _viewNeedsPaint = false;
     if (_expectingFrame) { // set during pump
-      assert(_pendingFrame != null);
       _pendingFrame.complete(); // unlocks the test API
       _pendingFrame = null;
       _expectingFrame = false;
@@ -1581,7 +1568,6 @@ class LiveTestWidgetsFlutterBinding extends TestWidgetsFlutterBinding {
 
   @override
   Future<void> runTest(Future<void> testBody(), VoidCallback invariantTester, { String description = '', Duration timeout }) async {
-    assert(description != null);
     assert(!inTest);
     _inTest = true;
     renderView._setDescription(description);
@@ -1738,7 +1724,6 @@ class _LiveTestRenderView extends RenderView {
     fontSize: 10.0,
   );
   void _setDescription(String value) {
-    assert(value != null);
     if (value.isEmpty) {
       _label = null;
       return;

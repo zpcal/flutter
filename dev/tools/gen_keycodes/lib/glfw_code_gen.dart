@@ -18,12 +18,10 @@ class GlfwCodeGenerator extends PlatformCodeGenerator {
   String get _glfwNumpadMap {
     final StringBuffer glfwNumpadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.glfwKeyCodes != null) {
-        for (final int code in entry.glfwKeyCodes.cast<int>()) {
-          glfwNumpadMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-        }
+      for (final int code in entry.glfwKeyCodes.cast<int>()) {
+        glfwNumpadMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
       }
-    }
+        }
     return glfwNumpadMap.toString().trimRight();
   }
 
@@ -31,12 +29,10 @@ class GlfwCodeGenerator extends PlatformCodeGenerator {
   String get _glfwKeyCodeMap {
     final StringBuffer glfwKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.glfwKeyCodes != null) {
-        for (final int code in entry.glfwKeyCodes.cast<int>()) {
-          glfwKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
-        }
+      for (final int code in entry.glfwKeyCodes.cast<int>()) {
+        glfwKeyCodeMap.writeln('  { $code, ${toHex(entry.flutterId, digits: 10)} },    // ${entry.constantName}');
       }
-    }
+        }
     return glfwKeyCodeMap.toString().trimRight();
   }
 

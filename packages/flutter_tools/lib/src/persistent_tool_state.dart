@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 
 import 'base/config.dart';
 import 'base/context.dart';
-import 'base/file_system.dart';
 import 'base/logger.dart';
 import 'base/platform.dart';
 import 'version.dart';
@@ -93,7 +92,6 @@ class _DefaultPersistentToolState implements PersistentToolState {
   @override
   String lastActiveVersion(Channel channel) {
     final String versionKey = _versionKeyFor(channel);
-    assert(versionKey != null);
     return _config.getValue(versionKey) as String;
   }
 
@@ -105,7 +103,6 @@ class _DefaultPersistentToolState implements PersistentToolState {
   @override
   void updateLastActiveVersion(String fullGitHash, Channel channel) {
     final String versionKey = _versionKeyFor(channel);
-    assert(versionKey != null);
     _config.setValue(versionKey, fullGitHash);
   }
 

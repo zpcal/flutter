@@ -11,7 +11,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import '../flutter_test_alternative.dart';
 import 'message_codecs_testing.dart';
 
 void main() {

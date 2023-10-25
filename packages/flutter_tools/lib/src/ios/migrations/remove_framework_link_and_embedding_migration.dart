@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import '../../base/common.dart';
-import '../../base/file_system.dart';
 import '../../base/logger.dart';
 import '../../macos/xcode.dart';
 import '../../project.dart';

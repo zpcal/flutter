@@ -3,9 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 import 'package:flutter_test/src/buffer_matcher.dart';
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 Future<void> main() async {
   FlutterDriver driver;

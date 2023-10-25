@@ -4,7 +4,6 @@
 
 // @dart = 2.8
 
-import '../flutter_test_alternative.dart';
 
 void main() {
   test('should pass', () {

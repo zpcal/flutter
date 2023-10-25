@@ -82,13 +82,11 @@ class WebExpressionCompiler implements ExpressionCompiler {
     final CompilerOutput compilerOutput = await _generator.compileExpressionToJs(libraryUri,
         line, column, jsModules, jsFrameValues, moduleName, expression);
 
-    if (compilerOutput != null && compilerOutput.outputFilename != null) {
-      final String content = utf8.decode(
-          globals.fs.file(compilerOutput.outputFilename).readAsBytesSync());
-      return ExpressionCompilationResult(
-          content, compilerOutput.errorCount > 0);
-    }
-
+    final String content = utf8.decode(
+        globals.fs.file(compilerOutput.outputFilename).readAsBytesSync());
+    return ExpressionCompilationResult(
+        content, compilerOutput.errorCount > 0);
+  
     return ExpressionCompilationResult(
       'InternalError: frontend server failed to compile \'$expression\'', true);
   }
@@ -567,13 +565,11 @@ class WebAssetServer implements AssetReader {
     if (segments.first == 'packages') {
       final Uri filePath = _packages.resolve(Uri(
         scheme: 'package', pathSegments: segments.skip(1)));
-      if (filePath != null) {
-        final File packageFile = globals.fs.file(filePath);
-        if (packageFile.existsSync()) {
-          return packageFile;
-        }
+      final File packageFile = globals.fs.file(filePath);
+      if (packageFile.existsSync()) {
+        return packageFile;
       }
-    }
+        }
 
     // Otherwise it must be a Dart SDK source or a Flutter Web SDK source.
     final Directory dartSdkParent = globals.fs
@@ -742,7 +738,7 @@ class WebDevFS implements DevFS {
   @override
   Future<void> destroy() async {
     await webAssetServer.dispose();
-    await _connectedApps?.cancel();
+    await _connectedApps.cancel();
   }
 
   @override
@@ -773,8 +769,6 @@ class WebDevFS implements DevFS {
     bool skipAssets = false,
     @required PackageConfig packageConfig,
   }) async {
-    assert(trackWidgetCreation != null);
-    assert(generator != null);
     lastPackageConfig = packageConfig;
     final File mainFile = globals.fs.file(mainUri);
     final String outputDirectoryPath = mainFile.parent.path;
@@ -804,13 +798,11 @@ class WebDevFS implements DevFS {
       );
       // TODO(jonahwilliams): refactor the asset code in this and the regular devfs to
       // be shared.
-      if (bundle != null) {
-        await writeBundle(
-          globals.fs.directory(getAssetBuildDirectory()),
-          bundle.entries,
-        );
-      }
-    }
+      await writeBundle(
+        globals.fs.directory(getAssetBuildDirectory()),
+        bundle.entries,
+      );
+        }
     final DateTime candidateCompileTime = DateTime.now();
     if (fullRestart) {
       generator.reset();
@@ -830,7 +822,7 @@ class WebDevFS implements DevFS {
         getDefaultApplicationKernelPath(trackWidgetCreation: trackWidgetCreation),
       packageConfig: packageConfig,
     );
-    if (compilerOutput == null || compilerOutput.errorCount > 0) {
+    if (compilerOutput.errorCount > 0) {
       return UpdateFSReport(success: false);
     }
 
@@ -916,7 +908,7 @@ class ReleaseAssetServer {
     } else {
       for (final Uri uri in _searchPaths()) {
         final Uri potential = uri.resolve(request.url.path);
-        if (potential == null || !_fileSystem.isFileSync(
+        if (!_fileSystem.isFileSync(
           potential.toFilePath(windows: _platform.isWindows))) {
           continue;
         }
@@ -924,18 +916,16 @@ class ReleaseAssetServer {
         break;
       }
     }
-    if (fileUri != null) {
-      final File file = _fileSystem.file(fileUri);
-      final Uint8List bytes = file.readAsBytesSync();
-      // Fallback to "application/octet-stream" on null which
-      // makes no claims as to the structure of the data.
-      final String mimeType = mime.lookupMimeType(file.path, headerBytes: bytes)
-        ?? 'application/octet-stream';
-      return shelf.Response.ok(bytes, headers: <String, String>{
-        'Content-Type': mimeType,
-      });
-    }
-    if (request.url.path == '') {
+    final File file = _fileSystem.file(fileUri);
+    final Uint8List bytes = file.readAsBytesSync();
+    // Fallback to "application/octet-stream" on null which
+    // makes no claims as to the structure of the data.
+    final String mimeType = mime.lookupMimeType(file.path, headerBytes: bytes)
+      ?? 'application/octet-stream';
+    return shelf.Response.ok(bytes, headers: <String, String>{
+      'Content-Type': mimeType,
+    });
+      if (request.url.path == '') {
       final File file = _fileSystem.file(_fileSystem.path.join(_webBuildDirectory, 'index.html'));
       return shelf.Response.ok(file.readAsBytesSync(), headers: <String, String>{
         'Content-Type': 'text/html',

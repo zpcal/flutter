@@ -4,7 +4,6 @@
 
 import 'package:intl/locale.dart';
 
-import '../base/file_system.dart';
 import '../convert.dart';
 import '../globals.dart' as globals;
 
@@ -150,7 +149,7 @@ class L10nException implements Exception {
 //   }
 // }
 class OptionalParameter {
-  const OptionalParameter(this.name, this.value) : assert(name != null), assert(value != null);
+  const OptionalParameter(this.name, this.value);
 
   final String name;
   final Object value;
@@ -191,9 +190,7 @@ class OptionalParameter {
 //
 class Placeholder {
   Placeholder(this.resourceId, this.name, Map<String, dynamic> attributes)
-    : assert(resourceId != null),
-      assert(name != null),
-      example = _stringAttribute(resourceId, name, attributes, 'example'),
+    : example = _stringAttribute(resourceId, name, attributes, 'example'),
       type = _stringAttribute(resourceId, name, attributes, 'type') ?? 'Object',
       format = _stringAttribute(resourceId, name, attributes, 'format'),
       optionalParameters = _optionalParameters(resourceId, name, attributes);
@@ -222,13 +219,13 @@ class Placeholder {
     if (value == null) {
       return null;
     }
-    if (value is! String || (value as String).isEmpty) {
+    if (value is! String || value.isEmpty) {
       throw L10nException(
         'The "$attributeName" value of the "$name" placeholder in message $resourceId '
         'must be a non-empty string.',
       );
     }
-    return value as String;
+    return value;
   }
 
   static List<OptionalParameter> _optionalParameters(
@@ -247,7 +244,7 @@ class Placeholder {
         'with keys that are strings.'
       );
     }
-    final Map<String, dynamic> optionalParameterMap = value as Map<String, dynamic>;
+    final Map<String, dynamic> optionalParameterMap = value;
     return optionalParameterMap.keys.map<OptionalParameter>((String parameterName) {
       return OptionalParameter(parameterName, optionalParameterMap[parameterName]);
     }).toList();
@@ -271,8 +268,7 @@ class Placeholder {
 // The docs for the Placeholder explain how placeholder entries are defined.
 class Message {
   Message(Map<String, dynamic> bundle, this.resourceId)
-    : assert(bundle != null),
-      assert(resourceId != null && resourceId.isNotEmpty),
+    : assert(resourceId.isNotEmpty),
       value = _value(bundle, resourceId),
       description = _description(bundle, resourceId),
       placeholders = _placeholders(bundle, resourceId),
@@ -286,7 +282,7 @@ class Message {
   final List<Placeholder> placeholders;
   final RegExpMatch _pluralMatch;
 
-  bool get isPlural => _pluralMatch != null && _pluralMatch.groupCount == 1;
+  bool get isPlural => _pluralMatch.groupCount == 1;
 
   bool get placeholdersRequireFormatting => placeholders.any((Placeholder p) => p.requiresFormatting);
 
@@ -326,7 +322,7 @@ class Message {
         'Ensure that it is a map with keys that are strings.'
       );
     }
-    return attributes as Map<String, dynamic>;
+    return attributes;
   }
 
   static String _description(Map<String, dynamic> bundle, String resourceId) {
@@ -339,7 +335,7 @@ class Message {
         'The description for "@$resourceId" is not a properly formatted String.'
       );
     }
-    return value as String;
+    return value;
   }
 
   static List<Placeholder> _placeholders(Map<String, dynamic> bundle, String resourceId) {
@@ -353,7 +349,7 @@ class Message {
         'properly formatted. Ensure that it is a map with string valued keys.'
       );
     }
-    final Map<String, dynamic> allPlaceholdersMap = value as Map<String, dynamic>;
+    final Map<String, dynamic> allPlaceholdersMap = value;
     return allPlaceholdersMap.keys.map<Placeholder>((String placeholderName) {
       final dynamic value = allPlaceholdersMap[placeholderName];
       if (value is! Map<String, dynamic>) {
@@ -363,7 +359,7 @@ class Message {
           'with string valued keys.'
         );
       }
-      return Placeholder(resourceId, placeholderName, value as Map<String, dynamic>);
+      return Placeholder(resourceId, placeholderName, value);
     }).toList();
   }
 }
@@ -390,7 +386,7 @@ class AppResourceBundle {
 
     for (int index = 0; index < fileName.length; index += 1) {
       // If an underscore was found, check if locale string follows.
-      if (fileName[index] == '_' && fileName[index + 1] != null) {
+      if (fileName[index] == '_') {
         // If Locale.tryParse fails, it returns null.
         final Locale parserResult = Locale.tryParse(fileName.substring(index + 1));
         // If the parserResult is not an actual locale identifier, end the loop.

@@ -9,7 +9,6 @@ import 'package:meta/meta.dart';
 
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/io.dart';
 import '../base/logger.dart';
 import '../base/net.dart';
@@ -448,10 +447,8 @@ class UpdatePackagesCommand extends FlutterCommand {
       if (link.to == to) {
         paths.add(link);
       }
-      if (link.from != null) {
-        visited.add(link.from.to);
-      }
-      for (final String dependency in tree._dependencyTree[link.to]) {
+      visited.add(link.from.to);
+          for (final String dependency in tree._dependencyTree[link.to]) {
         if (!visited.contains(dependency)) {
           traversalQueue.addFirst(_DependencyLink(from: link, to: dependency));
         }
@@ -463,10 +460,8 @@ class UpdatePackagesCommand extends FlutterCommand {
       while (path != null) {
         buf.write(path.to);
         path = path.from;
-        if (path != null) {
-          buf.write(' <- ');
-        }
-      }
+        buf.write(' <- ');
+            }
       globals.printStatus(buf.toString(), wrap: false);
     }
 
@@ -486,7 +481,7 @@ class _DependencyLink {
   final String to;
 
   @override
-  String toString() => '${from?.to} -> $to';
+  String toString() => '${from.to} -> $to';
 }
 
 /// The various sections of a pubspec.yaml file.
@@ -737,7 +732,6 @@ class PubspecYaml {
   /// that depend on the Flutter or Dart SDK directly and are thus automatically
   /// pinned).
   void apply(PubDependencyTree versions, Set<String> specialDependencies) {
-    assert(versions != null);
     final List<String> output = <String>[]; // the string data to output to the file, line by line
     final Set<String> directDependencies = <String>{}; // packages this pubspec directly depends on (i.e. not transitive)
     final Set<String> devDependencies = <String>{};
@@ -795,10 +789,8 @@ class PubspecYaml {
                 // unmodified. If there was an additional line (e.g. an "sdk:
                 // flutter" line) then we output that too.
                 output.add(data.line);
-                if (data.lockLine != null) {
-                  output.add(data.lockLine);
-                }
-              }
+                output.add(data.lockLine);
+                            }
               // Remember that we've dealt with this dependency so we don't
               // mention it again when doing the transitive dependencies.
               if (section == Section.dependencies) {
@@ -819,10 +811,8 @@ class PubspecYaml {
           default:
             // In other sections, pass everything through in its original form.
             output.add(data.line);
-            if (data.lockLine != null) {
-              output.add(data.lockLine);
-            }
-            break;
+            output.add(data.lockLine);
+                      break;
         }
       } else {
         // Not a header, not a dependency, just pass that through unmodified.
@@ -1162,7 +1152,6 @@ class PubspecDependency extends PubspecLine {
   /// We return true if we parsed it and stored the line in lockLine.
   /// We return false if we parsed it and it's a git dependency that needs the next few lines.
   bool parseLock(String line, String pubspecPath, { @required bool lockIsOverride }) {
-    assert(lockIsOverride != null);
     assert(kind == DependencyKind.unknown);
     if (line.startsWith(_pathPrefix)) {
       // We're a path dependency; remember the (absolute) path.
@@ -1362,8 +1351,6 @@ class PubDependencyTree {
     @required Set<String> seen,
     @required Set<String> exclude,
   }) sync* {
-    assert(seen != null);
-    assert(exclude != null);
     if (!_dependencyTree.containsKey(package)) {
       // We have no transitive dependencies extracted for flutter_sdk packages
       // because they were omitted from pubspec.yaml used for 'pub upgrade' run.

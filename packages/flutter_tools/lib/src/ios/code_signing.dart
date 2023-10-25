@@ -219,15 +219,13 @@ Future<String> _chooseSigningIdentity(List<String> validCodeSigningIdentities, L
   if (validCodeSigningIdentities.length > 1) {
     final String savedCertChoice = globals.config.getValue('ios-signing-cert') as String;
 
-    if (savedCertChoice != null) {
-      if (validCodeSigningIdentities.contains(savedCertChoice)) {
-        logger.printStatus('Found saved certificate choice "$savedCertChoice". To clear, use "flutter config".');
-        return savedCertChoice;
-      } else {
-        logger.printError('Saved signing certificate "$savedCertChoice" is not a valid development certificate');
-      }
+    if (validCodeSigningIdentities.contains(savedCertChoice)) {
+      logger.printStatus('Found saved certificate choice "$savedCertChoice". To clear, use "flutter config".');
+      return savedCertChoice;
+    } else {
+      logger.printError('Saved signing certificate "$savedCertChoice" is not a valid development certificate');
     }
-
+  
     // If terminal UI can't be used, just attempt with the first valid certificate
     // since we can't ask the user.
     if (!globals.terminal.usesTerminalUi) {
@@ -267,4 +265,4 @@ Future<String> _chooseSigningIdentity(List<String> validCodeSigningIdentities, L
 }
 
 /// Returns true if s is a not empty string.
-bool _isNotEmpty(String s) => s != null && s.isNotEmpty;
+bool _isNotEmpty(String s) => s.isNotEmpty;

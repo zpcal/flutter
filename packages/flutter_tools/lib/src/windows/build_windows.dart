@@ -5,7 +5,6 @@
 import '../artifacts.dart';
 import '../base/analyze_size.dart';
 import '../base/common.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/process.dart';
 import '../base/utils.dart';
@@ -78,29 +77,27 @@ Future<void> buildWindows(WindowsProject windowsProject, BuildInfo buildInfo, {
   } finally {
     status.cancel();
   }
-  if (buildInfo.codeSizeDirectory != null && sizeAnalyzer != null) {
-    final String arch = getNameForTargetPlatform(TargetPlatform.windows_x64);
-    final File codeSizeFile = globals.fs.directory(buildInfo.codeSizeDirectory)
-      .childFile('snapshot.$arch.json');
-    final File precompilerTrace = globals.fs.directory(buildInfo.codeSizeDirectory)
-      .childFile('trace.$arch.json');
-    final Map<String, Object> output = await sizeAnalyzer.analyzeAotSnapshot(
-      aotSnapshot: codeSizeFile,
-      // This analysis is only supported for release builds.
-      outputDirectory: globals.fs.directory(
-        globals.fs.path.join(getWindowsBuildDirectory(), 'runner', 'Release'),
-      ),
-      precompilerTrace: precompilerTrace,
-      type: 'windows',
-    );
-    final File outputFile = globals.fsUtils.getUniqueFile(
-      globals.fs.directory(getBuildDirectory()),'windows-code-size-analysis', 'json',
-    )..writeAsStringSync(jsonEncode(output));
-    // This message is used as a sentinel in analyze_apk_size_test.dart
-    globals.printStatus(
-      'A summary of your Windows bundle analysis can be found at: ${outputFile.path}',
-    );
-  }
+  final String arch = getNameForTargetPlatform(TargetPlatform.windows_x64);
+  final File codeSizeFile = globals.fs.directory(buildInfo.codeSizeDirectory)
+    .childFile('snapshot.$arch.json');
+  final File precompilerTrace = globals.fs.directory(buildInfo.codeSizeDirectory)
+    .childFile('trace.$arch.json');
+  final Map<String, Object> output = await sizeAnalyzer.analyzeAotSnapshot(
+    aotSnapshot: codeSizeFile,
+    // This analysis is only supported for release builds.
+    outputDirectory: globals.fs.directory(
+      globals.fs.path.join(getWindowsBuildDirectory(), 'runner', 'Release'),
+    ),
+    precompilerTrace: precompilerTrace,
+    type: 'windows',
+  );
+  final File outputFile = globals.fsUtils.getUniqueFile(
+    globals.fs.directory(getBuildDirectory()),'windows-code-size-analysis', 'json',
+  )..writeAsStringSync(jsonEncode(output));
+  // This message is used as a sentinel in analyze_apk_size_test.dart
+  globals.printStatus(
+    'A summary of your Windows bundle analysis can be found at: ${outputFile.path}',
+  );
 }
 
 Future<void> _runCmakeGeneration(String cmakePath, Directory buildDir, Directory sourceDir) async {
@@ -177,8 +174,7 @@ void _writeGeneratedFlutterConfig(
     'FLUTTER_ROOT': Cache.flutterRoot,
     'FLUTTER_EPHEMERAL_DIR': windowsProject.ephemeralDirectory.path,
     'PROJECT_DIR': windowsProject.parent.directory.path,
-    if (target != null)
-      'FLUTTER_TARGET': target,
+    'FLUTTER_TARGET': target,
     ...buildInfo.toEnvironmentConfig(),
   };
   if (globals.artifacts is LocalEngineArtifacts) {

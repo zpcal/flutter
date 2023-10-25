@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 
 import '../base/common.dart';
 import '../base/context.dart';
-import '../base/file_system.dart';
 import '../base/terminal.dart';
 import '../base/utils.dart';
 import '../base/version.dart';
@@ -20,10 +19,8 @@ import 'android_studio.dart';
 /// The environment variables needed to run Gradle.
 Map<String, String> get gradleEnvironment {
   final Map<String, String> environment = Map<String, String>.of(globals.platform.environment);
-  if (javaPath != null) {
-    // Use java bundled with Android Studio.
-    environment['JAVA_HOME'] = javaPath;
-  }
+  // Use java bundled with Android Studio.
+  environment['JAVA_HOME'] = javaPath;
   // Don't log analytics for downstream Flutter commands.
   // e.g. `flutter build bundle`.
   environment['FLUTTER_SUPPRESS_ANALYTICS'] = 'true';
@@ -179,8 +176,6 @@ bool _isWithinVersionRange(
   @required String min,
   @required String max,
 }) {
-  assert(min != null);
-  assert(max != null);
   final Version parsedTargetVersion = Version.parse(targetVersion);
   return parsedTargetVersion >= Version.parse(min) &&
          parsedTargetVersion <= Version.parse(max);
@@ -263,26 +258,22 @@ void updateLocalProperties({
     changed = true;
   }
 
-  if (globals.androidSdk != null) {
-    changeIfNecessary('sdk.dir', globals.fsUtils.escapePath(globals.androidSdk.directory));
-  }
+  changeIfNecessary('sdk.dir', globals.fsUtils.escapePath(globals.androidSdk.directory));
 
   changeIfNecessary('flutter.sdk', globals.fsUtils.escapePath(Cache.flutterRoot));
-  if (buildInfo != null) {
-    changeIfNecessary('flutter.buildMode', buildInfo.modeName);
-    final String buildName = validatedBuildNameForPlatform(
-      TargetPlatform.android_arm,
-      buildInfo.buildName ?? project.manifest.buildName,
-      globals.logger,
-    );
-    changeIfNecessary('flutter.versionName', buildName);
-    final String buildNumber = validatedBuildNumberForPlatform(
-      TargetPlatform.android_arm,
-      buildInfo.buildNumber ?? project.manifest.buildNumber,
-      globals.logger,
-    );
-    changeIfNecessary('flutter.versionCode', buildNumber?.toString());
-  }
+  changeIfNecessary('flutter.buildMode', buildInfo.modeName);
+  final String buildName = validatedBuildNameForPlatform(
+    TargetPlatform.android_arm,
+    buildInfo.buildName ?? project.manifest.buildName,
+    globals.logger,
+  );
+  changeIfNecessary('flutter.versionName', buildName);
+  final String buildNumber = validatedBuildNumberForPlatform(
+    TargetPlatform.android_arm,
+    buildInfo.buildNumber ?? project.manifest.buildNumber,
+    globals.logger,
+  );
+  changeIfNecessary('flutter.versionCode', buildNumber.toString());
 
   if (changed) {
     settings.writeContents(localProperties);
@@ -294,9 +285,7 @@ void updateLocalProperties({
 /// Writes the path to the Android SDK, if known.
 void writeLocalProperties(File properties) {
   final SettingsFile settings = SettingsFile();
-  if (globals.androidSdk != null) {
-    settings.values['sdk.dir'] = globals.fsUtils.escapePath(globals.androidSdk.directory);
-  }
+  settings.values['sdk.dir'] = globals.fsUtils.escapePath(globals.androidSdk.directory);
   settings.writeContents(properties);
 }
 

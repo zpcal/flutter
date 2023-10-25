@@ -21,10 +21,8 @@ class _CupertinoAlertDemoState extends State<CupertinoAlertDemo> {
       context: context,
       builder: (BuildContext context) => child,
     ).then((String value) {
-      if (value != null) {
-        setState(() { lastSelectedValue = value; });
-      }
-    });
+      setState(() { lastSelectedValue = value; });
+        });
   }
 
   void showDemoActionSheet({BuildContext context, Widget child}) {
@@ -32,10 +30,8 @@ class _CupertinoAlertDemoState extends State<CupertinoAlertDemo> {
       context: context,
       builder: (BuildContext context) => child,
     ).then((String value) {
-      if (value != null) {
-        setState(() { lastSelectedValue = value; });
-      }
-    });
+      setState(() { lastSelectedValue = value; });
+        });
   }
 
   @override
@@ -98,11 +94,10 @@ class _CupertinoAlertDemoState extends State<CupertinoAlertDemo> {
                     ],
                   ),
                 ),
-                if (lastSelectedValue != null)
-                  Positioned(
-                    bottom: 32.0,
-                    child: Text('You selected: $lastSelectedValue'),
-                  ),
+                Positioned(
+                  bottom: 32.0,
+                  child: Text('You selected: $lastSelectedValue'),
+                ),
               ],
             );
           },

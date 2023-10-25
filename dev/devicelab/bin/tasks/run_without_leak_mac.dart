@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
+import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:flutter_devicelab/framework/utils.dart';
 import 'package:flutter_devicelab/tasks/run_without_leak.dart';
-import 'package:flutter_devicelab/framework/framework.dart';
 import 'package:path/path.dart' as path;
 
 Future<void> main() async {

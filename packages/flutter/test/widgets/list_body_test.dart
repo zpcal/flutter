@@ -6,8 +6,8 @@
 
 import 'package:flutter/src/foundation/assertions.dart';
 import 'package:flutter/src/painting/basic_types.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 const List<Widget> children = <Widget>[
   SizedBox(width: 200.0, height: 150.0),

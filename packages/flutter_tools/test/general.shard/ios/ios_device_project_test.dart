@@ -14,7 +14,6 @@ import 'package:flutter_tools/src/project.dart';
 import 'package:mockito/mockito.dart';
 import 'package:vm_service/vm_service.dart';
 
-import '../../src/common.dart';
 import '../../src/context.dart';
 
 // FlutterProject still depends on context.

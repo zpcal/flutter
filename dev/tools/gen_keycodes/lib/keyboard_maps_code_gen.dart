@@ -16,7 +16,7 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
 
   List<Key> get numpadKeyData {
     return keyData.data.where((Key entry) {
-      return entry.constantName.startsWith('numpad') && entry.keyLabel != null;
+      return entry.constantName.startsWith('numpad');
     }).toList();
   }
 
@@ -31,12 +31,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get glfwNumpadMap {
     final StringBuffer glfwNumpadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.glfwKeyCodes != null) {
-        for (final int code in entry.glfwKeyCodes.cast<int>()) {
-          glfwNumpadMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.glfwKeyCodes.cast<int>()) {
+        glfwNumpadMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return glfwNumpadMap.toString().trimRight();
   }
 
@@ -44,12 +42,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get glfwKeyCodeMap {
     final StringBuffer glfwKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.glfwKeyCodes != null) {
-        for (final int code in entry.glfwKeyCodes.cast<int>()) {
-          glfwKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.glfwKeyCodes.cast<int>()) {
+        glfwKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return glfwKeyCodeMap.toString().trimRight();
   }
 
@@ -57,12 +53,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get gtkNumpadMap {
     final StringBuffer gtkNumpadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.gtkKeyCodes != null) {
-        for (final int code in entry.gtkKeyCodes.cast<int>()) {
-          gtkNumpadMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.gtkKeyCodes.cast<int>()) {
+        gtkNumpadMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return gtkNumpadMap.toString().trimRight();
   }
 
@@ -70,12 +64,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get gtkKeyCodeMap {
     final StringBuffer gtkKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.gtkKeyCodes != null) {
-        for (final int code in entry.gtkKeyCodes.cast<int>()) {
-          gtkKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.gtkKeyCodes.cast<int>()) {
+        gtkKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return gtkKeyCodeMap.toString().trimRight();
   }
 
@@ -83,10 +75,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get xkbScanCodeMap {
     final StringBuffer xkbScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.xKbScanCode != null) {
-        xkbScanCodeMap.writeln('  ${toHex(entry.xKbScanCode)}: PhysicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      xkbScanCodeMap.writeln('  ${toHex(entry.xKbScanCode)}: PhysicalKeyboardKey.${entry.constantName},');
+        }
     return xkbScanCodeMap.toString().trimRight();
   }
 
@@ -94,12 +84,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get androidKeyCodeMap {
     final StringBuffer androidKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.androidKeyCodes != null) {
-        for (final int code in entry.androidKeyCodes.cast<int>()) {
-          androidKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.androidKeyCodes.cast<int>()) {
+        androidKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return androidKeyCodeMap.toString().trimRight();
   }
 
@@ -107,12 +95,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get androidNumpadMap {
     final StringBuffer androidKeyCodeMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.androidKeyCodes != null) {
-        for (final int code in entry.androidKeyCodes.cast<int>()) {
-          androidKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.androidKeyCodes.cast<int>()) {
+        androidKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return androidKeyCodeMap.toString().trimRight();
   }
 
@@ -120,12 +106,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get androidScanCodeMap {
     final StringBuffer androidScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.androidScanCodes != null) {
-        for (final int code in entry.androidScanCodes.cast<int>()) {
-          androidScanCodeMap.writeln('  $code: PhysicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.androidScanCodes.cast<int>()) {
+        androidScanCodeMap.writeln('  $code: PhysicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return androidScanCodeMap.toString().trimRight();
   }
 
@@ -133,10 +117,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get windowsScanCodeMap {
     final StringBuffer windowsScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.windowsScanCode != null) {
-        windowsScanCodeMap.writeln('  ${toHex(entry.windowsScanCode)}: PhysicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      windowsScanCodeMap.writeln('  ${toHex(entry.windowsScanCode)}: PhysicalKeyboardKey.${entry.constantName},');
+        }
     return windowsScanCodeMap.toString().trimRight();
   }
 
@@ -144,12 +126,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get windowsNumpadMap {
     final StringBuffer windowsNumPadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.windowsKeyCodes != null){
-        for (final int code in entry.windowsKeyCodes) {
-          windowsNumPadMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.windowsKeyCodes) {
+        windowsNumPadMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return windowsNumPadMap.toString().trimRight();
   }
 
@@ -157,12 +137,10 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get windowsKeyCodeMap {
     final StringBuffer windowsKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.windowsKeyCodes != null) {
-        for (final int code in entry.windowsKeyCodes) {
-          windowsKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
-        }
+      for (final int code in entry.windowsKeyCodes) {
+        windowsKeyCodeMap.writeln('  $code: LogicalKeyboardKey.${entry.constantName},');
       }
-    }
+        }
     return windowsKeyCodeMap.toString().trimRight();
   }
 
@@ -170,10 +148,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get macOsScanCodeMap {
     final StringBuffer macOsScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.macOsScanCode != null) {
-        macOsScanCodeMap.writeln('  ${toHex(entry.macOsScanCode)}: PhysicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      macOsScanCodeMap.writeln('  ${toHex(entry.macOsScanCode)}: PhysicalKeyboardKey.${entry.constantName},');
+        }
     return macOsScanCodeMap.toString().trimRight();
   }
 
@@ -181,20 +157,16 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get macOsNumpadMap {
     final StringBuffer macOsNumPadMap = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.macOsScanCode != null) {
-        macOsNumPadMap.writeln('  ${toHex(entry.macOsScanCode)}: LogicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      macOsNumPadMap.writeln('  ${toHex(entry.macOsScanCode)}: LogicalKeyboardKey.${entry.constantName},');
+        }
     return macOsNumPadMap.toString().trimRight();
   }
 
   String get macOsFunctionKeyMap {
     final StringBuffer macOsFunctionKeyMap = StringBuffer();
     for (final Key entry in functionKeyData) {
-      if (entry.macOsScanCode != null) {
-        macOsFunctionKeyMap.writeln('  ${toHex(entry.macOsScanCode)}: LogicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      macOsFunctionKeyMap.writeln('  ${toHex(entry.macOsScanCode)}: LogicalKeyboardKey.${entry.constantName},');
+        }
     return macOsFunctionKeyMap.toString().trimRight();
   }
 
@@ -202,10 +174,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get fuchsiaKeyCodeMap {
     final StringBuffer fuchsiaKeyCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.usbHidCode != null) {
-        fuchsiaKeyCodeMap.writeln('  ${toHex(entry.flutterId)}: LogicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      fuchsiaKeyCodeMap.writeln('  ${toHex(entry.flutterId)}: LogicalKeyboardKey.${entry.constantName},');
+        }
     return fuchsiaKeyCodeMap.toString().trimRight();
   }
 
@@ -213,10 +183,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get fuchsiaHidCodeMap {
     final StringBuffer fuchsiaScanCodeMap = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.usbHidCode != null) {
-        fuchsiaScanCodeMap.writeln('  ${toHex(entry.usbHidCode)}: PhysicalKeyboardKey.${entry.constantName},');
-      }
-    }
+      fuchsiaScanCodeMap.writeln('  ${toHex(entry.usbHidCode)}: PhysicalKeyboardKey.${entry.constantName},');
+        }
     return fuchsiaScanCodeMap.toString().trimRight();
   }
 
@@ -224,10 +192,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get webLogicalKeyMap {
     final StringBuffer result = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.name != null) {
-        result.writeln("  '${entry.name}': LogicalKeyboardKey.${entry.constantName},");
-      }
-    }
+      result.writeln("  '${entry.name}': LogicalKeyboardKey.${entry.constantName},");
+        }
     return result.toString().trimRight();
   }
 
@@ -235,10 +201,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get webPhysicalKeyMap {
     final StringBuffer result = StringBuffer();
     for (final Key entry in keyData.data) {
-      if (entry.name != null) {
-        result.writeln("  '${entry.name}': PhysicalKeyboardKey.${entry.constantName},");
-      }
-    }
+      result.writeln("  '${entry.name}': PhysicalKeyboardKey.${entry.constantName},");
+        }
     return result.toString().trimRight();
   }
 
@@ -246,10 +210,8 @@ class KeyboardMapsCodeGenerator extends BaseCodeGenerator {
   String get webNumpadMap {
     final StringBuffer result = StringBuffer();
     for (final Key entry in numpadKeyData) {
-      if (entry.name != null) {
-        result.writeln("  '${entry.name}': LogicalKeyboardKey.${entry.constantName},");
-      }
-    }
+      result.writeln("  '${entry.name}': LogicalKeyboardKey.${entry.constantName},");
+        }
     return result.toString().trimRight();
   }
 

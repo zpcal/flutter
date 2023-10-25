@@ -8,7 +8,6 @@ import 'package:flutter/src/physics/utils.dart' show nearEqual;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../flutter_test_alternative.dart' show Fake;
 
 const Color _kScrollbarColor = Color(0xFF123456);
 const double _kThickness = 2.5;
@@ -388,7 +387,7 @@ void main() {
   testWidgets('thumb resizes gradually on overscroll', (WidgetTester tester) async {
     const EdgeInsets padding = EdgeInsets.fromLTRB(1, 2, 3, 4);
     const Size size = Size(60, 300);
-    final double scrollExtent = size.height * 10;
+    const double scrollExtent = size.height * 10;
     final ScrollMetrics metrics = defaultMetrics.copyWith(
       minScrollExtent: 0,
       maxScrollExtent: scrollExtent,

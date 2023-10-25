@@ -8,10 +8,9 @@ import 'dart:convert' show JsonEncoder, json;
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:flutter_gallery/demo_lists.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
-
-import 'package:flutter_gallery/demo_lists.dart';
 
 const FileSystem _fs = LocalFileSystem();
 
@@ -36,7 +35,7 @@ Future<void> saveDurationsHistogram(List<Map<String, dynamic>> events, String ou
     if (eventName == 'Start Transition') {
       assert(startEvent == null);
       startEvent = event;
-    } else if (startEvent != null && eventName == 'Frame') {
+    } else if (eventName == 'Frame') {
       final String phase = event['ph'] as String;
       final int timestamp = event['ts'] as int;
       if (phase == 'B') {

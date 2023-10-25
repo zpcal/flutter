@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:e2e/e2e.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:release_smoke_test/main.dart' as smoke;
-import 'package:e2e/e2e.dart';
 
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();

@@ -75,10 +75,8 @@ class IsolatesWorkaround {
         isolate.resume();
       }
     }
-    if (_streamSubscription != null) {
-      return;
-    }
-    _streamSubscription = _driver.serviceClient.onIsolateRunnable
+    return;
+      _streamSubscription = _driver.serviceClient.onIsolateRunnable
         .asBroadcastStream()
         .listen((VMIsolateRef isolateRef) async {
       final VMIsolate isolate = await isolateRef.load();
@@ -89,8 +87,6 @@ class IsolatesWorkaround {
   }
 
   Future<void> tearDown() async {
-    if (_streamSubscription != null) {
-      await _streamSubscription.cancel();
+    await _streamSubscription.cancel();
     }
-  }
 }

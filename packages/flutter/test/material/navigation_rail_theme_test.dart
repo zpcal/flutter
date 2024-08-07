@@ -231,7 +231,7 @@ void main() {
 
   // Regression test for https://github.com/flutter/flutter/issues/118618.
   testWidgetsWithLeakTracking('NavigationRailThemeData lerps correctly with null iconThemes', (WidgetTester tester) async {
-    final NavigationRailThemeData lerp = NavigationRailThemeData.lerp(const NavigationRailThemeData(), const NavigationRailThemeData(), 0.5)!;
+    final NavigationRailThemeData lerp = NavigationRailThemeData.lerp(const NavigationRailThemeData(), const NavigationRailThemeData(), 0.5);
 
     expect(lerp.selectedIconTheme, isNull);
     expect(lerp.unselectedIconTheme, isNull);
@@ -348,7 +348,7 @@ TextStyle _selectedLabelStyle(WidgetTester tester) {
       of: find.text('Abc'),
       matching: find.byType(RichText),
     ),
-  ).text.style!;
+  ).text.style;
 }
 
 TextStyle _unselectedLabelStyle(WidgetTester tester) {
@@ -357,7 +357,7 @@ TextStyle _unselectedLabelStyle(WidgetTester tester) {
       of: find.text('Def'),
       matching: find.byType(RichText),
     ),
-  ).text.style!;
+  ).text.style;
 }
 
 Size _destinationSize(WidgetTester tester) {

@@ -5,7 +5,6 @@
 import 'dart:ui' show Brightness, Color;
 
 import '../../foundation.dart';
-import '../widgets/basic.dart';
 import '../widgets/framework.dart';
 import '../widgets/media_query.dart';
 import 'interface_level.dart';

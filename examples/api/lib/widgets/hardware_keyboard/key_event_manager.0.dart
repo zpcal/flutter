@@ -110,7 +110,7 @@ class FallbackKeyEventRegistrar {
       // have been called somewhere.
       assert(existing != null);
       // Assign the global handler with a patched handler.
-      ServicesBinding.instance.keyEventManager.keyMessageHandler = _instance._buildHandler(existing!);
+      ServicesBinding.instance.keyEventManager.keyMessageHandler = _instance._buildHandler(existing);
       _initialized = true;
     }
     return _instance;

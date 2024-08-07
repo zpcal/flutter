@@ -609,7 +609,7 @@ class _InteractiveViewerState extends State<InteractiveViewer> with TickerProvid
         case PanAxis.vertical:
           alignedTranslation = _alignAxis(translation, Axis.vertical);
         case PanAxis.aligned:
-          alignedTranslation = _alignAxis(translation, _currentAxis!);
+          alignedTranslation = _alignAxis(translation, _currentAxis);
         case PanAxis.free:
           alignedTranslation = translation;
       }
@@ -851,7 +851,7 @@ class _InteractiveViewerState extends State<InteractiveViewer> with TickerProvid
         final Offset focalPointSceneCheck = _transformationController!.toScene(
           details.localFocalPoint,
         );
-        if (_round(_referenceFocalPoint!) != _round(focalPointSceneCheck)) {
+        if (_round(_referenceFocalPoint) != _round(focalPointSceneCheck)) {
           _referenceFocalPoint = focalPointSceneCheck;
         }
 
@@ -877,7 +877,7 @@ class _InteractiveViewerState extends State<InteractiveViewer> with TickerProvid
           widget.onInteractionUpdate?.call(details);
           return;
         }
-        _currentAxis ??= _getPanAxis(_referenceFocalPoint!, focalPointScene);
+        _currentAxis ??= _getPanAxis(_referenceFocalPoint, focalPointScene);
         // Translate so that the same point in the scene is underneath the
         // focal point before and after the movement.
         final Offset translationChange = focalPointScene - _referenceFocalPoint!;

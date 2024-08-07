@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 
 import '../android/android_sdk.dart';
 import '../artifacts.dart';
-import '../base/file_system.dart';
 import '../base/logger.dart';
 import '../base/os.dart';
 import '../base/process.dart';

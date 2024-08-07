@@ -11,7 +11,6 @@ import 'arena.dart';
 import 'binding.dart';
 import 'constants.dart';
 import 'drag.dart';
-import 'drag_details.dart';
 import 'events.dart';
 import 'recognizer.dart';
 import 'velocity_tracker.dart';
@@ -134,7 +133,7 @@ abstract class MultiDragPointerState {
     _client = client;
     final DragUpdateDetails details = DragUpdateDetails(
       sourceTimeStamp: _lastPendingEventTimestamp,
-      delta: pendingDelta!,
+      delta: pendingDelta,
       globalPosition: initialPosition,
     );
     _pendingDelta = null;

@@ -47,10 +47,10 @@ Future<void> testImageQuality(WidgetTester tester, ui.FilterQuality? quality) as
     0xff, 0x21, 0x1c, 0x00, 0xcb, 0x70, 0x0e, 0xf3, 0x5d, 0x11, 0xc2, 0xf8,
     0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
   ]);
-  final ui.Image image = (await tester.runAsync(() async {
+  final ui.Image image = await tester.runAsync(() async {
     final ui.Codec codec = await ui.instantiateImageCodec(test3x3Image);
     return (await codec.getNextFrame()).image;
-  }))!;
+  });
   expect(image.width, 3);
   expect(image.height, 3);
   final _TestImageStreamCompleter streamCompleter = _TestImageStreamCompleter();

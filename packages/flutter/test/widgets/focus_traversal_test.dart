@@ -43,7 +43,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key5));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       secondFocusNode.nextFocus();
 
       await tester.pump();
@@ -82,7 +82,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key5));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
 
       expect(firstFocusNode.hasFocus, isFalse);
       expect(secondFocusNode.hasFocus, isFalse);
@@ -254,7 +254,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key6));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       firstFocusNode.requestFocus();
 
       await tester.pump();
@@ -359,7 +359,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key6));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       secondFocusNode.requestFocus();
 
       await tester.pump();
@@ -481,7 +481,7 @@ void main() {
 
       final Element firstChild = tester.element(find.text('Go Forward'));
       final FocusNode firstFocusNode = Focus.of(firstChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       await tester.pump();
 
       expect(firstFocusNode.hasFocus, isTrue);
@@ -668,7 +668,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key5));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       secondFocusNode.nextFocus();
 
       await tester.pump();
@@ -739,7 +739,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key6));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       firstFocusNode.requestFocus();
 
       await tester.pump();
@@ -872,7 +872,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key6));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       secondFocusNode.requestFocus();
 
       await tester.pump();
@@ -1014,7 +1014,7 @@ void main() {
       for (int i = 0; i < nodeCount; ++i) {
         nodes.first.nextFocus();
         await tester.pump();
-        order.add(nodes.indexOf(primaryFocus!));
+        order.add(nodes.indexOf(primaryFocus));
       }
       expect(order, orderedEquals(<int>[0, 1, 2, 4, 3, 5, 6, 7, 8, 9]));
 
@@ -1024,7 +1024,7 @@ void main() {
       for (int i = 0; i < nodeCount; ++i) {
         nodes.first.nextFocus();
         await tester.pump();
-        order.add(nodes.indexOf(primaryFocus!));
+        order.add(nodes.indexOf(primaryFocus));
       }
       expect(order, orderedEquals(<int>[0, 1, 2, 4, 3, 5, 6, 8, 7, 9]));
     });
@@ -1061,7 +1061,7 @@ void main() {
       for (int i = 0; i < nodeCount; ++i) {
         nodes.first.nextFocus();
         await tester.pump();
-        order.add(nodes.indexOf(primaryFocus!));
+        order.add(nodes.indexOf(primaryFocus));
       }
       expect(order, orderedEquals(<int>[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]));
 
@@ -1088,7 +1088,7 @@ void main() {
       for (int i = 0; i < nodeCount; ++i) {
         nodes.first.nextFocus();
         await tester.pump();
-        order.add(nodes.indexOf(primaryFocus!));
+        order.add(nodes.indexOf(primaryFocus));
       }
       expect(order, orderedEquals(<int>[9, 8, 7, 6, 5, 4, 3, 2, 1, 0]));
 
@@ -1124,7 +1124,7 @@ void main() {
       for (int i = 0; i < nodeCount; ++i) {
         nodes.first.nextFocus();
         await tester.pump();
-        order.add(nodes.indexOf(primaryFocus!));
+        order.add(nodes.indexOf(primaryFocus));
       }
       expect(order, orderedEquals(<int>[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]));
     });
@@ -1206,7 +1206,7 @@ void main() {
       final Element secondChild = tester.element(find.byKey(key2));
       final FocusNode firstFocusNode = Focus.of(firstChild);
       final FocusNode secondFocusNode = Focus.of(secondChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       secondFocusNode.nextFocus();
 
       await tester.pump();
@@ -1487,7 +1487,7 @@ void main() {
       for (int i = 0; i < nodeCount; ++i) {
         nodes.first.nextFocus();
         await tester.pump();
-        order.add(nodes.indexOf(primaryFocus!));
+        order.add(nodes.indexOf(primaryFocus));
       }
       expect(order, orderedEquals(expectedOrder));
     });
@@ -1545,7 +1545,7 @@ void main() {
 
       final Element firstChild = tester.element(find.text('Go Forward'));
       final FocusNode firstFocusNode = Focus.of(firstChild);
-      final FocusNode scope = Focus.of(firstChild).enclosingScope!;
+      final FocusNode scope = Focus.of(firstChild).enclosingScope;
       await tester.pump();
 
       expect(firstFocusNode.hasFocus, isTrue);
@@ -1679,7 +1679,7 @@ void main() {
       final FocusNode upperRightNode = Focus.of(tester.element(find.byKey(upperRightKey)));
       final FocusNode lowerLeftNode = Focus.of(tester.element(find.byKey(lowerLeftKey)));
       final FocusNode lowerRightNode = Focus.of(tester.element(find.byKey(lowerRightKey)));
-      final FocusNode scope = upperLeftNode.enclosingScope!;
+      final FocusNode scope = upperLeftNode.enclosingScope;
       upperLeftNode.requestFocus();
 
       await tester.pump();
@@ -1818,7 +1818,7 @@ void main() {
         focus = List<bool?>.generate(focus.length, (int _) => null);
       }
 
-      final FocusNode scope = nodes[0].enclosingScope!;
+      final FocusNode scope = nodes[0].enclosingScope;
       nodes[4].requestFocus();
 
       // Test to make sure that the same path is followed backwards and forwards.
@@ -1956,7 +1956,7 @@ void main() {
         focus = List<bool?>.generate(focus.length, (int _) => null);
       }
 
-      final FocusNode scope = nodes[0].enclosingScope!;
+      final FocusNode scope = nodes[0].enclosingScope;
 
       // Go down the center column and make sure that the focus stays in that
       // column, even though the second row is irregular.
@@ -2081,7 +2081,7 @@ void main() {
         focus = List<bool?>.generate(focus.length, (int _) => null);
       }
 
-      final FocusNode scope = nodes[0].enclosingScope!;
+      final FocusNode scope = nodes[0].enclosingScope;
 
       // Go down the column and make sure that the focus goes to the next
       // closest one.
@@ -2172,7 +2172,7 @@ void main() {
         focus = List<bool?>.generate(focus.length, (int _) => null);
       }
 
-      final FocusNode scope = nodes[0].enclosingScope!;
+      final FocusNode scope = nodes[0].enclosingScope;
 
       // Go down the row and make sure that the focus goes to the next
       // closest one.
@@ -2250,7 +2250,7 @@ void main() {
       final FocusNode upperLeftNode = Focus.of(tester.element(find.byKey(upperLeftKey)));
       final FocusNode upperRightNode = Focus.of(tester.element(find.byKey(upperRightKey)));
       final FocusNode lowerLeftNode = Focus.of(tester.element(find.byKey(lowerLeftKey)));
-      final FocusNode scope = upperLeftNode.enclosingScope!;
+      final FocusNode scope = upperLeftNode.enclosingScope;
 
       await tester.pump();
 
@@ -2286,7 +2286,7 @@ void main() {
       ));
 
       focusTop.requestFocus();
-      final FocusNode scope = focusTop.enclosingScope!;
+      final FocusNode scope = focusTop.enclosingScope;
 
       scope.focusInDirection(TraversalDirection.down);
       scope.focusInDirection(TraversalDirection.down);

@@ -196,7 +196,7 @@ class Badge extends StatelessWidget {
       Stack(
         clipBehavior: Clip.none,
         children: <Widget>[
-          child!,
+          child,
           Positioned.fill(
             child: _Badge(
               alignment: effectiveAlignment,

@@ -990,7 +990,7 @@ abstract class Finder extends FinderBase<Element> with _LegacyFinderMixin {
   @override
   Iterable<Element> get allCandidates {
     return collectAllElementsFrom(
-      WidgetsBinding.instance.rootElement!,
+      WidgetsBinding.instance.rootElement,
       skipOffstage: skipOffstage,
     );
   }
@@ -1603,8 +1603,8 @@ class _AncestorSemanticsFinder extends FinderBase<SemanticsNode>
   Iterable<SemanticsNode> _collectAncestors(SemanticsNode child) {
     final List<SemanticsNode> ancestors = <SemanticsNode>[];
     while (child.parent != null) {
-      ancestors.add(child.parent!);
-      child = child.parent!;
+      ancestors.add(child.parent);
+      child = child.parent;
     }
     return ancestors;
   }

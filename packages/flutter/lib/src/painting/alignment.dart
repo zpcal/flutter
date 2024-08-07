@@ -6,7 +6,6 @@ import 'dart:ui' as ui show lerpDouble;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 
 /// Base class for [Alignment] that allows for text-direction aware
 /// resolution.

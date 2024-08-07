@@ -694,7 +694,7 @@ class IconButton extends StatelessWidget {
 
       Widget effectiveIcon = icon;
       if ((isSelected ?? false) && selectedIcon != null) {
-        effectiveIcon = selectedIcon!;
+        effectiveIcon = selectedIcon;
       }
 
       Widget iconButton = effectiveIcon;
@@ -893,7 +893,7 @@ class _IconButtonM3 extends ButtonStyleButton {
     super.statesController,
     required this.variant,
     required this.toggleable,
-    required Widget super.child,
+    required super.child,
   }) : super(
       onLongPress: null,
       onHover: null,

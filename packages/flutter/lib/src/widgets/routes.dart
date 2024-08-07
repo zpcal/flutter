@@ -339,8 +339,8 @@ abstract class TransitionRoute<T> extends OverlayRoute<T> {
     if (nextRoute is TransitionRoute<dynamic> && canTransitionTo(nextRoute) && nextRoute.canTransitionFrom(this)) {
       final Animation<double>? current = _secondaryAnimation.parent;
       if (current != null) {
-        final Animation<double> currentTrain = (current is TrainHoppingAnimation ? current.currentTrain : current)!;
-        final Animation<double> nextTrain = nextRoute._animation!;
+        final Animation<double> currentTrain = (current is TrainHoppingAnimation ? current.currentTrain : current);
+        final Animation<double> nextTrain = nextRoute._animation;
         if (
           currentTrain.value == nextTrain.value ||
           nextTrain.status == AnimationStatus.completed ||
@@ -946,8 +946,8 @@ class _ModalScopeState<T> extends State<_ModalScope<T>> {
                           builder: (BuildContext context, Widget? child) {
                             return widget.route.buildTransitions(
                               context,
-                              widget.route.animation!,
-                              widget.route.secondaryAnimation!,
+                              widget.route.animation,
+                              widget.route.secondaryAnimation,
                               // This additional AnimatedBuilder is include because if the
                               // value of the userGestureInProgressNotifier changes, it's
                               // only necessary to rebuild the IgnorePointer widget and set
@@ -972,8 +972,8 @@ class _ModalScopeState<T> extends State<_ModalScope<T>> {
                               builder: (BuildContext context) {
                                 return widget.route.buildPage(
                                   context,
-                                  widget.route.animation!,
-                                  widget.route.secondaryAnimation!,
+                                  widget.route.animation,
+                                  widget.route.secondaryAnimation,
                                 );
                               },
                             ),
@@ -1770,7 +1770,7 @@ abstract class ModalRoute<T> extends TransitionRoute<T> with LocalHistoryRoute<T
     Widget barrier = buildModalBarrier();
     if (filter != null) {
       barrier = BackdropFilter(
-        filter: filter!,
+        filter: filter,
         child: barrier,
       );
     }

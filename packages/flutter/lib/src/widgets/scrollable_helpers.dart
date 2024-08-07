@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import 'actions.dart';
-import 'basic.dart';
 import 'framework.dart';
 import 'primary_scroll_controller.dart';
 import 'scroll_configuration.dart';

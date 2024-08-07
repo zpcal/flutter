@@ -703,7 +703,7 @@ void main() {
 
     // Make the widget's render object dirty and verifies in the LayoutBuilder's
     // callback that the widget's render object is already laid out.
-    final RenderObject renderChild1 = widgetKey.currentContext!.findRenderObject()!;
+    final RenderObject renderChild1 = widgetKey.currentContext!.findRenderObject();
     renderChild1.markNeedsLayout();
     // Dirty both render subtree branches.
     childBox.markNeedsLayout();
@@ -1908,14 +1908,14 @@ void main() {
       final List<RenderObject> childrenVisited = <RenderObject>[];
       theater.visitChildren(childrenVisited.add);
       expect(childrenVisited.length, 3);
-      expect(childrenVisited, containsAllInOrder(<RenderObject>[child1Box.parent!, child2Box.parent!]));
+      expect(childrenVisited, containsAllInOrder(<RenderObject>[child1Box.parent, child2Box.parent]));
       childrenVisited.clear();
 
       setState(() { reparented = true; });
       await tester.pump();
       theater.visitChildren(childrenVisited.add);
       // The child list stays the same.
-      expect(childrenVisited, containsAllInOrder(<RenderObject>[child1Box.parent!, child2Box.parent!]));
+      expect(childrenVisited, containsAllInOrder(<RenderObject>[child1Box.parent, child2Box.parent]));
     });
   });
 
@@ -1923,7 +1923,7 @@ void main() {
     testWidgets('ordering and transform', (WidgetTester tester) async {
       final SemanticsTester semantics = SemanticsTester(tester);
 
-      final double rowOriginY = TestSemantics.fullScreen.height - 10;
+      const double rowOriginY = TestSemantics.fullScreen.height - 10;
 
       final Widget widget = Directionality(
         textDirection: TextDirection.ltr,

@@ -7,7 +7,6 @@ import 'dart:ui' as ui show lerpDouble;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 import 'edge_insets.dart';
 
 /// The style of line to draw for a [BorderSide] in a [Border].
@@ -269,7 +268,7 @@ class BorderSide with Diagnosticable {
     }
     if (a.style == b.style && a.strokeAlign == b.strokeAlign) {
       return BorderSide(
-        color: Color.lerp(a.color, b.color, t)!,
+        color: Color.lerp(a.color, b.color, t),
         width: width,
         style: a.style, // == b.style
         strokeAlign: a.strokeAlign, // == b.strokeAlign
@@ -290,13 +289,13 @@ class BorderSide with Diagnosticable {
     }
     if (a.strokeAlign != b.strokeAlign) {
       return BorderSide(
-        color: Color.lerp(colorA, colorB, t)!,
+        color: Color.lerp(colorA, colorB, t),
         width: width,
         strokeAlign: ui.lerpDouble(a.strokeAlign, b.strokeAlign, t)!,
       );
     }
     return BorderSide(
-      color: Color.lerp(colorA, colorB, t)!,
+      color: Color.lerp(colorA, colorB, t),
       width: width,
       strokeAlign: a.strokeAlign, // == b.strokeAlign
     );

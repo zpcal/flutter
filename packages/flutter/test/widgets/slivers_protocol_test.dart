@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 void verifyPaintPosition(GlobalKey key, Offset ideal) {
-  final RenderObject target = key.currentContext!.findRenderObject()!;
+  final RenderObject target = key.currentContext!.findRenderObject();
   expect(target.parent, isA<RenderViewport>());
   final SliverPhysicalParentData parentData = target.parentData! as SliverPhysicalParentData;
   final Offset actual = parentData.paintOffset;

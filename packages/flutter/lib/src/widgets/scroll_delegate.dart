@@ -494,7 +494,7 @@ class SliverChildBuilderDelegate extends SliverChildDelegate {
     if (child == null) {
       return null;
     }
-    final Key? key = child.key != null ? _SaltedValueKey(child.key!) : null;
+    final Key? key = child.key != null ? _SaltedValueKey(child.key) : null;
     if (addRepaintBoundaries) {
       child = RepaintBoundary(child: child);
     }
@@ -708,7 +708,7 @@ class SliverChildListDelegate extends SliverChildDelegate {
       return null;
     }
     Widget child = children[index];
-    final Key? key = child.key != null? _SaltedValueKey(child.key!) : null;
+    final Key? key = child.key != null? _SaltedValueKey(child.key) : null;
     if (addRepaintBoundaries) {
       child = RepaintBoundary(child: child);
     }
@@ -819,7 +819,7 @@ class _SelectionKeepAliveState extends State<_SelectionKeepAlive> with Automatic
       return;
     }
     assert(_selectableAttachments!.containsKey(selectable));
-    final VoidCallback attachment = _selectableAttachments!.remove(selectable)!;
+    final VoidCallback attachment = _selectableAttachments!.remove(selectable);
     selectable.removeListener(attachment);
     _registrar!.remove(selectable);
     _updateSelectablesWithSelections(selectable, add: false);

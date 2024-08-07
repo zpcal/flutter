@@ -106,8 +106,8 @@ void main() {
 
     const double selectedFontSize = 14.0;
     const double unselectedFontSize = 12.0;
-    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style!;
-    final TextStyle unselectedFontStyle = tester.renderObject<RenderParagraph>(find.text('Alarm')).text.style!;
+    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style;
+    final TextStyle unselectedFontStyle = tester.renderObject<RenderParagraph>(find.text('Alarm')).text.style;
     final TextStyle selectedIcon = _iconStyle(tester, Icons.ac_unit);
     final TextStyle unselectedIcon = _iconStyle(tester, Icons.access_alarm);
     expect(selectedFontStyle.color, equals(primaryColor));
@@ -167,8 +167,8 @@ void main() {
         ),
     );
 
-    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style!;
-    final TextStyle unselectedFontStyle = tester.renderObject<RenderParagraph>(find.text('Alarm')).text.style!;
+    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style;
+    final TextStyle unselectedFontStyle = tester.renderObject<RenderParagraph>(find.text('Alarm')).text.style;
     expect(selectedFontStyle.fontSize, equals(selectedTextStyle.fontSize));
     expect(selectedFontStyle.fontWeight, equals(selectedTextStyle.fontWeight));
     expect(
@@ -208,7 +208,7 @@ void main() {
         ),
     );
 
-    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style!;
+    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style;
     expect(selectedFontStyle.fontSize, equals(selectedTextStyle.fontSize));
     expect(
       tester.firstWidget<Transform>(find.ancestor(of: find.text('Alarm'), matching: find.byType(Transform))).transform,
@@ -280,8 +280,8 @@ void main() {
       ),
     );
 
-    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style!;
-    final TextStyle unselectedFontStyle = tester.renderObject<RenderParagraph>(find.text('Alarm')).text.style!;
+    final TextStyle selectedFontStyle = tester.renderObject<RenderParagraph>(find.text('AC')).text.style;
+    final TextStyle unselectedFontStyle = tester.renderObject<RenderParagraph>(find.text('Alarm')).text.style;
     final TextStyle selectedIcon = _iconStyle(tester, Icons.ac_unit);
     final TextStyle unselectedIcon = _iconStyle(tester, Icons.access_alarm);
     expect(selectedIcon.color, equals(selectedIconTheme.color));
@@ -2548,7 +2548,7 @@ TextStyle _iconStyle(WidgetTester tester, IconData icon) {
   final RichText iconRichText = tester.widget<RichText>(
       find.descendant(of: find.byIcon(icon), matching: find.byType(RichText)),
   );
-  return iconRichText.text.style!;
+  return iconRichText.text.style;
 }
 
 EdgeInsets _itemPadding(WidgetTester tester, IconData icon) {

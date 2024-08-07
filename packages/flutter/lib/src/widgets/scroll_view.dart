@@ -1560,7 +1560,7 @@ class ListView extends BoxScrollView {
     } else if (itemExtentBuilder != null) {
       return SliverVariedExtentList(
         delegate: childrenDelegate,
-        itemExtentBuilder: itemExtentBuilder!,
+        itemExtentBuilder: itemExtentBuilder,
       );
     } else if (prototypeItem != null) {
       return SliverPrototypeExtentList(

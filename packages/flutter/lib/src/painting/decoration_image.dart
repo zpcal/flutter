@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'alignment.dart';
-import 'basic_types.dart';
 import 'binding.dart';
 import 'borders.dart';
 import 'box_fit.dart';

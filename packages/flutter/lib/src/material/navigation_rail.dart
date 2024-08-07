@@ -433,7 +433,7 @@ class _NavigationRailState extends State<NavigationRail> with TickerProviderStat
                 _verticalSpacer,
                 if (widget.leading != null)
                   ...<Widget>[
-                    widget.leading!,
+                    widget.leading,
                     _verticalSpacer,
                   ],
                 Expanded(

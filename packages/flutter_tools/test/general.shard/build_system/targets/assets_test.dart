@@ -205,7 +205,7 @@ flutter:
       fileSystem: fileSystem,
       logger: logger,
       engineVersion: '2',
-    )!;
+    );
 
     expect(await content.contentsAsBytes(), utf8.encode('{"data":{}}'));
     expect(logger.errorText, contains('This may lead to less efficient shader caching'));
@@ -229,7 +229,7 @@ flutter:
       fileSystem: fileSystem,
       logger: logger,
       engineVersion: '2',
-    )!;
+    );
 
     expect(await content.contentsAsBytes(), utf8.encode('{"data":{}}'));
     expect(logger.errorText, isEmpty);

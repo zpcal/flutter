@@ -271,7 +271,7 @@ mixin ServicesBinding on BindingBase, SchedulerBinding {
 
   Future<String?> _handleLifecycleMessage(String? message) async {
     final AppLifecycleState? state = _parseAppLifecycleMessage(message!);
-    final List<AppLifecycleState> generated = _generateStateTransitions(lifecycleState, state!);
+    final List<AppLifecycleState> generated = _generateStateTransitions(lifecycleState, state);
     generated.forEach(handleAppLifecycleStateChanged);
     return null;
   }

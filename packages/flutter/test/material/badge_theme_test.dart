@@ -110,7 +110,7 @@ void main() {
     expect(tester.getSize(find.byType(Badge)), const Size(24, 24)); // default Icon size
     expect(tester.getTopLeft(find.byType(Badge)), Offset.zero);
 
-    final TextStyle textStyle = tester.renderObject<RenderParagraph>(find.text('1234')).text.style!;
+    final TextStyle textStyle = tester.renderObject<RenderParagraph>(find.text('1234')).text.style;
     expect(textStyle.fontSize, 12);
     expect(textStyle.color, black);
 
@@ -154,7 +154,7 @@ void main() {
     expect(tester.getTopLeft(find.text('1234')), const Offset(33, 4));
     expect(tester.getSize(find.byType(Badge)), const Size(24, 24)); // default Icon size
     expect(tester.getTopLeft(find.byType(Badge)), Offset.zero);
-    final TextStyle textStyle = tester.renderObject<RenderParagraph>(find.text('1234')).text.style!;
+    final TextStyle textStyle = tester.renderObject<RenderParagraph>(find.text('1234')).text.style;
     expect(textStyle.fontSize, 12);
     expect(textStyle.color, black);
     final RenderBox box = tester.renderObject(find.byType(Badge));

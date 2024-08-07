@@ -623,7 +623,7 @@ class _RenderCupertinoSwitch extends RenderConstrainedBox {
     }
 
     final Paint paint = Paint()
-      ..color = Color.lerp(trackColor, activeColor, currentValue)!;
+      ..color = Color.lerp(trackColor, activeColor, currentValue);
 
     final Rect trackRect = Rect.fromLTWH(
         offset.dx + (size.width - _kTrackWidth) / 2.0,

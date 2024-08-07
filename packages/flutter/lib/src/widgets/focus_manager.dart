@@ -808,7 +808,7 @@ class FocusNode with DiagnosticableTreeMixin, ChangeNotifier {
       'The context needs to be set before trying to evaluate traversal policies. '
       'Setting the context is typically done with the attach method.',
     );
-    final RenderObject object = context!.findRenderObject()!;
+    final RenderObject object = context!.findRenderObject();
     return MatrixUtils.transformPoint(object.getTransformTo(null), object.semanticBounds.topLeft);
   }
 
@@ -823,7 +823,7 @@ class FocusNode with DiagnosticableTreeMixin, ChangeNotifier {
       'The context needs to be set before trying to evaluate traversal policies. '
       'Setting the context is typically done with the attach method.',
     );
-    final RenderObject object = context!.findRenderObject()!;
+    final RenderObject object = context!.findRenderObject();
     final Offset topLeft = MatrixUtils.transformPoint(object.getTransformTo(null), object.semanticBounds.topLeft);
     final Offset bottomRight = MatrixUtils.transformPoint(object.getTransformTo(null), object.semanticBounds.bottomRight);
     return Rect.fromLTRB(topLeft.dx, topLeft.dy, bottomRight.dx, bottomRight.dy);
@@ -1977,7 +1977,7 @@ class _HighlightModeManager {
         }
       }
       if (node.onKey != null && message.rawEvent != null) {
-        results.add(node.onKey!(node, message.rawEvent!));
+        results.add(node.onKey!(node, message.rawEvent));
       }
       final KeyEventResult result = combineKeyEventResults(results);
       switch (result) {

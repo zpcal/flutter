@@ -1379,7 +1379,7 @@ class TextPainter {
     final Offset rawOffset;
     switch (caretMetrics) {
       case _EmptyLineCaretMetrics(:final double lineVerticalOffset):
-        final double paintOffsetAlignment = _computePaintOffsetFraction(textAlign, textDirection!);
+        final double paintOffsetAlignment = _computePaintOffsetFraction(textAlign, textDirection);
         // The full width is not (width - caretPrototype.width)
         // because RenderEditable reserves cursor width on the right. Ideally this
         // should be handled by RenderEditable instead.

@@ -21,7 +21,6 @@ import 'keyboard_inserted_content.dart';
 import 'message_codec.dart';
 import 'platform_channel.dart';
 import 'system_channels.dart';
-import 'text_editing.dart';
 import 'text_editing_delta.dart';
 
 export 'dart:ui' show Brightness, FontWeight, Offset, Rect, Size, TextAlign, TextDirection, TextPosition, TextRange;

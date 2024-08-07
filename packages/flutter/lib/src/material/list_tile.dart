@@ -1359,8 +1359,8 @@ class _RenderListTile extends RenderBox with SlottedContainerRenderObjectMixin<_
       titleY = (tileHeight - titleSize.height) / 2.0;
     } else {
       assert(subtitleBaselineType != null);
-      titleY = titleBaseline! - _boxBaseline(title!, titleBaselineType)!;
-      subtitleY = subtitleBaseline! - _boxBaseline(subtitle!, subtitleBaselineType!)! + visualDensity.vertical * 2.0;
+      titleY = titleBaseline! - _boxBaseline(title, titleBaselineType)!;
+      subtitleY = subtitleBaseline! - _boxBaseline(subtitle, subtitleBaselineType)! + visualDensity.vertical * 2.0;
       tileHeight = defaultTileHeight;
 
       // If the title and subtitle overlap, move the title upwards by half
@@ -1436,27 +1436,27 @@ class _RenderListTile extends RenderBox with SlottedContainerRenderObjectMixin<_
     switch (textDirection) {
       case TextDirection.rtl: {
         if (hasLeading) {
-          _positionBox(leading!, Offset(tileWidth - leadingSize.width, leadingY));
+          _positionBox(leading, Offset(tileWidth - leadingSize.width, leadingY));
         }
-        _positionBox(title!, Offset(adjustedTrailingWidth, titleY));
+        _positionBox(title, Offset(adjustedTrailingWidth, titleY));
         if (hasSubtitle) {
-          _positionBox(subtitle!, Offset(adjustedTrailingWidth, subtitleY!));
+          _positionBox(subtitle, Offset(adjustedTrailingWidth, subtitleY!));
         }
         if (hasTrailing) {
-          _positionBox(trailing!, Offset(0.0, trailingY));
+          _positionBox(trailing, Offset(0.0, trailingY));
         }
         break;
       }
       case TextDirection.ltr: {
         if (hasLeading) {
-          _positionBox(leading!, Offset(0.0, leadingY));
+          _positionBox(leading, Offset(0.0, leadingY));
         }
-        _positionBox(title!, Offset(titleStart, titleY));
+        _positionBox(title, Offset(titleStart, titleY));
         if (hasSubtitle) {
-          _positionBox(subtitle!, Offset(titleStart, subtitleY!));
+          _positionBox(subtitle, Offset(titleStart, subtitleY!));
         }
         if (hasTrailing) {
-          _positionBox(trailing!, Offset(tileWidth - trailingSize.width, trailingY));
+          _positionBox(trailing, Offset(tileWidth - trailingSize.width, trailingY));
         }
         break;
       }

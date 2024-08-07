@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 
-import 'basic.dart';
 import 'debug.dart';
 import 'framework.dart';
 import 'media_query.dart';
@@ -349,7 +348,7 @@ class _RenderSnapshotWidget extends RenderProxyBox {
     if (_childRaster == null) {
       painter.paint(context, offset, size, super.paint);
     } else {
-      painter.paintSnapshot(context, offset, size, _childRaster!, _childRasterSize!, devicePixelRatio);
+      painter.paintSnapshot(context, offset, size, _childRaster, _childRasterSize, devicePixelRatio);
     }
   }
 }

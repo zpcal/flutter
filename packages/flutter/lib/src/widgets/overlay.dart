@@ -232,11 +232,11 @@ class OverlayEntry implements Listenable {
 
 class _OverlayEntryWidget extends StatefulWidget {
   const _OverlayEntryWidget({
-    required Key key,
+    required super.key,
     required this.entry,
     required this.overlayState,
     this.tickerEnabled = true,
-  }) : super(key: key);
+  });
 
   final OverlayEntry entry;
   final OverlayState overlayState;
@@ -1124,15 +1124,13 @@ class _RenderTheater extends RenderBox with ContainerRenderObjectMixin<RenderBox
       assert(!child.debugNeedsLayout);
       final StackParentData childParentData = child.parentData! as StackParentData;
       double? candidate = child.getDistanceToActualBaseline(baseline);
-      if (candidate != null) {
-        candidate += childParentData.offset.dy;
-        if (result != null) {
-          result = math.min(result, candidate);
-        } else {
-          result = candidate;
-        }
+      candidate += childParentData.offset.dy;
+      if (result != null) {
+        result = math.min(result, candidate);
+      } else {
+        result = candidate;
       }
-      child = childParentData.nextSibling;
+          child = childParentData.nextSibling;
     }
     return result;
   }

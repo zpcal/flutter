@@ -6,7 +6,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 
 /// How a box should be inscribed into another box.
 ///

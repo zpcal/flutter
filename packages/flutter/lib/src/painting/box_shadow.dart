@@ -7,7 +7,6 @@ import 'dart:ui' as ui show Shadow, lerpDouble;
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 import 'debug.dart';
 
 /// A shadow cast by a box.
@@ -96,9 +95,9 @@ class BoxShadow extends ui.Shadow {
       return a.scale(1.0 - t);
     }
     return BoxShadow(
-      color: Color.lerp(a.color, b.color, t)!,
-      offset: Offset.lerp(a.offset, b.offset, t)!,
-      blurRadius: ui.lerpDouble(a.blurRadius, b.blurRadius, t)!,
+      color: Color.lerp(a.color, b.color, t),
+      offset: Offset.lerp(a.offset, b.offset, t),
+      blurRadius: ui.lerpDouble(a.blurRadius, b.blurRadius, t),
       spreadRadius: ui.lerpDouble(a.spreadRadius, b.spreadRadius, t)!,
       blurStyle: a.blurStyle == BlurStyle.normal ? b.blurStyle : a.blurStyle,
     );

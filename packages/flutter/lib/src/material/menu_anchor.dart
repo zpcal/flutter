@@ -1110,7 +1110,7 @@ class _MenuItemButtonState extends State<MenuItemButton> {
         shortcut: widget.shortcut,
         trailingIcon: widget.trailingIcon,
         hasSubmenu: false,
-        child: widget.child!,
+        child: widget.child,
       ),
     );
 
@@ -2103,7 +2103,7 @@ class _LocalizedShortcutLabeler {
     }
     if (serialized.trigger != null) {
       final List<String> modifiers = <String>[];
-      final LogicalKeyboardKey trigger = serialized.trigger!;
+      final LogicalKeyboardKey trigger = serialized.trigger;
       if (_usesSymbolicModifiers) {
         // macOS/iOS platform convention uses this ordering, with ⌘ always last.
         if (serialized.control!) {
@@ -3118,7 +3118,7 @@ class _MenuItemLabel extends StatelessWidget {
             padding: EdgeInsetsDirectional.only(start: horizontalPadding),
             child: Text(
               _LocalizedShortcutLabeler.instance.getShortcutLabel(
-                shortcut!,
+                shortcut,
                 MaterialLocalizations.of(context),
               ),
             ),
@@ -3543,8 +3543,8 @@ class _Submenu extends StatelessWidget {
 
     final VisualDensity visualDensity =
         effectiveValue((MenuStyle? style) => style?.visualDensity) ?? Theme.of(context).visualDensity;
-    final AlignmentGeometry alignment = effectiveValue((MenuStyle? style) => style?.alignment)!;
-    final BuildContext anchorContext = anchor._anchorKey.currentContext!;
+    final AlignmentGeometry alignment = effectiveValue((MenuStyle? style) => style?.alignment);
+    final BuildContext anchorContext = anchor._anchorKey.currentContext;
     final RenderBox overlay = Overlay.of(anchorContext).context.findRenderObject()! as RenderBox;
     final RenderBox anchorBox = anchorContext.findRenderObject()! as RenderBox;
     final Offset upperLeft = anchorBox.localToGlobal(Offset.zero, ancestor: overlay);

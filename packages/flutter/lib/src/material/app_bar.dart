@@ -838,7 +838,7 @@ class _AppBarState extends State<AppBar> {
       states,
       widget.backgroundColor,
       appBarTheme.backgroundColor,
-      defaults.backgroundColor!,
+      defaults.backgroundColor,
     );
 
     final Color foregroundColor = widget.foregroundColor

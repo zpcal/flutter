@@ -215,7 +215,7 @@ class RenderPadding extends RenderShiftedBox {
         _resolvedPadding!.top + _resolvedPadding!.bottom,
       ));
     }
-    final BoxConstraints innerConstraints = constraints.deflate(_resolvedPadding!);
+    final BoxConstraints innerConstraints = constraints.deflate(_resolvedPadding);
     final Size childSize = child!.getDryLayout(innerConstraints);
     return constraints.constrain(Size(
       _resolvedPadding!.left + childSize.width + _resolvedPadding!.right,
@@ -235,7 +235,7 @@ class RenderPadding extends RenderShiftedBox {
       ));
       return;
     }
-    final BoxConstraints innerConstraints = constraints.deflate(_resolvedPadding!);
+    final BoxConstraints innerConstraints = constraints.deflate(_resolvedPadding);
     child!.layout(innerConstraints, parentUsesSize: true);
     final BoxParentData childParentData = child!.parentData! as BoxParentData;
     childParentData.offset = Offset(_resolvedPadding!.left, _resolvedPadding!.top);

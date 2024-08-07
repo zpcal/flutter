@@ -7,7 +7,6 @@ import 'dart:ui' as ui show lerpDouble;
 import 'package:flutter/foundation.dart';
 
 import 'alignment.dart';
-import 'basic_types.dart';
 
 /// An offset that's expressed as a fraction of a [Size].
 ///

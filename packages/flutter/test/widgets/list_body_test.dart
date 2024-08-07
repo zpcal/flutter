@@ -111,7 +111,7 @@ void main() {
   });
 
   testWidgetsWithLeakTracking('Limited space along main axis error', (WidgetTester tester) async {
-    final FlutterExceptionHandler oldHandler = FlutterError.onError!;
+    final FlutterExceptionHandler oldHandler = FlutterError.onError;
     final List<FlutterErrorDetails> errors = <FlutterErrorDetails>[];
     FlutterError.onError = (FlutterErrorDetails error) => errors.add(error);
     try {
@@ -144,7 +144,7 @@ void main() {
   });
 
   testWidgetsWithLeakTracking('Nested ListBody unbounded cross axis error', (WidgetTester tester) async {
-    final FlutterExceptionHandler oldHandler = FlutterError.onError!;
+    final FlutterExceptionHandler oldHandler = FlutterError.onError;
     final List<FlutterErrorDetails> errors = <FlutterErrorDetails>[];
     FlutterError.onError = (FlutterErrorDetails error) => errors.add(error);
     try {

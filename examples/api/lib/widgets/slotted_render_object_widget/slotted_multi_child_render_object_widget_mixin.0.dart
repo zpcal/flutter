@@ -156,7 +156,7 @@ class RenderDiagonal extends RenderBox
     if (backgroundColor != null) {
       context.canvas.drawRect(
         offset & size,
-        Paint()..color = backgroundColor!,
+        Paint()..color = backgroundColor,
       );
     }
 

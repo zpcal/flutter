@@ -619,7 +619,7 @@ class RenderStack extends RenderBox
       if (!childParentData.isPositioned) {
         childParentData.offset = _resolvedAlignment!.alongOffset(size - child.size as Offset);
       } else {
-        _hasVisualOverflow = layoutPositionedChild(child, childParentData, size, _resolvedAlignment!) || _hasVisualOverflow;
+        _hasVisualOverflow = layoutPositionedChild(child, childParentData, size, _resolvedAlignment) || _hasVisualOverflow;
       }
 
       assert(child.parentData == childParentData);

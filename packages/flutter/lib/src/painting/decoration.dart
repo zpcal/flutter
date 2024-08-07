@@ -4,7 +4,6 @@
 
 import 'package:flutter/foundation.dart';
 
-import 'basic_types.dart';
 import 'edge_insets.dart';
 import 'image_provider.dart';
 

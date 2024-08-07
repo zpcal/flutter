@@ -616,12 +616,12 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
         // keep the current selection, if not then collapse it.
         final bool lastSecondaryTapDownPositionWasOnActiveSelection = _positionIsOnActiveSelection(globalPosition: details.globalPosition);
         if (!lastSecondaryTapDownPositionWasOnActiveSelection) {
-          _collapseSelectionAt(offset: lastSecondaryTapDownPosition!);
+          _collapseSelectionAt(offset: lastSecondaryTapDownPosition);
         }
         _showHandles();
         _showToolbar(location: lastSecondaryTapDownPosition);
       case TargetPlatform.iOS:
-        _selectWordAt(offset: lastSecondaryTapDownPosition!);
+        _selectWordAt(offset: lastSecondaryTapDownPosition);
         _showHandles();
         _showToolbar(location: lastSecondaryTapDownPosition);
       case TargetPlatform.macOS:
@@ -629,7 +629,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
           hideToolbar();
           return;
         }
-        _selectWordAt(offset: lastSecondaryTapDownPosition!);
+        _selectWordAt(offset: lastSecondaryTapDownPosition);
         _showHandles();
         _showToolbar(location: lastSecondaryTapDownPosition);
       case TargetPlatform.linux:
@@ -641,7 +641,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
         // keep the current selection, if not then collapse it.
         final bool lastSecondaryTapDownPositionWasOnActiveSelection = _positionIsOnActiveSelection(globalPosition: details.globalPosition);
         if (!lastSecondaryTapDownPositionWasOnActiveSelection) {
-          _collapseSelectionAt(offset: lastSecondaryTapDownPosition!);
+          _collapseSelectionAt(offset: lastSecondaryTapDownPosition);
         }
         _showHandles();
         _showToolbar(location: lastSecondaryTapDownPosition);
@@ -755,7 +755,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
 
     _selectionOverlay!.showMagnifier(_buildInfoForMagnifier(
       details.globalPosition,
-      _selectionDelegate.value.startSelectionPoint!,
+      _selectionDelegate.value.startSelectionPoint,
     ));
     _updateSelectedContentIfNeeded();
   }
@@ -769,7 +769,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
 
     _selectionOverlay!.updateMagnifier(_buildInfoForMagnifier(
       details.globalPosition,
-      _selectionDelegate.value.startSelectionPoint!,
+      _selectionDelegate.value.startSelectionPoint,
     ));
     _updateSelectedContentIfNeeded();
   }
@@ -782,7 +782,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
 
     _selectionOverlay!.showMagnifier(_buildInfoForMagnifier(
       details.globalPosition,
-      _selectionDelegate.value.endSelectionPoint!,
+      _selectionDelegate.value.endSelectionPoint,
     ));
     _updateSelectedContentIfNeeded();
   }
@@ -796,7 +796,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
 
     _selectionOverlay!.updateMagnifier(_buildInfoForMagnifier(
       details.globalPosition,
-      _selectionDelegate.value.endSelectionPoint!,
+      _selectionDelegate.value.endSelectionPoint,
     ));
     _updateSelectedContentIfNeeded();
   }
@@ -1084,7 +1084,7 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
   TextSelectionToolbarAnchors get contextMenuAnchors {
     if (lastSecondaryTapDownPosition != null) {
       return TextSelectionToolbarAnchors(
-        primaryAnchor: lastSecondaryTapDownPosition!,
+        primaryAnchor: lastSecondaryTapDownPosition,
       );
     }
     final RenderBox renderBox = context.findRenderObject()! as RenderBox;
@@ -1103,8 +1103,8 @@ class SelectableRegionState extends State<SelectableRegion> with TextSelectionDe
     }
     final bool isReversed;
     final SelectionPoint start = _selectionDelegate.value
-        .startSelectionPoint!;
-    final SelectionPoint end = _selectionDelegate.value.endSelectionPoint!;
+        .startSelectionPoint;
+    final SelectionPoint end = _selectionDelegate.value.endSelectionPoint;
     if (start.localPosition.dy > end.localPosition.dy) {
       isReversed = true;
     } else if (start.localPosition.dy < end.localPosition.dy) {

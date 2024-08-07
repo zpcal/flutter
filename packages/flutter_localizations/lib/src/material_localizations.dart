@@ -232,6 +232,7 @@ abstract class GlobalMaterialLocalizations implements MaterialLocalizations {
       case DayPeriod.pm:
         return postMeridiemAbbreviation;
     }
+    return null;
   }
 
   /// The raw version of [dateRangeStartDateSemanticLabel], with `$formattedDate` verbatim

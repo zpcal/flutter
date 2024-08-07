@@ -29,7 +29,7 @@ void main() {
     addTearDown(containerLayer.dispose);
     final PaintingContext paintingContext = PaintingContext(containerLayer, Rect.zero);
     textureBox.paint(paintingContext, Offset.zero);
-    final Layer layer = containerLayer.lastChild!;
+    final Layer layer = containerLayer.lastChild;
     expect(layer, isNotNull);
     final TextureLayer textureLayer = layer as TextureLayer;
     expect(textureLayer, isNotNull);
@@ -58,7 +58,7 @@ void main() {
     addTearDown(containerLayer.dispose);
     final PaintingContext paintingContext = PaintingContext(containerLayer, Rect.zero);
     textureBox.paint(paintingContext, Offset.zero);
-    final Layer layer = containerLayer.lastChild!;
+    final Layer layer = containerLayer.lastChild;
     expect(layer, isNotNull);
     final TextureLayer textureLayer = layer as TextureLayer;
     expect(textureLayer, isNotNull);
@@ -88,7 +88,7 @@ void main() {
     addTearDown(containerLayer.dispose);
     final PaintingContext paintingContext = PaintingContext(containerLayer, Rect.zero);
     textureBox.paint(paintingContext, Offset.zero);
-    final Layer layer = containerLayer.lastChild!;
+    final Layer layer = containerLayer.lastChild;
     expect(layer, isNotNull);
     final TextureLayer textureLayer = layer as TextureLayer;
     expect(textureLayer, isNotNull);
@@ -117,7 +117,7 @@ void main() {
     addTearDown(containerLayer.dispose);
     final PaintingContext paintingContext = PaintingContext(containerLayer, Rect.zero);
     textureBox.paint(paintingContext, Offset.zero);
-    final Layer layer = containerLayer.lastChild!;
+    final Layer layer = containerLayer.lastChild;
     expect(layer, isNotNull);
     final TextureLayer textureLayer = layer as TextureLayer;
     expect(textureLayer, isNotNull);

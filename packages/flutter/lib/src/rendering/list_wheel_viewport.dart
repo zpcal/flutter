@@ -11,7 +11,6 @@ import 'package:vector_math/vector_math_64.dart' show Matrix4;
 import 'box.dart';
 import 'layer.dart';
 import 'object.dart';
-import 'proxy_box.dart';
 import 'viewport.dart';
 import 'viewport_offset.dart';
 

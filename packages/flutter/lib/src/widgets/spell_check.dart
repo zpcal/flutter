@@ -8,7 +8,6 @@ import 'package:flutter/services.dart'
     show SpellCheckResults, SpellCheckService, SuggestionSpan, TextEditingValue;
 
 import 'editable_text.dart' show EditableTextContextMenuBuilder;
-import 'framework.dart' show immutable;
 
 /// Controls how spell check is performed for text input.
 ///

@@ -430,7 +430,7 @@ void main() {
     parentPipelineOwner.visitChildren((PipelineOwner child) {
       children.add(child);
     });
-    final PipelineOwner rawViewOwner = rawView.owner!;
+    final PipelineOwner rawViewOwner = rawView.owner;
     expect(children, contains(rawViewOwner));
 
     // Remove that View from the tree.

@@ -4,7 +4,6 @@
 
 import 'dart:math' as math;
 
-import 'basic_types.dart';
 
 /// Draw a line between two points, which cuts diagonally back and forth across
 /// the line that connects the two points.

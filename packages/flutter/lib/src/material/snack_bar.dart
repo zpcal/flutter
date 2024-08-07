@@ -578,7 +578,7 @@ class _SnackBarState extends State<SnackBar> {
               primary: colorScheme.onPrimary,
               secondary: buttonColor,
               surface: colorScheme.onSurface,
-              background: defaults.backgroundColor!,
+              background: defaults.backgroundColor,
               error: colorScheme.onError,
               onPrimary: colorScheme.primary,
               onSecondary: colorScheme.secondary,
@@ -685,7 +685,7 @@ class _SnackBarState extends State<SnackBar> {
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               ),
             ),
-            child: widget.action!,
+            child: widget.action,
           ),
         ),
       if (showCloseIcon)

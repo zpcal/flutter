@@ -77,7 +77,7 @@ Finder findBorderPainter() {
 }
 
 double getBorderBottom(WidgetTester tester) {
-  final RenderBox box = InputDecorator.containerOf(tester.element(findBorderPainter()))!;
+  final RenderBox box = InputDecorator.containerOf(tester.element(findBorderPainter()));
   return box.size.height;
 }
 
@@ -121,7 +121,7 @@ BorderSide? getBorderSide(WidgetTester tester) {
 }
 
 BorderRadius? getBorderRadius(WidgetTester tester) {
-  final InputBorder border = getBorder(tester)!;
+  final InputBorder border = getBorder(tester);
   if (border is UnderlineInputBorder) {
     return border.borderRadius;
   }
@@ -2813,14 +2813,14 @@ void runAllTests({ required bool useMaterial3 }) {
         );
 
         // Vertical components: contentPadding.vertical, densityOffset.y, child
-        final double childVerticalSpaceAffordance = totalHeight
+        const double childVerticalSpaceAffordance = totalHeight
                                                   - visualDensity.baseSizeAdjustment.dy
                                                   - contentPadding.vertical;
 
         // TextAlignVertical.center is specified so `child` needs to be centered
         // in the available space.
-        final double childMargin = (childVerticalSpaceAffordance - childHeight) / 2;
-        final double childTop = visualDensity.baseSizeAdjustment.dy / 2.0
+        const double childMargin = (childVerticalSpaceAffordance - childHeight) / 2;
+        const double childTop = visualDensity.baseSizeAdjustment.dy / 2.0
                               + contentPadding.top
                               + childMargin;
 
@@ -4615,7 +4615,7 @@ void runAllTests({ required bool useMaterial3 }) {
 
     final RenderObject renderer = tester.renderObject(find.byType(InputDecorator));
     final Iterable<String> nodeNames = renderer.debugDescribeChildren()
-      .map((DiagnosticsNode node) => node.name!);
+      .map((DiagnosticsNode node) => node.name);
     expect(nodeNames, unorderedEquals(<String>[
       'container',
       'counter',
@@ -4631,7 +4631,7 @@ void runAllTests({ required bool useMaterial3 }) {
     ]));
 
     final Set<Object> nodeValues = Set<Object>.from(
-      renderer.debugDescribeChildren().map<Object>((DiagnosticsNode node) => node.value!),
+      renderer.debugDescribeChildren().map<Object>((DiagnosticsNode node) => node.value),
     );
     expect(nodeValues.length, 11);
   });

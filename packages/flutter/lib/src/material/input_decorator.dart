@@ -1314,7 +1314,7 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
 
   @override
   double computeDistanceToActualBaseline(TextBaseline baseline) {
-    return _boxParentData(input!).offset.dy + (input?.computeDistanceToActualBaseline(baseline) ?? 0.0);
+    return _boxParentData(input).offset.dy + (input?.computeDistanceToActualBaseline(baseline) ?? 0.0);
   }
 
   // Records where the label was painted.
@@ -1409,7 +1409,7 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
         case TextDirection.ltr:
           x = 0.0;
        }
-      centerLayout(icon!, x);
+      centerLayout(icon, x);
     }
 
     switch (textDirection) {
@@ -1418,30 +1418,30 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
         double end = left;
         if (prefixIcon != null) {
           start += contentPadding.right;
-          start -= centerLayout(prefixIcon!, start - prefixIcon!.size.width);
+          start -= centerLayout(prefixIcon, start - prefixIcon!.size.width);
         }
         if (label != null) {
           if (decoration.alignLabelWithHint) {
-            baselineLayout(label!, start - label!.size.width);
+            baselineLayout(label, start - label!.size.width);
           } else {
-            centerLayout(label!, start - label!.size.width);
+            centerLayout(label, start - label!.size.width);
           }
         }
         if (prefix != null) {
-          start -= baselineLayout(prefix!, start - prefix!.size.width);
+          start -= baselineLayout(prefix, start - prefix!.size.width);
         }
         if (input != null) {
-          baselineLayout(input!, start - input!.size.width);
+          baselineLayout(input, start - input!.size.width);
         }
         if (hint != null) {
-          baselineLayout(hint!, start - hint!.size.width);
+          baselineLayout(hint, start - hint!.size.width);
         }
         if (suffixIcon != null) {
           end -= contentPadding.left;
-          end += centerLayout(suffixIcon!, end);
+          end += centerLayout(suffixIcon, end);
         }
         if (suffix != null) {
-          end += baselineLayout(suffix!, end);
+          end += baselineLayout(suffix, end);
         }
         break;
       }
@@ -1450,30 +1450,30 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
         double end = right;
         if (prefixIcon != null) {
           start -= contentPadding.left;
-          start += centerLayout(prefixIcon!, start);
+          start += centerLayout(prefixIcon, start);
         }
         if (label != null) {
           if (decoration.alignLabelWithHint) {
-            baselineLayout(label!, start);
+            baselineLayout(label, start);
           } else {
-            centerLayout(label!, start);
+            centerLayout(label, start);
           }
         }
         if (prefix != null) {
-          start += baselineLayout(prefix!, start);
+          start += baselineLayout(prefix, start);
         }
         if (input != null) {
-          baselineLayout(input!, start);
+          baselineLayout(input, start);
         }
         if (hint != null) {
-          baselineLayout(hint!, start);
+          baselineLayout(hint, start);
         }
         if (suffixIcon != null) {
           end += contentPadding.right;
-          end -= centerLayout(suffixIcon!, end - suffixIcon!.size.width);
+          end -= centerLayout(suffixIcon, end - suffixIcon!.size.width);
         }
         if (suffix != null) {
-          end -= baselineLayout(suffix!, end - suffix!.size.width);
+          end -= baselineLayout(suffix, end - suffix!.size.width);
         }
         break;
       }
@@ -1486,23 +1486,23 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
       switch (textDirection) {
         case TextDirection.rtl:
           if (helperError != null) {
-            baselineLayout(helperError!, right - helperError!.size.width - _boxSize(icon).width);
+            baselineLayout(helperError, right - helperError!.size.width - _boxSize(icon).width);
           }
           if (counter != null) {
-            baselineLayout(counter!, left);
+            baselineLayout(counter, left);
           }
         case TextDirection.ltr:
           if (helperError != null) {
-            baselineLayout(helperError!, left + _boxSize(icon).width);
+            baselineLayout(helperError, left + _boxSize(icon).width);
           }
           if (counter != null) {
-            baselineLayout(counter!, right - counter!.size.width);
+            baselineLayout(counter, right - counter!.size.width);
           }
       }
     }
 
     if (label != null) {
-      final double labelX = _boxParentData(label!).offset.dx;
+      final double labelX = _boxParentData(label).offset.dx;
       // +1 shifts the range of x from (-1.0, 1.0) to (0.0, 2.0).
       final double floatAlign = decoration.floatingLabelAlignment._x + 1;
       final double floatWidth = _boxSize(label).width * _kFinalLabelScale;
@@ -1555,7 +1555,7 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
     doPaint(container);
 
     if (label != null) {
-      final Offset labelOffset = _boxParentData(label!).offset;
+      final Offset labelOffset = _boxParentData(label).offset;
       final double labelHeight = _boxSize(label).height;
       final double labelWidth = _boxSize(label).width;
       // +1 shifts the range of x from (-1.0, 1.0) to (0.0, 2.0).
@@ -1570,7 +1570,7 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
       // Center the scaled label relative to the border.
       final double floatingY = isOutlineBorder ? (-labelHeight * _kFinalLabelScale) / 2.0 + borderWeight / 2.0 : contentPadding.top;
       final double scale = lerpDouble(1.0, _kFinalLabelScale, t)!;
-      final double centeredFloatX = _boxParentData(container!).offset.dx +
+      final double centeredFloatX = _boxParentData(container).offset.dx +
           _boxSize(container).width / 2.0 - floatWidth / 2.0;
       final double startX;
       double floatStartX;
@@ -1642,7 +1642,7 @@ class _RenderDecoration extends RenderBox with SlottedContainerRenderObjectMixin
   @override
   void applyPaintTransform(RenderObject child, Matrix4 transform) {
     if (child == label && _labelTransform != null) {
-      final Offset labelOffset = _boxParentData(label!).offset;
+      final Offset labelOffset = _boxParentData(label).offset;
       transform
         ..multiply(_labelTransform!)
         ..translate(-labelOffset.dx, -labelOffset.dy);
@@ -2039,9 +2039,9 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
       return Colors.transparent;
     }
     if (decoration.fillColor != null) {
-      return MaterialStateProperty.resolveAs(decoration.fillColor!, materialState);
+      return MaterialStateProperty.resolveAs(decoration.fillColor, materialState);
     }
-    return MaterialStateProperty.resolveAs(defaults.fillColor!, materialState);
+    return MaterialStateProperty.resolveAs(defaults.fillColor, materialState);
   }
 
   Color _getHoverColor(ThemeData themeData) {
@@ -2054,19 +2054,19 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
   Color _getIconColor(ThemeData themeData, InputDecorationTheme defaults) {
     return  MaterialStateProperty.resolveAs(decoration.iconColor, materialState)
       ?? MaterialStateProperty.resolveAs(themeData.inputDecorationTheme.iconColor, materialState)
-      ?? MaterialStateProperty.resolveAs(defaults.iconColor!, materialState);
+      ?? MaterialStateProperty.resolveAs(defaults.iconColor, materialState);
   }
 
   Color _getPrefixIconColor(ThemeData themeData, InputDecorationTheme defaults) {
     return MaterialStateProperty.resolveAs(decoration.prefixIconColor, materialState)
       ?? MaterialStateProperty.resolveAs(themeData.inputDecorationTheme.prefixIconColor, materialState)
-      ?? MaterialStateProperty.resolveAs(defaults.prefixIconColor!, materialState);
+      ?? MaterialStateProperty.resolveAs(defaults.prefixIconColor, materialState);
   }
 
   Color _getSuffixIconColor(ThemeData themeData, InputDecorationTheme defaults) {
     return MaterialStateProperty.resolveAs(decoration.suffixIconColor, materialState)
       ?? MaterialStateProperty.resolveAs(themeData.inputDecorationTheme.suffixIconColor, materialState)
-      ?? MaterialStateProperty.resolveAs(defaults.suffixIconColor!, materialState);
+      ?? MaterialStateProperty.resolveAs(defaults.suffixIconColor, materialState);
   }
 
   // True if the label will be shown and the hint will not.
@@ -2085,7 +2085,7 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
   // The base style for the inline label when they're displayed "inline",
   // i.e. when they appear in place of the empty text field.
   TextStyle _getInlineLabelStyle(ThemeData themeData, InputDecorationTheme defaults) {
-    final TextStyle defaultStyle = MaterialStateProperty.resolveAs(defaults.labelStyle!, materialState);
+    final TextStyle defaultStyle = MaterialStateProperty.resolveAs(defaults.labelStyle, materialState);
 
     final TextStyle? style = MaterialStateProperty.resolveAs(decoration.labelStyle, materialState)
       ?? MaterialStateProperty.resolveAs(themeData.inputDecorationTheme.labelStyle, materialState);
@@ -2100,7 +2100,7 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
   // The base style for the inline hint when they're displayed "inline",
   // i.e. when they appear in place of the empty text field.
   TextStyle _getInlineHintStyle(ThemeData themeData, InputDecorationTheme defaults) {
-    final TextStyle defaultStyle = MaterialStateProperty.resolveAs(defaults.hintStyle!, materialState);
+    final TextStyle defaultStyle = MaterialStateProperty.resolveAs(defaults.hintStyle, materialState);
 
     final TextStyle? style = MaterialStateProperty.resolveAs(decoration.hintStyle, materialState)
       ?? MaterialStateProperty.resolveAs(themeData.inputDecorationTheme.hintStyle, materialState);
@@ -2112,7 +2112,7 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
   }
 
   TextStyle _getFloatingLabelStyle(ThemeData themeData, InputDecorationTheme defaults) {
-    TextStyle defaultTextStyle = MaterialStateProperty.resolveAs(defaults.floatingLabelStyle!, materialState);
+    TextStyle defaultTextStyle = MaterialStateProperty.resolveAs(defaults.floatingLabelStyle, materialState);
     if (_hasError && decoration.errorStyle?.color != null) {
       defaultTextStyle = defaultTextStyle.copyWith(color: decoration.errorStyle?.color);
     }
@@ -2129,12 +2129,12 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
   }
 
   TextStyle _getHelperStyle(ThemeData themeData, InputDecorationTheme defaults) {
-    return MaterialStateProperty.resolveAs(defaults.helperStyle!, materialState)
+    return MaterialStateProperty.resolveAs(defaults.helperStyle, materialState)
       .merge(MaterialStateProperty.resolveAs(decoration.helperStyle, materialState));
   }
 
   TextStyle _getErrorStyle(ThemeData themeData, InputDecorationTheme defaults) {
-    return MaterialStateProperty.resolveAs(defaults.errorStyle!, materialState)
+    return MaterialStateProperty.resolveAs(defaults.errorStyle, materialState)
       .merge(decoration.errorStyle);
   }
 
@@ -2193,7 +2193,7 @@ class _InputDecoratorState extends State<InputDecorator> with TickerProviderStat
       Theme.of(context).useMaterial3 ? _InputDecoratorDefaultsM3(context) :  _InputDecoratorDefaultsM2(context);
 
     final TextStyle labelStyle = _getInlineLabelStyle(themeData, defaults);
-    final TextBaseline textBaseline = labelStyle.textBaseline!;
+    final TextBaseline textBaseline = labelStyle.textBaseline;
 
     final TextStyle hintStyle = _getInlineHintStyle(themeData, defaults);
     final String? hintText = decoration.hintText;

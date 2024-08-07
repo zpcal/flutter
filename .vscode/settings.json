@@ -14,5 +14,6 @@
         "master"
     ],
     "files.trimTrailingWhitespace": true,
-    "git.autofetch": true
+    "git.autofetch": true,
+    "dart.showTodos": false
 }

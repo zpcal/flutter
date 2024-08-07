@@ -9,10 +9,10 @@
         "editor.formatOnType": false,
         "editor.formatOnPaste": false,
     },
-
     "html.format.enable": false,
     "githubPullRequests.ignoredPullRequestBranches": [
         "master"
     ],
-    "files.trimTrailingWhitespace": true
+    "files.trimTrailingWhitespace": true,
+    "git.autofetch": true
 }

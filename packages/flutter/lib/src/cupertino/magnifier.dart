@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+/// @docImport 'package:flutter/material.dart';
+library;
+
 import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 
@@ -82,8 +85,10 @@ class _CupertinoTextMagnifierState extends State<CupertinoTextMagnifier>
   // set these values.
   Offset _currentAdjustedMagnifierPosition = Offset.zero;
   double _verticalFocalPointAdjustment = 0;
-  late AnimationController _ioAnimationController;
-  late Animation<double> _ioAnimation;
+  late final AnimationController _ioAnimationController;
+  late final Animation<double> _ioAnimation;
+  late final CurvedAnimation _ioCurvedAnimation;
+
 
   @override
   void initState() {
@@ -97,20 +102,21 @@ class _CupertinoTextMagnifierState extends State<CupertinoTextMagnifier>
     widget.controller.animationController = _ioAnimationController;
     widget.magnifierInfo
         .addListener(_determineMagnifierPositionAndFocalPoint);
-
+    _ioCurvedAnimation = CurvedAnimation(
+      parent: _ioAnimationController,
+      curve: widget.animationCurve,
+    );
     _ioAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _ioAnimationController,
-      curve: widget.animationCurve,
-    ));
+    ).animate(_ioCurvedAnimation);
   }
 
   @override
   void dispose() {
     widget.controller.animationController = null;
     _ioAnimationController.dispose();
+    _ioCurvedAnimation.dispose();
     widget.magnifierInfo
         .removeListener(_determineMagnifierPositionAndFocalPoint);
     super.dispose();

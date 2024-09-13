@@ -1452,25 +1452,21 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin, 
           ..sortKey = OrdinalSortKey(ordinal++)
           ..textDirection = initialDirection
           ..attributedLabel = AttributedString(info.semanticsLabel ?? info.text, attributes: info.stringAttributes);
-        final GestureRecognizer? recognizer = info.recognizer;
-        if (recognizer != null) {
-          if (recognizer is TapGestureRecognizer) {
-            if (recognizer.onTap != null) {
-              configuration.onTap = recognizer.onTap;
+        switch (info.recognizer) {
+          case TapGestureRecognizer(onTap: final VoidCallback? onTap):
+          case DoubleTapGestureRecognizer(onDoubleTap: final VoidCallback? onTap):
+            if (onTap != null) {
+              configuration.onTap = onTap;
               configuration.isLink = true;
             }
-          } else if (recognizer is DoubleTapGestureRecognizer) {
-            if (recognizer.onDoubleTap != null) {
-              configuration.onTap = recognizer.onDoubleTap;
-              configuration.isLink = true;
+          case LongPressGestureRecognizer(onLongPress: final GestureLongPressCallback? onLongPress):
+            if (onLongPress != null) {
+              configuration.onLongPress = onLongPress;
             }
-          } else if (recognizer is LongPressGestureRecognizer) {
-            if (recognizer.onLongPress != null) {
-              configuration.onLongPress = recognizer.onLongPress;
-            }
-          } else {
-            assert(false, '${recognizer.runtimeType} is not supported.');
-          }
+          case null:
+            break;
+          default:
+            assert(false, '${info.recognizer.runtimeType} is not supported.');
         }
         if (node.parentPaintClipRect != null) {
           final Rect paintRect = node.parentPaintClipRect!.intersect(currentRect);
@@ -2303,6 +2299,15 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin, 
   }
 
   @override
+  double computeDryBaseline(covariant BoxConstraints constraints, TextBaseline baseline) {
+    final (double minWidth, double maxWidth) = _adjustConstraints(minWidth: constraints.minWidth, maxWidth: constraints.maxWidth);
+    _textIntrinsics
+      ..setPlaceholderDimensions(layoutInlineChildren(constraints.maxWidth, ChildLayoutHelper.dryLayoutChild, ChildLayoutHelper.getDryBaseline))
+      ..layout(minWidth: minWidth, maxWidth: maxWidth);
+    return _textIntrinsics.computeDistanceToActualBaseline(baseline);
+  }
+
+  @override
   void performLayout() {
     final BoxConstraints constraints = this.constraints;
     _placeholderDimensions = layoutInlineChildren(constraints.maxWidth, ChildLayoutHelper.layoutChild, ChildLayoutHelper.getBaseline);
@@ -2312,18 +2317,10 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin, 
       ..layout(minWidth: minWidth, maxWidth: maxWidth);
     positionInlineChildren(_textPainter.inlinePlaceholderBoxes!);
     _computeCaretPrototype();
-    // We grab _textPainter.size here because assigning to `size` on the next
-    // line will trigger us to validate our intrinsic sizes, which will change
-    // _textPainter's layout because the intrinsic size calculations are
-    // destructive, which would mean we would get different results if we later
-    // used properties on _textPainter in this method.
-    // Other _textPainter state like didExceedMaxLines will also be affected,
-    // though we currently don't use those here.
-    // See also RenderParagraph which has a similar issue.
-    final Size textPainterSize = _textPainter.size;
+
     final double width = forceLine
       ? constraints.maxWidth
-      : constraints.constrainWidth(_textPainter.size.width + _caretMargin);
+      : constraints.constrainWidth(_textPainter.width + _caretMargin);
     assert(maxLines != 1 || _textPainter.maxLines == 1);
     final double preferredHeight = switch (maxLines) {
       null => math.max(_textPainter.height, preferredLineHeight * (minLines ?? 0)),
@@ -2336,7 +2333,7 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin, 
     };
 
     size = Size(width, constraints.constrainHeight(preferredHeight));
-    final Size contentSize = Size(textPainterSize.width + _caretMargin, textPainterSize.height);
+    final Size contentSize = Size(_textPainter.width + _caretMargin, _textPainter.height);
 
     final BoxConstraints painterConstraints = BoxConstraints.tight(contentSize);
 

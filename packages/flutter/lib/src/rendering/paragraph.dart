@@ -809,16 +809,10 @@ class RenderParagraph extends RenderBox with ContainerRenderObjectMixin<RenderBo
     _layoutTextWithConstraints(constraints);
     positionInlineChildren(_textPainter.inlinePlaceholderBoxes!);
 
-    // We grab _textPainter.size and _textPainter.didExceedMaxLines here because
-    // assigning to `size` will trigger us to validate our intrinsic sizes,
-    // which will change _textPainter's layout because the intrinsic size
-    // calculations are destructive. Other _textPainter state will also be
-    // affected. See also RenderEditable which has a similar issue.
     final Size textSize = _textPainter.size;
-    final bool textDidExceedMaxLines = _textPainter.didExceedMaxLines;
     size = constraints.constrain(textSize);
 
-    final bool didOverflowHeight = size.height < textSize.height || textDidExceedMaxLines;
+    final bool didOverflowHeight = size.height < textSize.height || _textPainter.didExceedMaxLines;
     final bool didOverflowWidth = size.width < textSize.width;
     // TODO(abarth): We're only measuring the sizes of the line boxes here. If
     // the glyphs draw outside the line boxes, we might think that there isn't
@@ -1220,25 +1214,21 @@ class RenderParagraph extends RenderBox with ContainerRenderObjectMixin<RenderBo
           ..sortKey = OrdinalSortKey(ordinal++)
           ..textDirection = initialDirection
           ..attributedLabel = AttributedString(info.semanticsLabel ?? info.text, attributes: info.stringAttributes);
-        final GestureRecognizer? recognizer = info.recognizer;
-        if (recognizer != null) {
-          if (recognizer is TapGestureRecognizer) {
-            if (recognizer.onTap != null) {
-              configuration.onTap = recognizer.onTap;
+        switch (info.recognizer) {
+          case TapGestureRecognizer(onTap: final VoidCallback? onTap):
+          case DoubleTapGestureRecognizer(onDoubleTap: final VoidCallback? onTap):
+            if (onTap != null) {
+              configuration.onTap = onTap;
               configuration.isLink = true;
             }
-          } else if (recognizer is DoubleTapGestureRecognizer) {
-            if (recognizer.onDoubleTap != null) {
-              configuration.onTap = recognizer.onDoubleTap;
-              configuration.isLink = true;
+          case LongPressGestureRecognizer(onLongPress: final GestureLongPressCallback? onLongPress):
+            if (onLongPress != null) {
+              configuration.onLongPress = onLongPress;
             }
-          } else if (recognizer is LongPressGestureRecognizer) {
-            if (recognizer.onLongPress != null) {
-              configuration.onLongPress = recognizer.onLongPress;
-            }
-          } else {
-            assert(false, '${recognizer.runtimeType} is not supported.');
-          }
+          case null:
+            break;
+          default:
+            assert(false, '${info.recognizer.runtimeType} is not supported.');
         }
         if (node.parentPaintClipRect != null) {
           final Rect paintRect = node.parentPaintClipRect!.intersect(currentRect);
@@ -2045,7 +2035,7 @@ class _SelectableFragment with Selectable, Diagnosticable, ChangeNotifier implem
   // [WidgetSpan]s.
   //
   // This method differs from [_updateSelectionStartEdgeByMultiSelectableBoundary]
-  // in that to mantain the origin text boundary selected at a placeholder,
+  // in that to maintain the origin text boundary selected at a placeholder,
   // this selectable fragment must be aware of the [RenderParagraph] that closely
   // encompasses the complete origin text boundary.
   //
@@ -2229,7 +2219,7 @@ class _SelectableFragment with Selectable, Diagnosticable, ChangeNotifier implem
   // [WidgetSpan]s.
   //
   // This method differs from [_updateSelectionEndEdgeByMultiSelectableBoundary]
-  // in that to mantain the origin text boundary selected at a placeholder, this
+  // in that to maintain the origin text boundary selected at a placeholder, this
   // selectable fragment must be aware of the [RenderParagraph] that closely
   // encompasses the complete origin text boundary.
   //
